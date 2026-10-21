@@ -1,0 +1,181 @@
+ID_Transaksi,Tanggal,Cabang,Kota,Kategori,Produk,Qty,Harga_Satuan,Diskon_Persen
+JW-0001,2026-01-03,Jawa,Surabaya,Elektronik,Smart TV 43 inci,9,4800000.00,15
+JW-0002,2026-01-05,Jawa,Bandung,Elektronik,Earbuds Nusa Pro,12,450000.00,10
+JW-0003,2026-01-06,Jawa,Bandung,Makanan,Kopi Arabika 1kg,11,185000.00,10
+JW-0004,2026-01-07,Jawa,Semarang,Elektronik,Smartphone Nusa X1,6,3200000.00,15
+JW-0005,2026-01-08,Jawa,Semarang,Rumah Tangga,Blender Multifungsi,5,360000.00,20
+JW-0006,2026-01-09,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,6,185000.00,5
+JW-0007,2026-01-10,Jawa,Bandung,Elektronik,Smartphone Nusa X1,11,3200000.00,0
+JW-0008,2026-01-10,Jawa,Semarang,Fashion,Kemeja Batik Pria,3,385000.00,0
+JW-0009,2026-01-14,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,11,450000.00,0
+JW-0010,2026-01-14,Jawa,Semarang,Rumah Tangga,Dispenser Air,2,1150000.00,15
+JW-0011,2026-01-16,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,12,185000.00,20
+JW-0012,2026-01-20,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,2,185000.00,10
+JW-0013,2026-01-21,Jawa,Jakarta,Rumah Tangga,Dispenser Air,5,1150000.00,20
+JW-0014,2026-01-21,Jawa,Semarang,Fashion,Sepatu Sneakers,5,650000.00,0
+JW-0015,2026-01-21,Jawa,Bandung,Fashion,Dress Tenun Wanita,9,520000.00,20
+JW-0016,2026-01-22,Jawa,Surabaya,Elektronik,Smart TV 43 inci,6,4800000.00,10
+JW-0017,2026-01-24,Jawa,Semarang,Elektronik,Smartphone Nusa X1,11,3200000.00,0
+JW-0018,2026-01-25,Jawa,Semarang,Fashion,Kemeja Batik Pria,3,385000.00,0
+JW-0019,2026-01-25,Jawa,Bandung,Elektronik,Smartphone Nusa X1,6,3200000.00,0
+JW-0020,2026-01-25,Jawa,Surabaya,Elektronik,Smartphone Nusa X1,10,3200000.00,20
+JW-0021,2026-01-31,Jawa,Surabaya,Fashion,Dress Tenun Wanita,5,520000.00,20
+JW-0022,2026-02-03,Jawa,Surabaya,Fashion,Kemeja Batik Pria,10,385000.00,15
+JW-0023,2026-02-06,Jawa,Semarang,Elektronik,Earbuds Nusa Pro,6,450000.00,10
+JW-0024,2026-02-07,Jawa,Semarang,Fashion,Sepatu Sneakers,1,650000.00,0
+JW-0025,2026-02-07,Jawa,Bandung,Rumah Tangga,Blender Multifungsi,1,360000.00,0
+JW-0026,2026-02-10,Jawa,Bandung,Makanan,Kopi Arabika 1kg,10,185000.00,0
+JW-0027,2026-02-11,Jawa,Bandung,Elektronik,Smartphone Nusa X1,2,3200000.00,5
+JW-0028,2026-02-14,Jawa,Jakarta,Makanan,Kopi Arabika 1kg,11,185000.00,10
+JW-0029,2026-02-14,Jawa,Surabaya,Fashion,Dress Tenun Wanita,8,520000.00,5
+JW-0030,2026-02-14,Jawa,Surabaya,Rumah Tangga,Blender Multifungsi,9,360000.00,10
+JW-0031,2026-02-17,Jawa,Jakarta,Elektronik,Smart TV 43 inci,3,4800000.00,15
+JW-0032,2026-02-18,Jawa,Bandung,Makanan,Kopi Arabika 1kg,5,185000.00,0
+JW-0033,2026-02-20,Jawa,Jakarta,Makanan,Paket Camilan Nusantara,2,95000.00,0
+JW-0034,2026-02-21,Jawa,Surabaya,Fashion,Dress Tenun Wanita,12,520000.00,5
+JW-0035,2026-02-22,Jawa,Semarang,Rumah Tangga,Blender Multifungsi,10,360000.00,0
+JW-0036,2026-02-22,Jawa,Bandung,Rumah Tangga,"Rice Cooker 1,8L",12,425000.00,0
+JW-0037,2026-02-25,Jawa,Semarang,Rumah Tangga,Dispenser Air,7,1150000.00,15
+JW-0038,2026-02-26,Jawa,Surabaya,Fashion,Kemeja Batik Pria,9,385000.00,0
+JW-0039,2026-02-27,Jawa,Bandung,Makanan,Kopi Arabika 1kg,6,185000.00,5
+JW-0040,2026-02-28,Jawa,Jakarta,Elektronik,Smart TV 43 inci,1,4800000.00,0
+JW-0041,2026-03-01,Jawa,Surabaya,Fashion,Kemeja Batik Pria,3,385000.00,10
+JW-0042,2026-03-02,Jawa,Jakarta,Elektronik,Earbuds Nusa Pro,5,450000.00,0
+JW-0043,2026-03-05,Jawa,Jakarta,Elektronik,Power Bank 20000mAh,10,275000.00,0
+JW-0044,2026-03-05,Jawa,Surabaya,Rumah Tangga,Blender Multifungsi,11,360000.00,20
+JW-0045,2026-03-07,Jawa,Semarang,Fashion,Sepatu Sneakers,1,650000.00,0
+JW-0046,2026-03-08,Jawa,Surabaya,Elektronik,Smart TV 43 inci,2,4800000.00,0
+JW-0047,2026-03-09,Jawa,Bandung,Makanan,Paket Camilan Nusantara,12,95000.00,15
+JW-0048,2026-03-09,Jawa,Surabaya,Fashion,Sepatu Sneakers,11,650000.00,0
+JW-0049,2026-03-09,Jawa,Bandung,Rumah Tangga,"Rice Cooker 1,8L",9,425000.00,15
+JW-0050,2026-03-10,Jawa,Surabaya,Rumah Tangga,Blender Multifungsi,3,360000.00,0
+JW-0051,2026-03-10,Jawa,Bandung,Rumah Tangga,Dispenser Air,2,1150000.00,20
+JW-0052,2026-03-10,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,10,450000.00,5
+JW-0053,2026-03-10,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,1,185000.00,20
+JW-0054,2026-03-12,Jawa,Jakarta,Rumah Tangga,Blender Multifungsi,4,360000.00,0
+JW-0055,2026-03-12,Jawa,Semarang,Fashion,Dress Tenun Wanita,5,520000.00,0
+JW-0056,2026-03-13,Jawa,Bandung,Makanan,Paket Camilan Nusantara,10,95000.00,0
+JW-0057,2026-03-13,Jawa,Surabaya,Elektronik,Smartphone Nusa X1,3,3200000.00,0
+JW-0058,2026-03-15,Jawa,Semarang,Fashion,Sepatu Sneakers,3,650000.00,0
+JW-0059,2026-03-15,Jawa,Surabaya,Rumah Tangga,Blender Multifungsi,3,360000.00,5
+JW-0060,2026-03-16,Jawa,Surabaya,Rumah Tangga,Blender Multifungsi,8,360000.00,0
+JW-0061,2026-03-16,Jawa,Jakarta,Fashion,Dress Tenun Wanita,5,520000.00,20
+JW-0062,2026-03-17,Jawa,Surabaya,Elektronik,Power Bank 20000mAh,1,275000.00,0
+JW-0063,2026-03-19,Jawa,Jakarta,Makanan,Kopi Arabika 1kg,7,185000.00,10
+JW-0064,2026-03-19,Jawa,Bandung,Fashion,Dress Tenun Wanita,9,520000.00,0
+JW-0065,2026-03-20,Jawa,Semarang,Makanan,Kopi Arabika 1kg,7,185000.00,5
+JW-0066,2026-03-21,Jawa,Jakarta,Fashion,Kemeja Batik Pria,12,385000.00,10
+JW-0067,2026-03-22,Jawa,Bandung,Makanan,Kopi Arabika 1kg,7,185000.00,0
+JW-0068,2026-03-23,Jawa,Jakarta,Elektronik,Earbuds Nusa Pro,4,450000.00,10
+JW-0069,2026-03-23,Jawa,Jakarta,Fashion,Sepatu Sneakers,9,650000.00,0
+JW-0070,2026-03-23,Jawa,Jakarta,Rumah Tangga,Blender Multifungsi,11,360000.00,20
+JW-0071,2026-03-26,Jawa,Semarang,Makanan,Paket Camilan Nusantara,6,95000.00,0
+JW-0072,2026-03-26,Jawa,Jakarta,Makanan,Kopi Arabika 1kg,7,185000.00,15
+JW-0073,2026-03-28,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,3,185000.00,0
+JW-0074,2026-03-29,Jawa,Bandung,Fashion,Kemeja Batik Pria,6,385000.00,0
+JW-0075,2026-03-29,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,6,185000.00,0
+JW-0076,2026-04-01,Jawa,Bandung,Elektronik,Smart TV 43 inci,2,4800000.00,10
+JW-0077,2026-04-02,Jawa,Semarang,Fashion,Dress Tenun Wanita,12,520000.00,10
+JW-0078,2026-04-02,Jawa,Semarang,Elektronik,Smart TV 43 inci,7,4800000.00,5
+JW-0079,2026-04-03,Jawa,Bandung,Fashion,Sepatu Sneakers,9,650000.00,20
+JW-0080,2026-04-03,Jawa,Bandung,Rumah Tangga,"Rice Cooker 1,8L",5,425000.00,15
+JW-0081,2026-04-04,Jawa,Surabaya,Rumah Tangga,"Rice Cooker 1,8L",8,425000.00,0
+JW-0082,2026-04-04,Jawa,Semarang,Fashion,Dress Tenun Wanita,9,520000.00,10
+JW-0083,2026-04-05,Jawa,Surabaya,Makanan,Paket Camilan Nusantara,8,95000.00,5
+JW-0084,2026-04-05,Jawa,Jakarta,Rumah Tangga,"Rice Cooker 1,8L",4,425000.00,15
+JW-0085,2026-04-07,Jawa,Jakarta,Elektronik,Power Bank 20000mAh,2,275000.00,5
+JW-0086,2026-04-10,Jawa,Surabaya,Elektronik,Smart TV 43 inci,7,4800000.00,10
+JW-0087,2026-04-10,Jawa,Surabaya,Fashion,Kemeja Batik Pria,6,385000.00,0
+JW-0088,2026-04-13,Jawa,Semarang,Elektronik,Earbuds Nusa Pro,2,450000.00,5
+JW-0089,2026-04-13,Jawa,Semarang,Makanan,Kopi Arabika 1kg,1,185000.00,10
+JW-0090,2026-04-15,Jawa,Semarang,Fashion,Dress Tenun Wanita,4,520000.00,0
+JW-0091,2026-04-16,Jawa,Semarang,Rumah Tangga,Blender Multifungsi,3,360000.00,10
+JW-0092,2026-04-16,Jawa,Bandung,Makanan,Kopi Arabika 1kg,8,185000.00,0
+JW-0093,2026-04-16,Jawa,Semarang,Elektronik,Smart TV 43 inci,9,4800000.00,0
+JW-0094,2026-04-17,Jawa,Semarang,Rumah Tangga,Dispenser Air,8,1150000.00,0
+JW-0095,2026-04-18,Jawa,Semarang,Fashion,Kemeja Batik Pria,9,385000.00,10
+JW-0096,2026-04-18,Jawa,Bandung,Elektronik,Power Bank 20000mAh,3,275000.00,0
+JW-0097,2026-04-18,Jawa,Jakarta,Fashion,Kemeja Batik Pria,3,385000.00,10
+JW-0098,2026-04-19,Jawa,Surabaya,Rumah Tangga,"Rice Cooker 1,8L",9,425000.00,0
+JW-0099,2026-04-21,Jawa,Bandung,Makanan,Kopi Arabika 1kg,3,185000.00,0
+JW-0100,2026-04-22,Jawa,Jakarta,Makanan,Paket Camilan Nusantara,5,95000.00,15
+JW-0101,2026-04-23,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,8,450000.00,0
+JW-0102,2026-04-23,Jawa,Semarang,Makanan,Paket Camilan Nusantara,2,95000.00,0
+JW-0103,2026-04-26,Jawa,Jakarta,Elektronik,Earbuds Nusa Pro,11,450000.00,5
+JW-0104,2026-04-26,Jawa,Jakarta,Elektronik,Smartphone Nusa X1,10,3200000.00,20
+JW-0105,2026-04-26,Jawa,Surabaya,Fashion,Kemeja Batik Pria,2,385000.00,5
+JW-0106,2026-04-26,Jawa,Bandung,Elektronik,Smartphone Nusa X1,8,3200000.00,15
+JW-0107,2026-04-28,Jawa,Surabaya,Elektronik,Power Bank 20000mAh,10,275000.00,15
+JW-0108,2026-04-29,Jawa,Bandung,Elektronik,Power Bank 20000mAh,12,275000.00,0
+JW-0109,2026-04-29,Jawa,Bandung,Elektronik,Smartphone Nusa X1,4,3200000.00,5
+JW-0110,2026-05-01,Jawa,Bandung,Fashion,Sepatu Sneakers,8,650000.00,0
+JW-0111,2026-05-02,Jawa,Semarang,Fashion,Dress Tenun Wanita,2,520000.00,10
+JW-0112,2026-05-03,Jawa,Jakarta,Fashion,Sepatu Sneakers,11,650000.00,0
+JW-0113,2026-05-03,Jawa,Semarang,Rumah Tangga,Blender Multifungsi,5,360000.00,0
+JW-0114,2026-05-03,Jawa,Surabaya,Rumah Tangga,Dispenser Air,8,1150000.00,0
+JW-0115,2026-05-04,Jawa,Semarang,Rumah Tangga,Blender Multifungsi,2,360000.00,10
+JW-0116,2026-05-05,Jawa,Jakarta,Fashion,Dress Tenun Wanita,12,520000.00,0
+JW-0117,2026-05-06,Jawa,Semarang,Makanan,Paket Camilan Nusantara,4,95000.00,0
+JW-0118,2026-05-06,Jawa,Bandung,Fashion,Kemeja Batik Pria,9,385000.00,15
+JW-0119,2026-05-07,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,5,450000.00,20
+JW-0120,2026-05-07,Jawa,Semarang,Makanan,Kopi Arabika 1kg,6,185000.00,0
+JW-0121,2026-05-07,Jawa,Bandung,Makanan,Kopi Arabika 1kg,7,185000.00,0
+JW-0122,2026-05-11,Jawa,Semarang,Rumah Tangga,"Rice Cooker 1,8L",7,425000.00,10
+JW-0123,2026-05-11,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,8,450000.00,0
+JW-0124,2026-05-11,Jawa,Jakarta,Elektronik,Smart TV 43 inci,8,4800000.00,0
+JW-0125,2026-05-12,Jawa,Bandung,Makanan,Paket Camilan Nusantara,8,95000.00,15
+JW-0126,2026-05-13,Jawa,Bandung,Elektronik,Power Bank 20000mAh,3,275000.00,15
+JW-0127,2026-05-13,Jawa,Bandung,Rumah Tangga,Blender Multifungsi,9,360000.00,0
+JW-0128,2026-05-13,Jawa,Jakarta,Makanan,Paket Camilan Nusantara,3,95000.00,0
+JW-0129,2026-05-14,Jawa,Surabaya,Elektronik,Smart TV 43 inci,10,4800000.00,15
+JW-0130,2026-05-14,Jawa,Semarang,Fashion,Dress Tenun Wanita,1,520000.00,15
+JW-0131,2026-05-15,Jawa,Bandung,Rumah Tangga,Blender Multifungsi,9,360000.00,0
+JW-0132,2026-05-18,Jawa,Semarang,Elektronik,Smart TV 43 inci,12,4800000.00,5
+JW-0133,2026-05-19,Jawa,Bandung,Makanan,Paket Camilan Nusantara,3,95000.00,10
+JW-0134,2026-05-19,Jawa,Surabaya,Fashion,Kemeja Batik Pria,3,385000.00,5
+JW-0135,2026-05-20,Jawa,Surabaya,Makanan,Paket Camilan Nusantara,9,95000.00,5
+JW-0136,2026-05-20,Jawa,Bandung,Elektronik,Smart TV 43 inci,8,4800000.00,10
+JW-0137,2026-05-20,Jawa,Bandung,Fashion,Sepatu Sneakers,1,650000.00,0
+JW-0138,2026-05-21,Jawa,Semarang,Elektronik,Earbuds Nusa Pro,1,450000.00,0
+JW-0139,2026-05-23,Jawa,Semarang,Rumah Tangga,Dispenser Air,10,1150000.00,10
+JW-0140,2026-05-24,Jawa,Jakarta,Elektronik,Power Bank 20000mAh,12,275000.00,0
+JW-0141,2026-05-24,Jawa,Surabaya,Rumah Tangga,Blender Multifungsi,6,360000.00,15
+JW-0142,2026-05-26,Jawa,Bandung,Rumah Tangga,"Rice Cooker 1,8L",7,425000.00,0
+JW-0143,2026-05-26,Jawa,Semarang,Elektronik,Earbuds Nusa Pro,12,450000.00,10
+JW-0144,2026-05-27,Jawa,Bandung,Rumah Tangga,"Rice Cooker 1,8L",3,425000.00,10
+JW-0145,2026-05-27,Jawa,Jakarta,Fashion,Kemeja Batik Pria,7,385000.00,5
+JW-0146,2026-05-28,Jawa,Bandung,Elektronik,Smartphone Nusa X1,3,3200000.00,20
+JW-0147,2026-05-30,Jawa,Surabaya,Rumah Tangga,"Rice Cooker 1,8L",2,425000.00,0
+JW-0148,2026-05-31,Jawa,Jakarta,Fashion,Kemeja Batik Pria,5,385000.00,0
+JW-0149,2026-05-31,Jawa,Bandung,Makanan,Kopi Arabika 1kg,2,185000.00,0
+JW-0150,2026-06-03,Jawa,Semarang,Rumah Tangga,Blender Multifungsi,7,360000.00,10
+JW-0151,2026-06-03,Jawa,Surabaya,Elektronik,Smart TV 43 inci,2,4800000.00,5
+JW-0152,2026-06-03,Jawa,Bandung,Rumah Tangga,"Rice Cooker 1,8L",11,425000.00,15
+JW-0153,2026-06-05,Jawa,Jakarta,Rumah Tangga,"Rice Cooker 1,8L",7,425000.00,0
+JW-0154,2026-06-06,Jawa,Bandung,Rumah Tangga,Dispenser Air,3,1150000.00,0
+JW-0155,2026-06-08,Jawa,Jakarta,Elektronik,Smart TV 43 inci,2,4800000.00,0
+JW-0156,2026-06-10,Jawa,Semarang,Elektronik,Earbuds Nusa Pro,11,450000.00,5
+JW-0157,2026-06-10,Jawa,Jakarta,Elektronik,Smart TV 43 inci,3,4800000.00,10
+JW-0158,2026-06-10,Jawa,Bandung,Elektronik,Smartphone Nusa X1,8,3200000.00,0
+JW-0159,2026-06-11,Jawa,Jakarta,Elektronik,Power Bank 20000mAh,10,275000.00,15
+JW-0160,2026-06-11,Jawa,Jakarta,Fashion,Sepatu Sneakers,10,650000.00,0
+JW-0161,2026-06-13,Jawa,Semarang,Rumah Tangga,"Rice Cooker 1,8L",9,425000.00,20
+JW-0162,2026-06-14,Jawa,Semarang,Elektronik,Power Bank 20000mAh,4,275000.00,5
+JW-0163,2026-06-15,Jawa,Jakarta,Elektronik,Smart TV 43 inci,9,4800000.00,0
+JW-0164,2026-06-15,Jawa,Surabaya,Makanan,Paket Camilan Nusantara,8,95000.00,10
+JW-0165,2026-06-16,Jawa,Surabaya,Elektronik,Smartphone Nusa X1,6,3200000.00,15
+JW-0166,2026-06-17,Jawa,Semarang,Elektronik,Smart TV 43 inci,9,4800000.00,5
+JW-0167,2026-06-18,Jawa,Jakarta,Elektronik,Smart TV 43 inci,11,4800000.00,20
+JW-0168,2026-06-19,Jawa,Semarang,Elektronik,Power Bank 20000mAh,4,275000.00,0
+JW-0169,2026-06-20,Jawa,Semarang,Fashion,Dress Tenun Wanita,12,520000.00,15
+JW-0170,2026-06-20,Jawa,Jakarta,Rumah Tangga,Blender Multifungsi,6,360000.00,0
+JW-0171,2026-06-22,Jawa,Surabaya,Rumah Tangga,"Rice Cooker 1,8L",4,425000.00,0
+JW-0172,2026-06-23,Jawa,Bandung,Elektronik,Power Bank 20000mAh,12,275000.00,20
+JW-0173,2026-06-23,Jawa,Bandung,Makanan,Paket Camilan Nusantara,2,95000.00,0
+JW-0174,2026-06-24,Jawa,Semarang,Rumah Tangga,"Rice Cooker 1,8L",3,425000.00,0
+JW-0175,2026-06-25,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,6,450000.00,20
+JW-0176,2026-06-25,Jawa,Surabaya,Elektronik,Earbuds Nusa Pro,9,450000.00,15
+JW-0177,2026-06-28,Jawa,Surabaya,Makanan,Paket Camilan Nusantara,6,95000.00,20
+JW-0178,2026-06-30,Jawa,Surabaya,Makanan,Kopi Arabika 1kg,1,185000.00,20
+JW-0179,2026-06-30,Jawa,Jakarta,Elektronik,Smartphone Nusa X1,12,3200000.00,10
+JW-0180,2026-06-30,Jawa,Bandung,Rumah Tangga,Blender Multifungsi,12,360000.00,0
