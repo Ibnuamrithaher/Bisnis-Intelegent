@@ -1,0 +1,146 @@
+<section class="pane" id="teori">
+ <h2>1. Memahami pengguna: Direktur Penjualan</h2>
+ <div class="card">
+  <p>Dashboard eksekutif dirancang untuk orang yang punya <b>30 detik</b> dan perlu satu jawaban: <i>"Apakah kita di jalur yang benar, dan di mana saya harus bertindak?"</i> Klik pertanyaan direktur untuk melihat KPI dan visual yang menjawabnya.</p>
+  <div class="grid2"><div id="q-list"></div><div id="q-ans" class="callout">Pilih pertanyaan di kiri.</div></div>
+ </div>
+
+ <h2>2. Dashboard demo interaktif</h2>
+ <div class="card">
+  <p class="muted">Ubah filter, <b>klik batang wilayah</b> untuk menyaring, dan baca insight otomatis di bawah.</p>
+  <div class="controls" id="sd-ctl"></div>
+  <div class="dash-frame">
+   <div id="sd-kpi"></div>
+   <div class="grid2" style="grid-template-columns:3fr 2fr">
+    <div class="card"><h4>Revenue bulanan vs target</h4><div id="sd-line"></div></div>
+    <div class="card"><h4>Revenue per wilayah (klik untuk filter)</h4><div id="sd-reg"></div></div>
+   </div>
+   <div class="grid2"><div class="card"><h4>Top 5 produk</h4><div id="sd-top"></div></div><div class="card"><h4>Catatan analis</h4><div id="sd-ins" class="small"></div></div></div>
+  </div>
+ </div>
+
+ <h2>3. Tata letak: ke mana mata bergerak?</h2>
+ <div class="card">
+  <div id="lay-seg"></div>
+  <div class="grid2" style="align-items:center"><div id="lay-svg" class="chart"></div><div id="lay-txt" class="callout"></div></div>
+ </div>
+
+ <h2>4. Dari angka ke rekomendasi</h2>
+ <div class="card">
+  <p>Susun kalimat insight dari data dashboard di atas (mengikuti filter yang sedang aktif), lalu pilih tindakan.</p>
+  <div class="controls" id="in-ctl"></div>
+  <div id="in-out" class="callout ok"></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b><code>P07_SalesDashboard.pbix</code>: 1 halaman, 4–6 KPI/visual, 3 insight + 1 rekomendasi tertulis di kotak teks.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>📐 Wireframe yang disarankan</h3><div id="wire" class="chart"></div></div>
+ <div class="card"><h3>🧮 Penilaian mandiri (rubrik)</h3><div id="rb"></div><div id="rb-out" class="score"></div></div>
+ <div class="card"><h3>🎓 Persiapan UTS (Minggu 8)</h3><p class="small">UTS = praktik mandiri: relasi data, measure, dan visualisasi dasar dari studi kasus baru. Pastikan Anda bisa:</p><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>KPI Card: Worksheet teks besar + Show Me; target: Reference Line; layout: Dashboard → Layout containers (Horizontal/Vertical).</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 7</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const star = BI.data.star(BI.data.sales(900, 7));
+const pm = {}; star.dimProduk.forEach(p => pm[p.ProdukID] = p);
+const wm = {}; star.dimWilayah.forEach(w => wm[w.WilayahID] = w.Wilayah);
+const E = star.fakta.map(r => ({ ...r, Kategori: pm[r.ProdukID].Kategori, Produk: pm[r.ProdukID].Produk, Wilayah: wm[r.WilayahID], Tahun: r.Tanggal.slice(0, 4), Bln: +r.Tanggal.slice(5, 7) - 1, Biaya: r.Qty * r.HPP }));
+const sum = BI.sum;
+
+/* 1. persona */
+const Q = [
+  ['Apakah kita mencapai target bulan ini?', 'KPI: Revenue vs Target + Achievement %. Visual: kartu dengan indikator warna dan garis target pada tren.'],
+  ['Apakah kita tumbuh dibanding tahun lalu?', 'KPI: Growth YoY (%). Visual: kartu dengan panah naik/turun dan sparkline.'],
+  ['Wilayah mana yang paling bagus dan paling lemah?', 'Visual: bar terurut per wilayah, warna menyorot terendah; klik untuk drill ke produk.'],
+  ['Produk apa yang menggerakkan penjualan?', 'Visual: Top 5 produk (bar horizontal). Hindari tabel panjang.'],
+  ['Apakah penjualan sehat (untung)?', 'KPI: Margin %. Letakkan dekat Revenue agar keterkaitan terlihat.']
+];
+Q.forEach(([q, a], i) => $('#q-list').append(h('button', { class: 'btn', style: 'display:block;width:100%;text-align:left;margin:5px 0', onclick(e) { BI.$$('#q-list .btn').forEach(b => b.classList.remove('on')); e.currentTarget.classList.add('on'); $('#q-ans').innerHTML = `<b class="t">Jawaban dashboard</b>${a}`; } }, (i + 1) + '. ' + q)));
+
+/* 2. dashboard */
+const S = { y: '2024', w: '', k: '' };
+BI.select('#sd-ctl', 'Tahun', [['2024', '2024'], ['2023', '2023'], ['all', 'Semua']], S.y, v => { S.y = v; dash(); });
+BI.select('#sd-ctl', 'Kategori', [['', '(semua)'], ...Object.keys(BI.CATALOG)], '', v => { S.k = v; dash(); });
+const wsel = BI.select('#sd-ctl', 'Wilayah', [['', '(semua)'], ...BI.REGION], '', v => { S.w = v; dash(); });
+const fl = (o = {}) => E.filter(r => (o.y === undefined ? (S.y === 'all' || r.Tahun === S.y) : (o.y === 'all' || r.Tahun === o.y)) && (o.w === undefined ? (!S.w || r.Wilayah === S.w) : (!o.w || r.Wilayah === o.w)) && (!S.k || r.Kategori === S.k));
+const monthly = rows => BI.MON.map((_, m) => sum(rows.filter(r => r.Bln === m).map(r => r.Pendapatan)));
+function dash() {
+  wsel.value = S.w;
+  const rows = fl(), rev = sum(rows.map(r => r.Pendapatan)), mrev = monthly(rows);
+  const base23 = monthly(fl({ y: '2023' })), base24 = monthly(fl({ y: '2024' }));
+  const tgtOne = base23.map((v, i) => 1.05 * (v + base24[i]) / 2), mult = S.y === 'all' ? 2 : 1;
+  const tgt = tgtOne.map(v => v * mult), tgtTot = sum(tgt);
+  const ach = rev / tgtTot, prev = S.y === '2024' ? sum(base23) : null, gr = prev ? rev / prev - 1 : null;
+  const biaya = sum(rows.map(r => r.Biaya)), margin = (rev - biaya) / rev, ord = rows.length;
+  BI.kpi('#sd-kpi', [{ label: 'Revenue', value: 'Rp ' + short(rev), sub: 'target Rp ' + short(tgtTot), spark: mrev }, { label: 'Pencapaian target', value: pct(ach), delta: ach - 1, note: 'vs target' },
+    { label: 'Growth YoY', value: gr == null ? 'n/a' : pct(gr), delta: gr, sub: gr == null ? 'pilih 2024' : 'vs 2023' }, { label: 'Order', value: fmt(ord), sub: 'AOV Rp ' + short(rev / ord) }, { label: 'Margin', value: pct(margin) }]);
+  BI.line('#sd-line', { labels: BI.MON, series: [{ name: 'Revenue', data: mrev }, { name: 'Target', data: tgt, dash: true, color: 'var(--c4)' }], height: 240, area: false, zero: true });
+  const byR = BI.REGION.map(w => sum(fl({ w: w }).map(r => r.Pendapatan)));
+  BI.bar('#sd-reg', { labels: BI.REGION.map(x => x.split(' ')[0]), series: [{ name: 'Revenue', data: byR }], height: 240, highlight: S.w ? BI.REGION.indexOf(S.w) : null, onClick: i => { S.w = S.w === BI.REGION[i] ? '' : BI.REGION[i]; dash(); } });
+  const top = BI.groupBy(rows, 'Produk', r => r.Pendapatan).sort((a, b) => b.value - a.value).slice(0, 5);
+  BI.hbar('#sd-top', { labels: top.map(x => x.key), data: top.map(x => x.value), rowH: 28, colorBy: i => (i === 0 ? 'var(--c1)' : 'var(--c8)') });
+  const bi = mrev.indexOf(Math.max(...mrev)), wi = mrev.indexOf(Math.min(...mrev)), bw = byR.indexOf(Math.max(...byR));
+  const below = mrev.map((v, i) => v < tgt[i] ? BI.MON[i] : null).filter(Boolean);
+  $('#sd-ins').innerHTML = `<ul><li>Revenue <b>Rp ${short(rev)}</b> = <b>${pct(ach)}</b> dari target.</li><li>Puncak <b>${BI.MON[bi]}</b>, terendah <b>${BI.MON[wi]}</b>.</li><li>Wilayah terbesar: <b>${BI.REGION[bw]}</b> (${pct(byR[bw] / sum(byR))}).</li><li>${below.length ? 'Di bawah target pada: ' + below.join(', ') : 'Semua bulan memenuhi target.'}</li></ul>`;
+  insight(ach, gr, BI.MON[wi]);
+}
+/* 3. layout */
+const LAY = {
+  'A · KPI di atas, tren, detail': { r: [[0, 0, 4, 1, 'KPI'], [0, 1, 3, 2, 'Tren vs target'], [3, 1, 1, 2, 'Wilayah'], [0, 3, 2, 1, 'Top produk'], [2, 3, 2, 1, 'Catatan']], t: 'Mengikuti pola Z/F: KPI di kiri atas langsung menjawab inti pertanyaan, detail menyusul ke bawah. Rekomendasi untuk eksekutif.', w: [[1, .9, .8, .5], [.6, .5, .4, .3], [.35, .3, .25, .2], [.2, .15, .1, .1]] },
+  'B · Grafik besar tanpa KPI': { r: [[0, 0, 4, 3, 'Satu grafik raksasa'], [0, 3, 4, 1, 'Legenda & catatan']], t: 'Pembaca harus menafsirkan grafik untuk tahu apakah target tercapai. Tidak ada jawaban cepat.', w: [[.3, .4, .5, .4], [.4, .6, .6, .4], [.3, .5, .5, .3], [.1, .1, .1, .1]] },
+  'C · Tabel penuh': { r: [[0, 0, 4, 4, 'Tabel 30 kolom']], t: 'Tidak ada hierarki visual; mata tidak tahu harus mulai dari mana. Cocok untuk analis, bukan eksekutif.', w: [[.3, .3, .3, .3], [.3, .3, .3, .3], [.3, .3, .3, .3], [.3, .3, .3, .3]] }
+};
+BI.seg('#lay-seg', Object.keys(LAY).map(k => [k, k]), 'A · KPI di atas, tren, detail', k => {
+  const L = LAY[k], svg = BI.S('svg', { viewBox: '0 0 400 280' });
+  L.r.forEach(([x, y, w, hh, t]) => { BI.S('rect', { x: 10 + x * 95, y: 10 + y * 65, width: w * 95 - 5, height: hh * 65 - 5, rx: 6, fill: 'var(--soft)', stroke: 'var(--line)' }, svg); BI.T(svg, 18 + x * 95, 30 + y * 65, t, { class: 'lbl' }); });
+  L.w.forEach((row, y) => row.forEach((v, x) => BI.S('rect', { x: 10 + x * 95, y: 10 + y * 65, width: 90, height: 60, rx: 6, fill: 'var(--c4)', opacity: v * 0.55, style: 'pointer-events:none' }, svg)));
+  $('#lay-svg').innerHTML = ''; $('#lay-svg').append(svg); $('#lay-txt').innerHTML = `<b class="t">Peta perhatian (merah = dilihat lebih dulu)</b>${L.t}`;
+});
+/* 4. insight */
+const ins = { aksi: 'Perkuat promosi pada bulan terendah', fok: 'revenue' };
+BI.select('#in-ctl', 'Tindakan', ['Perkuat promosi pada bulan terendah', 'Tambah stok produk terlaris sebelum puncak musim', 'Evaluasi wilayah dengan kontribusi terendah', 'Pertahankan strategi saat ini'], ins.aksi, v => { ins.aksi = v; dash(); });
+function insight(ach, gr, low) {
+  const tone = ach >= 1 ? 'melampaui' : ach >= 0.9 ? 'mendekati' : 'masih di bawah';
+  $('#in-out').innerHTML = `<b class="t">Insight &amp; rekomendasi</b>Revenue ${tone} target (${pct(ach)})${gr != null ? ', ' + (gr >= 0 ? 'tumbuh ' : 'turun ') + pct(Math.abs(gr)) + ' dibanding tahun lalu' : ''}. Bulan terlemah adalah <b>${low}</b>. <b>Rekomendasi:</b> ${ins.aksi.toLowerCase()}.`;
+}
+dash();
+
+/* Praktik */
+const mt = BI.MON.map((m, i) => ({ BulanNo: i + 1, Bulan: m, Target2023: Math.round(sum(E.filter(r => r.Bln === i && r.Tahun === '2023').map(r => r.Pendapatan)) * 1.0), Target2024: Math.round(sum(E.filter(r => r.Bln === i).map(r => r.Pendapatan)) / 2 * 1.05 * 1.1) }));
+const dl = $('#dl');
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_tanggal.csv', star.dimTanggal], ['target_bulanan.csv', mt]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+BI.steps('#steps', [
+  { t: 'Siapkan model', tm: '5\'', b: 'Muat tabel + relasi bintang (Pertemuan 4). Muat <code>target_bulanan.csv</code> dan hubungkan lewat BulanNo (atau gabungkan ke Dim_Tanggal).' },
+  { t: 'KPI Card', tm: '15\'', b: 'Measure: <code>Revenue = SUM(Fakta[Pendapatan])</code>, <code>Target = SUM(Target[Target2024])</code>, <code>Pencapaian = DIVIDE([Revenue],[Target])</code>, <code>Growth YoY</code> (ringkas, detail Pertemuan 13). Pakai visual Card/KPI.' },
+  { t: 'Tren bulanan', tm: '20\'', b: 'Line chart: Axis = Bulan (urut BulanNo), Values = Revenue + Target (garis putus-putus di Format → Lines). Tambah anotasi puncak.' },
+  { t: 'Breakdown', tm: '20\'', b: 'Bar wilayah (urut menurun), Top 5 produk (filter Top N), donut kategori opsional.' },
+  { t: 'Layout & format', tm: '20\'', b: 'Susun sesuai wireframe; tema satu warna aksen; hapus gridline berlebih; judul berupa insight.' },
+  { t: 'Insight & rekomendasi', tm: '15\'', b: 'Tulis di text box: 3 insight dan 1 rekomendasi (format: temuan → penyebab → aksi).' },
+  { t: 'Persiapan UTS', tm: '5\'', b: 'Cek daftar kemampuan UTS di bawah.' }
+]);
+(function () {
+  const svg = BI.S('svg', { viewBox: '0 0 400 260' });
+  [[10, 10, 380, 45, 'Judul dashboard + filter tahun/kategori'], [10, 65, 90, 60, 'KPI 1'], [105, 65, 90, 60, 'KPI 2'], [200, 65, 90, 60, 'KPI 3'], [295, 65, 95, 60, 'KPI 4'], [10, 135, 240, 115, 'Tren bulanan vs target'], [260, 135, 130, 55, 'Bar wilayah'], [260, 195, 130, 55, 'Top 5 produk']].forEach(([x, y, w, hh, t]) => { BI.S('rect', { x, y, width: w, height: hh, rx: 6, fill: 'var(--soft)', stroke: 'var(--acc)' }, svg); BI.T(svg, x + 6, y + 18, t, { class: 'lbl', style: 'font-size:10px' }); });
+  $('#wire').append(svg);
+})();
+const rubric = ['KPI utama terlihat < 5 detik', 'Ada pembanding (target / periode lalu)', 'Tren dibaca mudah, target terlihat', 'Warna konsisten, ada satu aksen', 'Insight &amp; rekomendasi tertulis jelas'];
+const rv = rubric.map(() => 0);
+rubric.forEach((t, i) => BI.slider('#rb', t, 0, 4, 1, 0, v => { rv[i] = v; const s = sum(rv) / (rubric.length * 4) * 100; $('#rb-out').textContent = `Skor mandiri: ${Math.round(s)} / 100 ${s >= 80 ? '· siap dikumpulkan' : '· perbaiki aspek bernilai rendah'}`; }, v => ['—', 'kurang', 'cukup', 'baik', 'sangat baik'][v]));
+$('#rb').querySelectorAll('label').forEach(l => l.style.display = 'flex');
+BI.checklist('#chk', ['Mengimpor & membersihkan data CSV', 'Membuat relasi star schema', 'Membuat measure SUM, COUNT, DIVIDE, CALCULATE', 'Memilih dan memformat grafik yang tepat', 'Membuat KPI card dan slicer', 'Menyimpan &amp; menamai file sesuai instruksi'], 'p7uts');
+
+BI.quiz('#quiz', [
+  { q: 'Informasi paling penting pada dashboard eksekutif ditempatkan di…', o: ['Kanan bawah', 'Kiri atas', 'Tengah acak', 'Footer'], a: 1, e: 'Mata memulai dari kiri atas.' },
+  { q: 'KPI Revenue sebaiknya disertai…', o: ['Warna bebas', 'Pembanding (target/periode lalu)', 'Tabel 10 halaman', 'Gambar'], a: 1, e: 'Angka tunggal tanpa pembanding sulit dimaknai.' },
+  { q: 'Achievement % dihitung…', o: ['Target ÷ Revenue', 'Revenue ÷ Target', 'Revenue − Target', 'Revenue × Target'], a: 1, e: 'Realisasi dibanding target.' },
+  { q: 'Judul visual terbaik:', o: ['Grafik tren', 'Revenue Nov–Des 50% di atas rata-rata', 'Bulan', 'Data'], a: 1, e: 'Judul berupa insight.' },
+  { q: 'Untuk melihat musiman, gunakan…', o: ['Line bulanan dengan target', 'Pie', 'Tabel tanpa urutan', 'Radar'], a: 0, e: 'Line chart cocok untuk tren.' },
+  { q: 'Insight yang baik memuat…', o: ['Angka saja', 'Temuan, penyebab, dan aksi', 'Warna', 'Nama dashboard'], a: 1, e: 'Menghubungkan data ke keputusan.' }
+]);
+</script>

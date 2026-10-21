@@ -1,0 +1,151 @@
+<section class="pane" id="teori">
+ <h2>1. Interaktivitas: dari laporan statis ke eksplorasi</h2>
+ <div class="card"><p>Dashboard statis memaksa pembuat menebak semua pertanyaan pembaca. Interaktivitas memberi pembaca kendali: <b>menyaring</b> (slicer/filter), <b>menyorot</b> (cross-highlight), <b>menyelam</b> (drill-down), dan <b>berpindah konteks</b> (drill-through, tombol, bookmark). Namun setiap kontrol menambah beban kognitif, jadi tambahkan hanya yang perlu.</p>
+  <h4>Memilih kontrol filter yang tepat</h4>
+  <div class="controls" id="sl-ctl"></div><div id="sl-out" class="callout"></div></div>
+
+ <h2>2. Mini-app: slicer, highlight vs filter, bookmark</h2>
+ <div class="card">
+  <p class="muted">Klik batang <b>kategori</b>. Ganti mode interaksi untuk melihat perbedaannya pada tren dan donut.</p>
+  <div class="row"><b class="small">Mode interaksi:</b><span id="ma-mode"></span><b class="small" style="margin-left:12px">Bookmark:</b><span id="ma-bm" class="row"></span></div>
+  <div class="controls" id="ma-ctl"></div>
+  <div class="dash-frame"><div class="grid3">
+   <div class="card"><h4>Kategori (klik)</h4><div id="ma-cat"></div></div>
+   <div class="card"><h4>Tren bulanan</h4><div id="ma-line"></div></div>
+   <div class="card"><h4>Channel</h4><div id="ma-pie"></div></div>
+  </div><div id="ma-info" class="small muted"></div></div>
+ </div>
+
+ <h2>3. Drill-down: Tahun → Kuartal → Bulan</h2>
+ <div class="card">
+  <p class="muted">Klik batang untuk turun satu level. Gunakan breadcrumb untuk naik.</p>
+  <div id="dd-bc" class="row"></div><div id="dd-chart"></div>
+ </div>
+
+ <h2>4. Drill-through: dari ringkasan ke halaman detail</h2>
+ <div class="card">
+  <div id="dt-main"><p class="muted">Pilih produk (klik batang), lalu tekan tombol <i>Drill through</i> (setara klik kanan → Drill through).</p><div id="dt-chart"></div><button class="btn pri" id="dt-go" disabled>Drill through ke halaman detail →</button></div>
+  <div id="dt-detail" style="display:none"><button class="btn" id="dt-back">← Kembali</button><h4 id="dt-ttl"></h4><div id="dt-kpi"></div><div id="dt-tbl"></div></div>
+ </div>
+
+ <h2>5. Prinsip UX dashboard interaktif</h2>
+ <div class="grid3">
+  <div class="card"><h4>Beri petunjuk</h4><p class="small">Tampilkan "klik batang untuk memfilter" dan tombol Reset yang jelas.</p></div>
+  <div class="card"><h4>Konsistensi</h4><p class="small">Slicer yang sama berlaku di semua halaman (sync slicers); letakkan di posisi tetap.</p></div>
+  <div class="card"><h4>Hemat ruang</h4><p class="small">Gunakan dropdown, panel filter, bookmark/tooltip halaman agar ruang tidak habis oleh slicer.</p></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b>Dashboard minggu 7/8 ditambah: ≥3 slicer (sinkron), pengaturan Edit interactions, 1 hierarki drill-down, 1 halaman drill-through, 2 tombol navigasi, 2 bookmark.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>⏱ Uji UX bersama teman (5 tugas)</h3><p class="small muted">Minta teman menyelesaikan tiap tugas tanpa bantuan. Tekan Mulai saat ia mulai dan Selesai saat ia menemukan jawabannya.</p><div id="ux"></div><div id="ux-out" class="callout"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Filter actions, Highlight actions, Go to Sheet actions (Dashboard → Actions); Hierarchy untuk drill; Parameter + tombol navigasi.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 9</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const star = BI.data.star(BI.data.sales(900, 7));
+const pm = {}; star.dimProduk.forEach(p => pm[p.ProdukID] = p);
+const wm = {}; star.dimWilayah.forEach(w => wm[w.WilayahID] = w.Wilayah);
+const E = star.fakta.map(r => ({ ...r, Kategori: pm[r.ProdukID].Kategori, Produk: pm[r.ProdukID].Produk, Wilayah: wm[r.WilayahID], Tahun: r.Tanggal.slice(0, 4), Bln: +r.Tanggal.slice(5, 7) - 1 }));
+const sum = BI.sum, CATS = Object.keys(BI.CATALOG);
+
+/* 1. pilih kontrol */
+const sc = { n: 5, t: 'kategori' };
+BI.select('#sl-ctl', 'Jenis data', [['kategori', 'Kategori (teks)'], ['tanggal', 'Tanggal / waktu'], ['angka', 'Angka (harga, qty)']], sc.t, v => { sc.t = v; sl(); });
+BI.slider('#sl-ctl', 'Jumlah pilihan', 2, 60, 1, sc.n, v => { sc.n = v; sl(); });
+function sl() {
+  let c, why;
+  if (sc.t === 'tanggal') { c = 'Slicer <b>Between</b> / Relative date'; why = 'Rentang waktu paling alami dipilih dengan slider rentang atau "30 hari terakhir".'; }
+  else if (sc.t === 'angka') { c = 'Slicer <b>Between</b> (slider rentang)'; why = 'Nilai kontinu: gunakan rentang, bukan daftar.'; }
+  else if (sc.n <= 5) { c = 'Slicer <b>Tile / Button</b>'; why = 'Pilihan sedikit: tombol terlihat sekaligus, satu klik.'; }
+  else if (sc.n <= 12) { c = 'Slicer <b>List</b> (multi-select)'; why = 'Daftar muat di layar dan memungkinkan multi-pilih.'; }
+  else { c = 'Slicer <b>Dropdown</b> + search'; why = 'Banyak opsi: dropdown menghemat ruang; aktifkan pencarian.'; }
+  $('#sl-out').innerHTML = `<b class="t">${c}</b>${why}`;
+}
+sl();
+
+/* 2. mini app */
+const MA = { y: '', w: '', cat: null, mode: 'highlight' };
+const maY = BI.select('#ma-ctl', 'Tahun', [['', '(semua)'], '2023', '2024'], '', v => { MA.y = v; ma(); });
+const maW = BI.select('#ma-ctl', 'Wilayah', [['', '(semua)'], ...BI.REGION], '', v => { MA.w = v; ma(); });
+$('#ma-ctl').append(h('button', { class: 'btn sm', onclick() { MA.y = ''; MA.w = ''; MA.cat = null; ma(); } }, '⟲ Reset'));
+[['Elektronik 2024', { y: '2024', w: '', cat: 'Elektronik' }], ['Jawa 2023', { y: '2023', w: 'Jawa', cat: null }], ['Semua Fashion', { y: '', w: '', cat: 'Fashion' }]].forEach(([t, s]) => $('#ma-bm').append(h('button', { class: 'btn sm', onclick() { Object.assign(MA, s); ma(); } }, '🔖 ' + t)));
+BI.seg('#ma-mode', [['highlight', 'Highlight'], ['filter', 'Filter'], ['none', 'Tidak ada']], 'highlight', v => { MA.mode = v; ma(); });
+function ma() {
+  maY.value = MA.y; maW.value = MA.w;
+  const base = E.filter(r => (!MA.y || r.Tahun === MA.y) && (!MA.w || r.Wilayah === MA.w));
+  const cat = CATS.map(k => sum(base.filter(r => r.Kategori === k).map(r => r.Pendapatan)));
+  BI.bar('#ma-cat', { labels: CATS, series: [{ name: 'Revenue', data: cat }], height: 230, rot: true, highlight: MA.cat ? CATS.indexOf(MA.cat) : null, onClick: i => { MA.cat = MA.cat === CATS[i] ? null : CATS[i]; ma(); } });
+  const sel = MA.cat ? base.filter(r => r.Kategori === MA.cat) : base, mon = rows => BI.MON.map((_, m) => sum(rows.filter(r => r.Bln === m).map(r => r.Pendapatan)));
+  const ser = (!MA.cat || MA.mode === 'none') ? [{ name: 'Revenue', data: mon(base) }] : MA.mode === 'filter' ? [{ name: MA.cat, data: mon(sel) }] : [{ name: 'Total', data: mon(base), color: 'var(--line)' }, { name: MA.cat, data: mon(sel), color: 'var(--c1)' }];
+  BI.line('#ma-line', { labels: BI.MON, series: ser, height: 230, zero: true });
+  const chs = ['Marketplace', 'Website', 'Toko Offline', 'Social Commerce'], src = (!MA.cat || MA.mode === 'none') ? base : sel;
+  const cd = chs.map(c => sum(src.filter(r => r.Channel === c).map(r => r.Pendapatan)));
+  BI.pie('#ma-pie', { labels: chs, data: cd, donut: true, center: { big: short(sum(cd)), small: 'revenue' } });
+  $('#ma-info').textContent = `Konteks aktif → Tahun: ${MA.y || 'semua'} · Wilayah: ${MA.w || 'semua'} · Kategori: ${MA.cat || 'semua'} · Mode: ${MA.mode}`;
+}
+
+/* 3. drill-down */
+let path = [];
+function dd() {
+  const L = ['Tahun', 'Kuartal', 'Bulan'], lvl = path.length;
+  $('#dd-bc').innerHTML = ''; $('#dd-bc').append(h('button', { class: 'btn sm', onclick() { path = []; dd(); } }, 'Semua'));
+  path.forEach((p, i) => $('#dd-bc').append(h('span', {}, '›'), h('button', { class: 'btn sm', onclick() { path = path.slice(0, i + 1); dd(); } }, p)));
+  $('#dd-bc').append(h('span', { class: 'chip' }, 'Level: ' + L[Math.min(lvl, 2)]));
+  let rows = E, labels, vals;
+  if (lvl >= 1) rows = rows.filter(r => r.Tahun === path[0]);
+  if (lvl >= 2) rows = rows.filter(r => 'Q' + (Math.floor(r.Bln / 3) + 1) === path[1]);
+  if (lvl === 0) { labels = ['2023', '2024']; vals = labels.map(y => sum(E.filter(r => r.Tahun === y).map(r => r.Pendapatan))); }
+  else if (lvl === 1) { labels = ['Q1', 'Q2', 'Q3', 'Q4']; vals = labels.map((q, i) => sum(rows.filter(r => Math.floor(r.Bln / 3) === i).map(r => r.Pendapatan))); }
+  else { const q = +path[1][1] - 1; labels = [0, 1, 2].map(i => BI.MON[q * 3 + i]); vals = [0, 1, 2].map(i => sum(rows.filter(r => r.Bln === q * 3 + i).map(r => r.Pendapatan))); }
+  BI.bar('#dd-chart', { labels, series: [{ name: 'Revenue', data: vals }], height: 240, title: 'Revenue per ' + L[Math.min(lvl, 2)].toLowerCase() + (lvl ? ' · ' + path.join(' › ') : ''), onClick: i => { if (lvl < 2) { path = [...path, labels[i]]; dd(); } } });
+}
+dd();
+
+/* 4. drill-through */
+let dtSel = null;
+const prods = BI.groupBy(E, 'Produk', r => r.Pendapatan).sort((a, b) => b.value - a.value).slice(0, 8);
+function dt() { BI.hbar('#dt-chart', { labels: prods.map(p => p.key), data: prods.map(p => p.value), rowH: 26, highlight: dtSel == null ? null : dtSel, onClick: i => { dtSel = i; $('#dt-go').disabled = false; dt(); } }); }
+dt();
+$('#dt-go').onclick = () => {
+  const p = prods[dtSel].key, rows = E.filter(r => r.Produk === p);
+  $('#dt-main').style.display = 'none'; $('#dt-detail').style.display = '';
+  $('#dt-ttl').textContent = 'Detail transaksi: ' + p;
+  BI.kpi('#dt-kpi', [{ label: 'Revenue', value: 'Rp ' + short(sum(rows.map(r => r.Pendapatan))) }, { label: 'Order', value: fmt(rows.length) }, { label: 'Qty', value: fmt(sum(rows.map(r => r.Qty))) }]);
+  BI.table('#dt-tbl', { cols: [{ k: 'OrderID', l: 'Order' }, { k: 'Tanggal', l: 'Tanggal' }, { k: 'Wilayah', l: 'Wilayah' }, { k: 'Channel', l: 'Channel' }, { k: 'Qty', l: 'Qty', r: 1 }, { k: 'Pendapatan', l: 'Rp', r: 1, f: fmt }], rows, filter: true, limit: 50, maxH: 260 });
+};
+$('#dt-back').onclick = () => { $('#dt-main').style.display = ''; $('#dt-detail').style.display = 'none'; };
+
+/* Praktik */
+const dl = $('#dl');
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+BI.steps('#steps', [
+  { t: 'Siapkan', tm: '5\'', b: 'Buka dashboard sebelumnya. Duplikat halaman sebagai cadangan (klik kanan tab halaman → Duplicate page).' },
+  { t: 'Slicer & sinkronisasi', tm: '20\'', b: 'Tambah slicer Tahun (Between/Tile), Wilayah (Dropdown), Kategori (Tile). <b>View → Sync slicers</b> agar berlaku di semua halaman.' },
+  { t: 'Edit interactions', tm: '20\'', b: 'Pilih visual bar → <b>Format → Edit interactions</b>; atur ikon Filter / Highlight / None pada tiap visual lain. Jelaskan pilihan Anda.' },
+  { t: 'Hierarki drill-down', tm: '20\'', b: 'Di Dim_Tanggal buat hierarki Tahun › Kuartal › Bulan. Letakkan di sumbu line/bar; gunakan panah drill (↓, ⇊, ↑).' },
+  { t: 'Drill-through & tombol', tm: '20\'', b: 'Halaman baru "Detail Produk": tambahkan field Produk ke <i>Drill through</i>. Tambah tombol Back dan tombol navigasi (Insert → Buttons → Page navigator).' },
+  { t: 'Bookmark', tm: '5\'', b: 'View → Bookmarks: simpan 2 tampilan (mis. "Elektronik 2024") dan hubungkan ke tombol.' },
+  { t: 'Uji UX', tm: '10\'', b: 'Gunakan alat uji di bawah dengan seorang teman.' }
+]);
+const tasks = ['Temukan revenue Kuartal 4 tahun 2024', 'Lihat hanya data wilayah Jawa', 'Temukan produk terlaris di kategori Fashion', 'Buka detail transaksi suatu produk', 'Kembalikan dashboard ke tampilan awal'];
+const times = [];
+tasks.forEach((t, i) => { let t0 = 0; const out = h('span', { class: 'chip' }, '—'); $('#ux').append(h('div', { class: 'row', style: 'border-bottom:1px dashed var(--line);padding:6px 0' }, h('span', { style: 'flex:1;min-width:200px' }, `${i + 1}. ${t}`), h('button', { class: 'btn sm', onclick() { t0 = performance.now(); out.textContent = '⏱ berjalan…'; } }, 'Mulai'), h('button', { class: 'btn sm pri', onclick() { if (!t0) return; times[i] = (performance.now() - t0) / 1000; out.textContent = times[i].toFixed(1) + ' dtk'; const v = times.filter(x => x != null); $('#ux-out').innerHTML = `<b class="t">Rata-rata ${BI.avg(v).toFixed(1)} dtk</b>${BI.avg(v) > 20 ? 'Terlalu lama: sederhanakan navigasi atau beri petunjuk.' : 'Cukup intuitif. Catat tugas yang paling lama untuk diperbaiki.'}`; } }, 'Selesai'), out)); });
+$('#ux-out').textContent = 'Hasil akan tampil di sini.';
+BI.checklist('#chk', ['3 slicer & sinkron antar halaman', 'Edit interactions diatur & dijelaskan', 'Hierarki drill-down berfungsi', 'Halaman drill-through + tombol Back', '2 bookmark & tombol navigasi', 'Uji UX dengan 5 tugas'], 'p9');
+
+BI.quiz('#quiz', [
+  { q: 'Mode "Highlight" pada klik batang kategori…', o: ['Menghapus visual lain', 'Menyorot bagian terkait dan mempertahankan total sebagai konteks', 'Menyembunyikan data', 'Menutup laporan'], a: 1, e: 'Highlight menjaga konteks keseluruhan.' },
+  { q: 'Slicer terbaik untuk rentang tanggal:', o: ['Dropdown 365 opsi', 'Between / relative date', 'Tile', 'Tabel'], a: 1, e: 'Rentang waktu = between/relative date.' },
+  { q: 'Drill-through berbeda dari drill-down karena…', o: ['Sama saja', 'Berpindah ke halaman detail dengan membawa konteks', 'Menghapus data', 'Hanya tampilan'], a: 1, e: 'Drill-down masuk hierarki; drill-through berpindah halaman.' },
+  { q: 'Mengapa tidak menambahkan slicer sebanyak mungkin?', o: ['Tidak ada alasan', 'Beban kognitif & ruang meningkat', 'Dilarang', 'Warna'], a: 1, e: 'Setiap kontrol harus punya tujuan.' },
+  { q: 'Sync slicers berfungsi untuk…', o: ['Menyalin file', 'Menyamakan pilihan slicer di beberapa halaman', 'Mengganti tema', 'Mempercepat refresh'], a: 1, e: 'Pilihan di satu halaman ikut berlaku di halaman lain.' },
+  { q: 'Bookmark dipakai untuk…', o: ['Menyimpan kondisi tampilan/filter', 'Menghapus visual', 'Mengunci akses', 'Mengimpor data'], a: 0, e: 'Menyimpan state laporan.' }
+]);
+</script>

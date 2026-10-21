@@ -1,0 +1,173 @@
+<section class="pane" id="teori">
+ <h2>1. Mengapa satu tabel besar bermasalah?</h2>
+ <div class="card">
+  <p>Menyimpan semua kolom dalam satu tabel datar membuat informasi yang sama (mis. kategori produk) tersalin di ribuan baris. Mengubahnya berarti mengubah banyak baris, dan rawan tidak konsisten. Model dimensional memisahkan <b>peristiwa</b> (fakta) dari <b>konteks</b> (dimensi).</p>
+  <div class="controls" id="flat-ctl"></div>
+  <div class="grid2"><div><h4>Tabel datar</h4><div id="flat-t"></div></div><div><h4>Model bintang</h4><div id="flat-s"></div></div></div>
+  <div id="flat-res" class="callout"></div>
+ </div>
+
+ <h2>2. Fakta atau dimensi?</h2>
+ <div class="card">
+  <p><b>Fakta</b> = ukuran numerik dari sebuah peristiwa (bisa dijumlahkan). <b>Dimensi</b> = siapa, apa, di mana, kapan (dipakai untuk mengelompokkan). <b>Kunci</b> = penghubung. Klasifikasikan kolom di bawah.</p>
+  <div id="fd"></div><div id="fd-score" class="score"></div>
+ </div>
+
+ <h2>3. Bangun star schema sendiri</h2>
+ <div class="card">
+  <p class="muted">Klik satu tabel lalu tabel lain untuk membuat relasi. Relasi yang benar menghubungkan <b>dimensi → fakta</b> lewat kolom kunci. Klik garis relasi untuk menghapus.</p>
+  <div class="row"><button class="btn" id="sc-auto">Lengkapi otomatis</button><button class="btn" id="sc-reset">Reset</button><span id="sc-msg" class="chip">Pilih tabel pertama</span></div>
+  <div id="sc" class="chart"></div>
+  <h4>Uji propagasi filter</h4>
+  <p class="small muted">Pilih nilai filter pada dimensi. Jika relasinya belum ada, filter tidak mempengaruhi fakta.</p>
+  <div class="controls" id="sc-ctl"></div>
+  <div id="sc-kpi"></div><div id="sc-note" class="callout"></div>
+ </div>
+
+ <h2>4. Kardinalitas dan arah filter</h2>
+ <div class="card">
+  <div class="grid3" id="card-types"></div>
+  <h4 class="mt">Eksperimen: kunci dimensi tidak unik</h4>
+  <p>Jika kunci di sisi "satu" ternyata duplikat, setiap baris fakta ikut terduplikasi saat digabung, sehingga total membengkak.</p>
+  <div class="controls"><label><input type="checkbox" id="dup-chk"> Tambahkan duplikat pada ProdukID di dimensi Produk</label></div>
+  <div class="grid2"><div id="dup-chart"></div><div id="dup-note" class="callout"></div></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b><code>P04_NamaAnda.pbix</code> dengan 5 tabel terhubung (1 fakta, 4 dimensi), diagram Model view, dan 1 visual lintas tabel (Pendapatan per Kategori per Tahun).</div>
+ <div class="card"><h3>⬇ Dataset bintang</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>📝 Lembar klasifikasi kolom</h3><p class="small">Isi sebelum membuat relasi. Klik untuk menandai.</p><div id="cls"></div></div>
+ <div class="card"><h3>🔧 Latihan memperbaiki relasi</h3><div id="fix"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Data Source tab → seret tabel ke canvas (relationships/noodles). Tableau otomatis menebak kunci; periksa panah &amp; field yang dipakai.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 4</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, S, T, fmt, rp, short} = BI;
+const star = BI.data.star(BI.data.sales(600));
+const sum = BI.sum;
+
+/* 1. flat vs star */
+const catOf = {}; star.dimProduk.forEach(p => catOf[p.ProdukID] = p.Kategori);
+const flat = star.fakta.slice(0, 600).map(f => ({ OrderID: f.OrderID, Produk: star.dimProduk.find(p => p.ProdukID === f.ProdukID).Produk, Kategori: catOf[f.ProdukID], Qty: f.Qty }));
+BI.table('#flat-t', { cols: [{ k: 'OrderID', l: 'Order' }, { k: 'Produk', l: 'Produk' }, { k: 'Kategori', l: 'Kategori' }, { k: 'Qty', l: 'Qty', r: 1 }], rows: flat, limit: 6, maxH: 200, sort: false });
+BI.table('#flat-s', { cols: [{ k: 'ProdukID', l: 'ProdukID' }, { k: 'Produk', l: 'Produk' }, { k: 'Kategori', l: 'Kategori' }], rows: star.dimProduk, limit: 6, maxH: 200, sort: false });
+let target = 'Elektronik';
+BI.select('#flat-ctl', 'Kategori yang akan diganti namanya', Object.keys(BI.CATALOG), target, v => { target = v; flatCalc(); });
+function flatCalc() {
+  const nflat = flat.filter(r => r.Kategori === target).length, nstar = star.dimProduk.filter(p => p.Kategori === target).length;
+  $('#flat-res').innerHTML = `Mengganti nama "<b>${target}</b>": tabel datar harus mengubah <b>${fmt(nflat)} baris</b>, model bintang cukup <b>${nstar} baris</b> pada dimensi. Ukuran juga lebih hemat karena teks tidak diulang.`;
+}
+flatCalc();
+
+/* 2. fakta/dimensi */
+const cols = [['Pendapatan', 'F'], ['NamaProduk', 'D'], ['Qty', 'F'], ['Wilayah', 'D'], ['ProdukID', 'K'], ['Diskon (Rp)', 'F'], ['Segmen Pelanggan', 'D'], ['Tanggal', 'D'], ['HPP', 'F'], ['Kategori', 'D'], ['Harga satuan', 'F'], ['PelangganID', 'K']];
+const names = { F: 'Fakta (ukuran)', D: 'Dimensi (konteks)', K: 'Kunci' };
+let fdok = 0, fdn = 0;
+cols.forEach(([c, a]) => {
+  const row = h('div', { class: 'row', style: 'border-bottom:1px dashed var(--line);padding:4px 0' }, h('b', { style: 'min-width:150px' }, c));
+  Object.keys(names).forEach(k => row.append(h('button', { class: 'btn sm', onclick(e) {
+    if (row.dataset.d) return; row.dataset.d = 1; fdn++; if (k === a) { fdok++; e.currentTarget.style.background = '#dcfce7'; } else { e.currentTarget.style.background = '#fee2e2'; BI.$$('button', row).forEach(b => { if (b.textContent === names[a]) b.style.outline = '2px solid var(--ok)'; }); }
+    $('#fd-score').textContent = `Benar ${fdok} dari ${fdn}`;
+  } }, names[k])));
+  $('#fd').append(row);
+});
+
+/* 3. star builder */
+const B = { Fakta: { x: 235, y: 135, w: 170, h: 110, cols: ['OrderID (PK)', 'Tanggal (FK)', 'ProdukID (FK)', 'PelangganID (FK)', 'WilayahID (FK)', 'Qty · Pendapatan'] },
+  Produk: { x: 20, y: 10, w: 150, h: 76, cols: ['ProdukID (PK)', 'Produk', 'Kategori'], key: 'ProdukID' },
+  Pelanggan: { x: 470, y: 10, w: 150, h: 76, cols: ['PelangganID (PK)', 'Nama', 'Segmen'], key: 'PelangganID' },
+  Wilayah: { x: 20, y: 290, w: 150, h: 70, cols: ['WilayahID (PK)', 'Wilayah', 'Zona'], key: 'WilayahID' },
+  Tanggal: { x: 470, y: 280, w: 150, h: 82, cols: ['Tanggal (PK)', 'Tahun', 'Kuartal', 'Bulan'], key: 'Tanggal' } };
+let links = new Set(), sel = null;
+const msg = t => $('#sc-msg').textContent = t;
+function drawSC() {
+  const c = $('#sc'); c.innerHTML = ''; const svg = S('svg', { viewBox: '0 0 640 370' }); c.append(svg);
+  const ctr = n => [B[n].x + B[n].w / 2, B[n].y + B[n].h / 2];
+  links.forEach(n => {
+    const [x1, y1] = ctr(n), [x2, y2] = ctr('Fakta');
+    const ln = S('line', { x1, y1, x2, y2, stroke: 'var(--c3)', 'stroke-width': 3, style: 'cursor:pointer' }, svg);
+    ln.addEventListener('click', () => { links.delete(n); drawSC(); calc(); msg('Relasi ' + n + ' dihapus'); });
+    BI.hover(ln, 'Klik untuk menghapus');
+    T(svg, x1 + (x2 - x1) * 0.25, y1 + (y2 - y1) * 0.25 - 4, '1', { class: 'lbl', style: 'font-size:14px' });
+    T(svg, x1 + (x2 - x1) * 0.78, y1 + (y2 - y1) * 0.78 - 4, '*', { class: 'lbl', style: 'font-size:18px' });
+  });
+  Object.keys(B).forEach(n => {
+    const b = B[n], g = S('g', { style: 'cursor:pointer' }, svg);
+    S('rect', { x: b.x, y: b.y, width: b.w, height: b.h, rx: 8, fill: n === 'Fakta' ? 'var(--c2)' : 'var(--card)', stroke: sel === n ? 'var(--acc)' : 'var(--line)', 'stroke-width': sel === n ? 4 : 2, opacity: n === 'Fakta' ? 0.25 : 1 }, g);
+    T(g, b.x + 8, b.y + 16, (n === 'Fakta' ? '★ Fakta_Penjualan' : '◇ Dim_' + n), { class: 'lbl' });
+    b.cols.forEach((cc, i) => T(g, b.x + 8, b.y + 33 + i * 14, cc, { style: 'font-size:10.5px' }));
+    g.addEventListener('click', () => pickT(n));
+  });
+}
+function pickT(n) {
+  if (!sel) { sel = n; msg('Dipilih: ' + n + '. Pilih tabel pasangan.'); drawSC(); return; }
+  if (sel === n) { sel = null; msg('Pilihan dibatalkan'); drawSC(); return; }
+  const dim = sel === 'Fakta' ? n : n === 'Fakta' ? sel : null;
+  if (!dim) { msg('❌ Dua dimensi tidak dihubungkan langsung. Hubungkan lewat tabel fakta (bintang, bukan jaring).'); sel = null; drawSC(); return; }
+  links.add(dim); msg(`✅ Relasi Dim_${dim}[${B[dim].key}] 1 → * Fakta[${B[dim].key}]`); sel = null; drawSC(); calc();
+}
+$('#sc-auto').onclick = () => { ['Produk', 'Pelanggan', 'Wilayah', 'Tanggal'].forEach(n => links.add(n)); drawSC(); calc(); msg('Semua relasi dibuat'); };
+$('#sc-reset').onclick = () => { links = new Set(); sel = null; drawSC(); calc(); msg('Reset'); };
+const flt = { Wilayah: '', Kategori: '', Segmen: '', Tahun: '' };
+const optf = (l, a) => BI.select('#sc-ctl', l, [['', '(semua)'], ...a.map(x => [String(x), String(x)])], '', v => { flt[l.split(' ')[0]] = v; calc(); });
+optf('Wilayah', BI.REGION); optf('Kategori', Object.keys(BI.CATALOG)); optf('Segmen', ['Reguler', 'Premium', 'Reseller']); optf('Tahun', [2023, 2024]);
+const wm = {}; star.dimWilayah.forEach(w => wm[w.WilayahID] = w.Wilayah);
+const pm = {}; star.dimProduk.forEach(p => pm[p.ProdukID] = p);
+const cm = {}; star.dimPelanggan.forEach(p => cm[p.PelangganID] = p);
+function calc() {
+  let ignored = [], rows = star.fakta;
+  const f = (name, key, test) => { if (!flt[key]) return; if (!links.has(name)) { ignored.push(key + ' (relasi Dim_' + name + ' belum ada)'); return; } rows = rows.filter(test); };
+  f('Wilayah', 'Wilayah', r => wm[r.WilayahID] === flt.Wilayah);
+  f('Produk', 'Kategori', r => pm[r.ProdukID].Kategori === flt.Kategori);
+  f('Pelanggan', 'Segmen', r => cm[r.PelangganID].Segmen === flt.Segmen);
+  f('Tanggal', 'Tahun', r => r.Tanggal.slice(0, 4) === flt.Tahun);
+  BI.kpi('#sc-kpi', [{ label: 'Total pendapatan', value: 'Rp ' + short(sum(rows.map(r => r.Pendapatan))) }, { label: 'Jumlah order', value: fmt(rows.length) }, { label: 'Relasi aktif', value: links.size + ' / 4' }]);
+  $('#sc-note').innerHTML = ignored.length ? `<b class="t">⚠ Filter diabaikan</b>${ignored.join('; ')}. Itulah sebabnya angka tidak berubah ketika relasi hilang.` : links.size === 4 ? '<b class="t">✅ Model lengkap</b>Semua filter mengalir dari dimensi ke fakta.' : '<b class="t">Petunjuk</b>Buat relasi lalu pilih filter yang sesuai.';
+}
+drawSC(); calc();
+
+/* 4. kardinalitas */
+[['One-to-Many (1:*)', 'Dim_Produk → Fakta. Standar star schema. Filter mengalir dari satu ke banyak.', 'ok'], ['Many-to-Many (*:*)', 'Dua sisi sama-sama tidak unik. Hasil ambigu; gunakan tabel jembatan.', 'bad'], ['One-to-One (1:1)', 'Sering berarti dua tabel sebaiknya digabung (mis. detail pelanggan terpisah).', 'warn']].forEach(([t, d, c]) => $('#card-types').append(h('div', { class: 'card' }, h('span', { class: 'chip ' + c }, t), h('p', { class: 'small' }, d))));
+$('#dup-chk').onchange = dup; dup();
+function dup() {
+  const on = $('#dup-chk').checked, byCat = {};
+  star.fakta.forEach(r => { const p = pm[r.ProdukID], mult = on && r.ProdukID === 'P01' ? 2 : 1; byCat[p.Kategori] = (byCat[p.Kategori] || 0) + r.Pendapatan * mult; });
+  const real = sum(star.fakta.map(r => r.Pendapatan)), got = sum(Object.values(byCat));
+  BI.hbar('#dup-chart', { labels: Object.keys(byCat), data: Object.values(byCat), height: 150, rowH: 32, colorBy: (i, v, l) => (on && Object.keys(byCat)[i] === 'Elektronik' ? 'var(--bad)' : 'var(--c1)') });
+  $('#dup-note').innerHTML = on ? `<b class="t">⚠ Total membengkak</b>Total seharusnya Rp ${short(real)}, hasil Rp ${short(got)} (selisih Rp ${short(got - real)}). Pastikan kunci dimensi unik.` : `<b class="t">✅ Normal</b>Total Rp ${short(real)} sesuai tabel fakta.`;
+}
+
+/* Praktik */
+const dl = $('#dl');
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_wilayah.csv', star.dimWilayah], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+BI.steps('#steps', [
+  { t: 'Muat kelima tabel', tm: '5\'', b: 'Get data → Text/CSV untuk masing-masing. Pastikan tipe data kunci sama (Text untuk ID, Date untuk Tanggal).' },
+  { t: 'Klasifikasi kolom', tm: '15\'', b: 'Isi lembar klasifikasi di bawah dan gambar sketsa star schema di kertas.' },
+  { t: 'Buat relasi di Model view', tm: '25\'', b: 'Seret <code>Dim_Produk[ProdukID]</code> → <code>Fakta[ProdukID]</code>. Ulangi untuk Pelanggan, Wilayah, Tanggal. Periksa bahwa kardinalitas <b>One to many (1:*)</b> dan arah filter <b>Single</b>.' },
+  { t: 'Uji propagasi filter', tm: '20\'', b: 'Report view: tabel/bar dengan <i>Kategori</i> (Dim_Produk), <i>Tahun</i> (Dim_Tanggal), <i>Sum of Pendapatan</i> (Fakta). Tambah slicer Wilayah dan Segmen; pastikan angka berubah.' },
+  { t: 'Perbaiki relasi rusak', tm: '20\'', b: 'Kerjakan kasus latihan di bawah menggunakan model Anda.' },
+  { t: 'Dokumentasi', tm: '10\'', b: 'Screenshot Model view (semua garis 1:*) dan 1 visual lintas tabel; tulis 3 kalimat penjelasan.' }
+]);
+const clsRows = ['OrderID', 'Tanggal', 'ProdukID', 'Qty', 'Pendapatan', 'Kategori', 'Segmen', 'Zona', 'HPP'];
+const clsAns = { OrderID: 'Kunci', Tanggal: 'Kunci', ProdukID: 'Kunci', Qty: 'Fakta', Pendapatan: 'Fakta', Kategori: 'Dimensi', Segmen: 'Dimensi', Zona: 'Dimensi', HPP: 'Fakta' };
+clsRows.forEach(c => { const r = h('div', { class: 'row' }, h('b', { style: 'min-width:100px' }, c)); ['Fakta', 'Dimensi', 'Kunci'].forEach(k => r.append(h('button', { class: 'btn sm', onclick(e) { BI.$$('button', r).forEach(b => b.classList.remove('on')); e.currentTarget.classList.add('on'); r.querySelector('.chip') && r.querySelector('.chip').remove(); r.append(h('span', { class: 'chip ' + (clsAns[c] === k ? 'ok' : 'bad') }, clsAns[c] === k ? 'Tepat' : 'Periksa lagi')); } }, k))); $('#cls').append(r); });
+[['Hubungan Many-to-Many muncul antara Penjualan dan Produk', 'Cek kolom ProdukID di Dim_Produk: apakah ada nilai ganda? Hapus duplikat (Remove Duplicates) pada dimensi.'],
+ ['Tanggal tidak bisa dihubungkan (tipe berbeda)', 'Satu kolom Text, satu Date. Samakan tipe data di Power Query.'],
+ ['Slicer Wilayah tidak mengubah angka', 'Relasi belum aktif/terhapus atau arah filter salah. Periksa garis di Model view (garis putus-putus = tidak aktif).'],
+ ['Total penjualan lebih besar dari sumber', 'Kemungkinan kunci dimensi duplikat sehingga baris fakta berlipat.']].forEach(([a, b]) => $('#fix').append(h('details', {}, h('summary', {}, a), h('p', {}, '  ' + b))));
+BI.checklist('#chk', ['5 tabel termuat dengan tipe kunci sama', 'Lembar klasifikasi terisi', '4 relasi One-to-many tercipta', 'Slicer lintas tabel berfungsi', 'Relasi rusak berhasil diperbaiki', 'Diagram Model view didokumentasikan'], 'p4');
+
+BI.quiz('#quiz', [
+  { q: 'Kolom "Pendapatan" berperan sebagai…', o: ['Dimensi', 'Fakta (ukuran)', 'Kunci dimensi', 'Hierarki'], a: 1, e: 'Angka yang diagregasi = fakta.' },
+  { q: 'Kardinalitas standar dimensi → fakta adalah…', o: ['Many-to-many', 'One-to-one', 'One-to-many', 'Many-to-one dari dimensi'], a: 2, e: 'Satu baris dimensi punya banyak baris fakta.' },
+  { q: 'Total membengkak setelah relasi dibuat. Penyebab paling mungkin?', o: ['Tema salah', 'Kunci dimensi duplikat', 'Slicer tidak ada', 'Tanggal terlalu banyak'], a: 1, e: 'Duplikat kunci memperbanyak baris saat join.' },
+  { q: 'Mengapa tidak menghubungkan dua dimensi langsung?', o: ['Dilarang software', 'Merusak bentuk bintang dan memicu ambiguitas filter', 'Memperkecil file', 'Tidak ada alasan'], a: 1, e: 'Hubungkan lewat fakta.' },
+  { q: 'Filter mengalir dari…', o: ['Fakta ke dimensi', 'Dimensi (sisi 1) ke fakta (sisi banyak)', 'Acak', 'Hanya visual'], a: 1, e: 'Arah default: single dari dimensi ke fakta.' },
+  { q: 'Manfaat utama star schema:', o: ['Data lebih rapi, konsisten, dan cepat dianalisis', 'Menghilangkan kebutuhan ETL', 'Mengganti DAX', 'Menyembunyikan data'], a: 0, e: 'Struktur sederhana, tidak redundan.' }
+]);
+</script>

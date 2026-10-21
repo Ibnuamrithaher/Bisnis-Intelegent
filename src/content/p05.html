@@ -1,0 +1,158 @@
+<section class="pane" id="teori">
+ <h2>1. Mengapa angka berubah saat kita mengeklik?</h2>
+ <div class="card">
+  <p>Di dashboard, "Total Penjualan" bisa menunjukkan angka berbeda di kartu, di batang kategori, dan di baris tabel. Itu bukan bug: <b>satu measure dihitung ulang untuk setiap konteks filter</b>. Memahami konteks filter adalah inti DAX (Power BI) maupun calculated field (Tableau).</p>
+ </div>
+
+ <h2>2. Playground measure &amp; konteks filter</h2>
+ <div class="card">
+  <p class="muted">Pilih measure, ubah slicer, lalu <b>klik sel matriks</b> untuk melihat konteks filter yang membentuk angkanya.</p>
+  <div class="controls" id="pg-ctl"></div>
+  <pre><code id="pg-dax"></code></pre>
+  <div class="grid2" style="grid-template-columns:3fr 2fr;align-items:start"><div id="pg-mx"></div><div><div id="pg-ctx" class="callout">Klik sel matriks.</div><div id="pg-chart"></div></div></div>
+ </div>
+
+ <h2>3. Calculated column vs measure</h2>
+ <div class="card">
+  <div class="grid2">
+   <div><h4>Calculated column</h4><ul class="small"><li>Dihitung per baris saat refresh</li><li>Disimpan di model (memakai memori)</li><li>Bisa dipakai sebagai sumbu/filter</li><li>Contoh: <code>Laba = Fakta[Pendapatan] - Fakta[Qty]*Fakta[HPP]</code></li></ul></div>
+   <div><h4>Measure</h4><ul class="small"><li>Dihitung saat dipakai, sesuai konteks</li><li>Tidak menyimpan hasil per baris</li><li>Dipakai pada nilai/KPI</li><li>Contoh: <code>Margin % = DIVIDE([Laba],[Total Penjualan])</code></li></ul></div>
+  </div>
+  <h4 class="mt">Jebakan: rata-rata dari persentase ≠ persentase dari total</h4>
+  <div class="grid2"><div id="trap-chart"></div><div id="trap-txt" class="callout"></div></div>
+ </div>
+
+ <h2>4. Rasio aman dengan DIVIDE</h2>
+ <div class="card">
+  <div class="controls" id="dv-ctl"></div>
+  <div id="dv-out" class="grid3"></div>
+ </div>
+ <h2>5. Anatomi sintaks</h2>
+ <div class="card"><div id="anat"></div></div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b>8 measure di tabel khusus <i>_Measures</i> (folder tampilan), tervalidasi terhadap hitungan manual, + kartu &amp; matriks pengujian.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧪 Uji formula (ketik DAX Anda)</h3><p class="small muted">Ketik formula untuk tiap tugas. Spasi dan huruf besar/kecil tidak dipermasalahkan.</p><div id="ft"></div><div id="ft-score" class="score"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Analysis → Create Calculated Field: <code>SUM([Pendapatan])</code>, <code>SUM([Laba])/SUM([Pendapatan])</code>, LOD: <code>{ FIXED [Kategori] : SUM([Pendapatan]) }</code> (padanan CALCULATE+ALL).</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 5</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, S, T, fmt, rp, short, pct} = BI;
+const star = BI.data.star(BI.data.sales(600));
+const pm = {}; star.dimProduk.forEach(p => pm[p.ProdukID] = p);
+const wm = {}; star.dimWilayah.forEach(w => wm[w.WilayahID] = w.Wilayah);
+const E = star.fakta.map(r => ({ ...r, Kategori: pm[r.ProdukID].Kategori, Wilayah: wm[r.WilayahID], Tahun: r.Tanggal.slice(0, 4), Biaya: r.Qty * r.HPP }));
+const sum = BI.sum;
+const rowsOf = c => E.filter(r => (!c.Wilayah || r.Wilayah === c.Wilayah) && (!c.Kategori || r.Kategori === c.Kategori) && (!c.Tahun || r.Tahun === c.Tahun));
+const TOT = c => sum(rowsOf(c).map(r => r.Pendapatan)), BIA = c => sum(rowsOf(c).map(r => r.Biaya)), N = c => rowsOf(c).length;
+const dv = (a, b) => (b ? a / b : null);
+const M = {
+  'Total Penjualan': { dax: 'Total Penjualan = SUM ( Fakta[Pendapatan] )', fn: TOT, f: v => rp(v) },
+  'Jumlah Order': { dax: 'Jumlah Order = COUNTROWS ( Fakta )', fn: N, f: fmt },
+  'Rata-rata Order': { dax: 'Rata-rata Order = DIVIDE ( [Total Penjualan], [Jumlah Order] )', fn: c => dv(TOT(c), N(c)), f: v => (v == null ? '-' : rp(v)) },
+  'Total Biaya': { dax: 'Total Biaya = SUMX ( Fakta, Fakta[Qty] * Fakta[HPP] )', fn: BIA, f: rp },
+  'Laba': { dax: 'Laba = [Total Penjualan] - [Total Biaya]', fn: c => TOT(c) - BIA(c), f: rp },
+  'Margin %': { dax: 'Margin % = DIVIDE ( [Laba], [Total Penjualan] )', fn: c => dv(TOT(c) - BIA(c), TOT(c)), f: v => (v == null ? '-' : pct(v)) },
+  'Pelanggan Unik': { dax: 'Pelanggan Unik = DISTINCTCOUNT ( Fakta[PelangganID] )', fn: c => new Set(rowsOf(c).map(r => r.PelangganID)).size, f: fmt },
+  'Penjualan Jawa': { dax: 'Penjualan Jawa =\nCALCULATE ( [Total Penjualan], Dim_Wilayah[Wilayah] = "Jawa" )', fn: c => TOT({ ...c, Wilayah: 'Jawa' }), f: rp },
+  'Kontribusi Kategori %': { dax: 'Kontribusi Kategori % =\nDIVIDE ( [Total Penjualan],\n  CALCULATE ( [Total Penjualan], ALL ( Dim_Produk[Kategori] ) ) )', fn: c => dv(TOT(c), TOT({ ...c, Kategori: undefined })), f: v => (v == null ? '-' : pct(v)) }
+};
+const st = { m: 'Total Penjualan', w: '', t: '' };
+BI.select('#pg-ctl', 'Measure', Object.keys(M), st.m, v => { st.m = v; pg(); });
+BI.select('#pg-ctl', 'Slicer Wilayah', [['', '(semua)'], ...BI.REGION], '', v => { st.w = v; pg(); });
+BI.select('#pg-ctl', 'Slicer Tahun', [['', '(semua)'], '2023', '2024'], '', v => { st.t = v; pg(); });
+let selCell = null;
+function pg() {
+  const m = M[st.m], cats = Object.keys(BI.CATALOG), yrs = ['2023', '2024'];
+  $('#pg-dax').textContent = m.dax;
+  const mx = $('#pg-mx'); mx.innerHTML = '';
+  const tb = h('table', { class: 'tbl' }, h('thead', {}, h('tr', {}, h('th', {}, 'Kategori ↓ / Tahun →'), ...yrs.map(y => h('th', { class: 'r' }, y)), h('th', { class: 'r' }, 'Total'))));
+  const body = h('tbody');
+  const cell = (c, lab) => { const v = m.fn({ ...c, Wilayah: st.w || undefined, Tahun: c.Tahun || (st.t || undefined) }); return h('td', { class: 'r', style: 'cursor:pointer', title: 'Klik untuk lihat konteks', onclick() { selCell = c; ctx(c); } }, m.f(v)); };
+  cats.concat([null]).forEach(k => body.append(h('tr', {}, h('td', {}, h('b', {}, k || 'Total')), ...yrs.map(y => cell({ Kategori: k || undefined, Tahun: y })), cell({ Kategori: k || undefined, Tahun: undefined }))));
+  tb.append(body); mx.append(h('div', { class: 'tblwrap' }, tb));
+  if (selCell) ctx(selCell);
+  const vals = cats.map(k => m.fn({ Kategori: k, Wilayah: st.w || undefined, Tahun: st.t || undefined }) || 0);
+  BI.hbar('#pg-chart', { labels: cats, data: vals, height: 150, rowH: 30, fmt: v => (m.f === fmt || m.f === rp ? short(v) : v.toFixed(2)), valFmt: v => (st.m.includes('%') ? pct(v) : short(v)), title: 'Per kategori (konteks slicer)' });
+}
+function ctx(c) {
+  const full = { ...c, Wilayah: st.w || undefined, Tahun: c.Tahun || (st.t || undefined) };
+  const parts = [['Wilayah', full.Wilayah], ['Kategori', full.Kategori], ['Tahun', full.Tahun]].map(([k, v]) => `<li>${k} = <b>${v || '(semua)'}</b></li>`).join('');
+  const m = M[st.m];
+  let extra = '';
+  if (st.m === 'Penjualan Jawa') extra = '<p class="small">CALCULATE <b>menimpa</b> filter Wilayah menjadi "Jawa" walau slicer memilih wilayah lain.</p>';
+  if (st.m === 'Kontribusi Kategori %') extra = '<p class="small">ALL() membuang filter Kategori untuk penyebut sehingga hasil adalah porsi terhadap seluruh kategori.</p>';
+  $('#pg-ctx').innerHTML = `<b class="t">Konteks filter sel ini</b><ul style="margin:4px 0;padding-left:18px">${parts}</ul>Baris fakta terlibat: <b>${fmt(N(full))}</b><br>Hasil: <b>${m.f(m.fn(full))}</b>${extra}`;
+}
+pg();
+
+/* Trap */
+(function () {
+  const byCat = Object.keys(BI.CATALOG).map(k => { const r = E.filter(x => x.Kategori === k); const rowPct = r.map(x => (x.Pendapatan - x.Biaya) / x.Pendapatan); return { k, avgRow: BI.avg(rowPct), ratio: (sum(r.map(x => x.Pendapatan)) - sum(r.map(x => x.Biaya))) / sum(r.map(x => x.Pendapatan)) }; });
+  BI.bar('#trap-chart', { labels: byCat.map(x => x.k), series: [{ name: 'Rata-rata % per baris (salah)', data: byCat.map(x => x.avgRow * 100) }, { name: 'Laba ÷ Penjualan (benar)', data: byCat.map(x => x.ratio * 100) }], height: 240, fmt: v => v.toFixed(0) + '%', tipFmt: v => v.toFixed(2) + '%', yMin: 0 });
+  const d = Math.max(...byCat.map(x => Math.abs(x.avgRow - x.ratio))) * 100;
+  $('#trap-txt').innerHTML = `<b class="t">Pelajaran</b>Kedua cara memberi angka berbeda (selisih hingga ${d.toFixed(2)} poin). Order bernilai besar seharusnya berbobot lebih besar. Karena itu rasio dihitung sebagai <b>measure</b> (jumlah dibagi jumlah), bukan rata-rata kolom persen.`;
+})();
+
+/* DIVIDE */
+let a = 500000, b = 0;
+BI.slider('#dv-ctl', 'Pembilang (laba)', 0, 1000000, 50000, a, v => { a = v; dvr(); }, fmt);
+BI.slider('#dv-ctl', 'Penyebut (penjualan)', 0, 1000000, 50000, b, v => { b = v; dvr(); }, fmt);
+function dvr() {
+  $('#dv-out').innerHTML = '';
+  [['a / b', b ? pct(a / b) : '#ERROR: bagi nol', b ? 'ok' : 'bad'], ['DIVIDE(a, b)', b ? pct(a / b) : '(BLANK)', 'ok'], ['DIVIDE(a, b, 0)', b ? pct(a / b) : '0,0%', 'ok']].forEach(([t, v, c]) => $('#dv-out').append(h('div', { class: 'card' }, h('code', {}, t), h('div', { style: 'font-size:1.4rem;font-weight:800;margin-top:6px' }, v), h('span', { class: 'chip ' + c }, c === 'ok' ? 'aman' : 'berisiko'))));
+}
+dvr();
+
+/* Anatomi */
+const parts = [['Margin %', 'Nama measure'], ['=', 'Pemisah definisi'], ['DIVIDE', 'Fungsi'], ['[Laba]', 'Referensi measure (tanda kurung siku)'], [',', 'Pemisah argumen'], ['[Total Penjualan]', 'Referensi measure lain'], ['Fakta[Qty]', 'Kolom: Tabel[Kolom]']];
+parts.forEach(([t, d], i) => $('#anat').append(h('span', { class: 'node', style: 'margin:3px', onclick(e) { BI.$$('#anat .node').forEach(n => n.classList.remove('on')); e.currentTarget.classList.add('on'); $('#anat-d').innerHTML = `<b class="t">${t}</b>${d}`; } }, t)));
+$('#anat').append(h('div', { id: 'anat-d', class: 'callout', style: 'margin-top:10px' }, 'Klik bagian formula.'));
+
+/* Praktik */
+const dl = $('#dl');
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+BI.steps('#steps', [
+  { t: 'Buka model minggu 4', tm: '5\'', b: 'Muat ulang 5 tabel dan relasi (atau pakai file P04). Home → Enter data → buat tabel kosong <code>_Measures</code> untuk menampung measure.' },
+  { t: 'Measure agregasi', tm: '15\'', b: 'Total Penjualan, Jumlah Order, Rata-rata Order, Pelanggan Unik. Format: mata uang/angka.' },
+  { t: 'Measure rasio', tm: '20\'', b: 'Total Biaya (SUMX), Laba, Margin %, Diskon %. Gunakan DIVIDE.' },
+  { t: 'CALCULATE', tm: '20\'', b: 'Penjualan Jawa, Penjualan Elektronik, Kontribusi Kategori % (ALL).' },
+  { t: 'Verifikasi', tm: '20\'', b: 'Tabel verifikasi: ambil 1 kategori + 1 tahun, hitung manual di Excel (pivot) dan cocokkan dengan measure.' },
+  { t: 'Uji formula', tm: '15\'', b: 'Selesaikan latihan ketik formula.' },
+  { t: 'Dokumentasi', tm: '5\'', b: 'Isi kamus metrik: nama, rumus, makna bisnis, bukti verifikasi.' }
+]);
+const tasks = [
+  ['Total pendapatan', 'SUM(Fakta[Pendapatan])', ['sum(fakta[pendapatan])']],
+  ['Jumlah baris order', 'COUNTROWS(Fakta)', ['countrows(fakta)']],
+  ['Pelanggan unik', 'DISTINCTCOUNT(Fakta[PelangganID])', ['distinctcount(fakta[pelangganid])']],
+  ['Margin % dari measure [Laba] dan [Total Penjualan], aman bagi nol', 'DIVIDE([Laba],[Total Penjualan])', ['divide([laba],[totalpenjualan])']],
+  ['Penjualan wilayah Jawa (abaikan slicer wilayah)', 'CALCULATE([Total Penjualan], Dim_Wilayah[Wilayah]="Jawa")', ['calculate([totalpenjualan],dim_wilayah[wilayah]="jawa")']],
+  ['Penjualan semua kategori (hapus filter kategori)', 'CALCULATE([Total Penjualan], ALL(Dim_Produk[Kategori]))', ['calculate([totalpenjualan],all(dim_produk[kategori]))', 'calculate([totalpenjualan],removefilters(dim_produk[kategori]))']],
+  ['Total biaya = Qty × HPP per baris lalu dijumlahkan', 'SUMX(Fakta, Fakta[Qty]*Fakta[HPP])', ['sumx(fakta,fakta[qty]*fakta[hpp])']],
+  ['Rata-rata nilai order', 'AVERAGE(Fakta[Pendapatan])', ['average(fakta[pendapatan])', 'divide([totalpenjualan],[jumlahorder])']]
+];
+let ftOk = new Set();
+tasks.forEach(([q, ans, alts], i) => {
+  const inp = h('input', { type: 'text', style: 'width:100%;font-family:monospace', placeholder: 'Ketik formula…' }), fb = h('span', { class: 'small' });
+  const norm = s => s.toLowerCase().replace(/\s+/g, '').replace(/^[^=]*=/, '');
+  const chk = h('button', { class: 'btn sm', onclick() { const ok = alts.includes(norm(inp.value)); fb.textContent = ok ? '✅ Benar' : '❌ Belum sesuai'; if (ok) ftOk.add(i); else ftOk.delete(i); $('#ft-score').textContent = `Benar: ${ftOk.size} / ${tasks.length}`; } }, 'Periksa');
+  const hint = h('button', { class: 'btn sm', onclick() { fb.innerHTML = 'Contoh: <code>' + ans + '</code>'; } }, 'Lihat contoh');
+  $('#ft').append(h('div', { style: 'margin:10px 0' }, h('div', {}, h('b', {}, `${i + 1}. `), q), inp, h('div', { class: 'row' }, chk, hint, fb)));
+});
+BI.checklist('#chk', ['Tabel _Measures dibuat', '4 measure agregasi selesai', 'Margin % memakai DIVIDE', 'CALCULATE dengan filter Jawa berhasil', 'Kontribusi Kategori % memakai ALL', 'Verifikasi manual cocok', 'Kamus metrik terisi'], 'p5');
+
+BI.quiz('#quiz', [
+  { q: 'Measure dihitung…', o: ['Per baris saat refresh', 'Saat dipakai, mengikuti konteks filter', 'Hanya sekali', 'Tidak pernah'], a: 1, e: 'Measure bersifat dinamis sesuai konteks.' },
+  { q: 'Fungsi yang aman untuk pembagian adalah…', o: ['/', 'DIVIDE', 'SUM', 'COUNT'], a: 1, e: 'DIVIDE menangani pembagi nol.' },
+  { q: 'CALCULATE berfungsi untuk…', o: ['Menghapus tabel', 'Mengubah konteks filter saat menghitung', 'Membuat relasi', 'Mengubah warna'], a: 1, e: 'Memodifikasi filter context.' },
+  { q: 'Margin % sebaiknya dibuat sebagai…', o: ['Rata-rata kolom persen per baris', 'Measure: laba total ÷ penjualan total', 'Slicer', 'Kolom teks'], a: 1, e: 'Rasio dihitung dari agregat.' },
+  { q: 'ALL(Dim_Produk[Kategori]) di dalam CALCULATE…', o: ['Menambah filter', 'Menghapus filter pada kolom Kategori', 'Menghapus tabel', 'Menjumlahkan semua'], a: 1, e: 'Dipakai untuk penyebut pada persentase kontribusi.' },
+  { q: 'Referensi kolom yang benar:', o: ['Fakta.Pendapatan', 'Fakta[Pendapatan]', '[Fakta]Pendapatan', '{Pendapatan}'], a: 1, e: 'Format DAX: Tabel[Kolom].' }
+]);
+</script>

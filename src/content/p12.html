@@ -1,0 +1,156 @@
+<section class="pane" id="teori">
+ <h2>1. Desember tinggi: bisnis tumbuh atau hanya musiman?</h2>
+ <div class="card">
+  <p>Penjualan Desember hampir selalu lebih tinggi dari November. Membandingkan bulan ke bulan (<b>MoM</b>) bisa menyesatkan oleh pola musiman. Membandingkan dengan bulan yang sama tahun lalu (<b>YoY</b>) memberi perbandingan yang setara (<i>apple to apple</i>).</p>
+  <div id="p1-seg"></div>
+  <div class="grid2"><div id="p1-chart"></div><div id="p1-txt" class="callout"></div></div>
+ </div>
+
+ <h2>2. Tabel kalender (Date Table)</h2>
+ <div class="card">
+  <p>Fungsi time intelligence membutuhkan tabel tanggal yang <b>kontinu</b> (tidak ada hari bolong), <b>unik</b>, dan mencakup seluruh rentang data. Pilih kolom, lihat kode DAX dan pratinjau tabel.</p>
+  <div class="controls" id="dt-ctl"></div>
+  <div class="grid2" style="align-items:start"><pre><code id="dt-code"></code></pre><div id="dt-tbl"></div></div>
+  <div class="controls"><label><input type="checkbox" id="dt-gap"> Simulasikan kalender yang bolong (Februari 2024 hilang)</label></div>
+  <div id="dt-val" class="callout"></div>
+ </div>
+
+ <h2>3. Bandingkan periode</h2>
+ <div class="card">
+  <p class="muted">Pilih bulan dan jenis perbandingan; lihat hasil, grafik, dan formula DAX yang setara.</p>
+  <div class="controls" id="tp-ctl"></div>
+  <div id="tp-kpi"></div>
+  <div class="grid2"><div id="tp-chart"></div><div><pre><code id="tp-dax"></code></pre><div id="tp-note" class="callout"></div></div></div>
+ </div>
+
+ <h2>4. Tren, rata-rata bergerak, dan musiman</h2>
+ <div class="card">
+  <p>Data mingguan sangat berfluktuasi. Rata-rata bergerak (<i>moving average</i>) menghaluskan derau agar tren terlihat. Geser jendela.</p>
+  <div class="controls" id="ma-ctl"></div>
+  <div id="ma-chart"></div>
+  <h4 class="mt">Indeks musiman (100 = rata-rata bulan)</h4>
+  <div class="grid2"><div id="si-chart"></div><div id="si-txt" class="callout"></div></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b><code>P12_TimeIntelligence.pbix</code>: tabel kalender kustom (Date Table), measure YTD/MoM/YoY, line chart 2 tahun, kartu growth, dan validasi periode.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧾 Pola DAX time intelligence</h3><pre><code>Dim_Tanggal =
+ADDCOLUMNS (
+  CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2024, 12, 31 ) ),
+  "Tahun", YEAR ( [Date] ),
+  "BulanNo", MONTH ( [Date] ),
+  "Bulan", FORMAT ( [Date], "MMM" ),
+  "Kuartal", "Q" &amp; QUARTER ( [Date] )
+)
+
+Revenue        = SUM ( Fakta[Pendapatan] )
+Revenue LY     = CALCULATE ( [Revenue], SAMEPERIODLASTYEAR ( Dim_Tanggal[Date] ) )
+YoY %          = DIVIDE ( [Revenue] - [Revenue LY], [Revenue LY] )
+Revenue PM     = CALCULATE ( [Revenue], DATEADD ( Dim_Tanggal[Date], -1, MONTH ) )
+MoM %          = DIVIDE ( [Revenue] - [Revenue PM], [Revenue PM] )
+Revenue YTD    = TOTALYTD ( [Revenue], Dim_Tanggal[Date] )
+Rata-rata 3 bln = AVERAGEX ( DATESINPERIOD ( Dim_Tanggal[Date], MAX ( Dim_Tanggal[Date] ), -3, MONTH ), [Revenue] )</code></pre></div>
+ <div class="card"><h3>🔍 Daftar validasi</h3><div id="val"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Table calculation: <i>Percent difference from</i> (previous), Year-over-Year growth quick table calc; atau <code>LOOKUP(SUM([Revenue]), -12)</code> pada data bulanan.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 12</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const star = BI.data.star(BI.data.sales(1500, 7));
+const sum = BI.sum, avg = BI.avg;
+const F = star.fakta;
+const mon = (y, pick = r => r.Pendapatan) => BI.MON.map((_, m) => sum(F.filter(r => r.Tanggal.startsWith(y) && +r.Tanggal.slice(5, 7) === m + 1).map(pick)));
+const R = { y23: mon('2023'), y24: mon('2024') }, O = { y23: mon('2023', () => 1), y24: mon('2024', () => 1) };
+
+/* 1. MoM vs YoY */
+BI.seg('#p1-seg', [['mom', 'Growth MoM 2024'], ['yoy', 'Growth YoY 2024']], 'mom', v => {
+  const g = R.y24.map((x, i) => (v === 'mom' ? (i ? x / R.y24[i - 1] - 1 : null) : x / R.y23[i] - 1));
+  BI.bar('#p1-chart', { labels: BI.MON, series: [{ name: v === 'mom' ? 'MoM %' : 'YoY %', data: g.map(x => (x == null ? 0 : x * 100)) }], height: 240, fmt: v => v.toFixed(0) + '%', tipFmt: v => v.toFixed(1) + '%', colorBy: (i, x) => (x >= 0 ? 'var(--c3)' : 'var(--c4)') });
+  const vals = g.filter(x => x != null);
+  $('#p1-txt').innerHTML = v === 'mom' ? `<b class="t">MoM bergejolak</b>Naik-turun hingga ${(Math.max(...vals) * 100).toFixed(0)}% / ${(Math.min(...vals) * 100).toFixed(0)}% karena musim (hari raya, akhir tahun), bukan semata kinerja.` : `<b class="t">YoY lebih stabil</b>Bulan dibandingkan bulan yang sama tahun lalu sehingga efek musiman saling menghapus. Rata-rata growth YoY: <b>${pct(avg(vals))}</b>.`;
+});
+
+/* 2. date table */
+const cols = { Tahun: ['"Tahun", YEAR ( [Date] )', 'Tahun'], BulanNo: ['"BulanNo", MONTH ( [Date] )', 'BulanNo'], Bulan: ['"Bulan", FORMAT ( [Date], "MMM" )', 'Bulan'], Kuartal: ['"Kuartal", "Q" & QUARTER ( [Date] )', 'Kuartal'], NamaHari: ['"NamaHari", FORMAT ( [Date], "dddd" )', 'NamaHari'], AkhirPekan: ['"AkhirPekan", IF ( WEEKDAY ( [Date], 2 ) > 5, "Ya", "Tidak" )', 'AkhirPekan'] };
+const sel = new Set(['Tahun', 'BulanNo', 'Bulan']);
+Object.keys(cols).forEach(k => $('#dt-ctl').append(h('label', {}, h('input', { type: 'checkbox', checked: sel.has(k) ? '' : null, onchange(e) { e.target.checked ? sel.add(k) : sel.delete(k); dt(); } }), ' ' + k)));
+$('#dt-gap').onchange = dt;
+function dt() {
+  const ks = Object.keys(cols).filter(k => sel.has(k));
+  $('#dt-code').textContent = 'Dim_Tanggal =\nADDCOLUMNS (\n  CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2024, 12, 31 ) )' + ks.map(k => ',\n  ' + cols[k][0]).join('') + '\n)';
+  const gap = $('#dt-gap').checked;
+  let rows = star.dimTanggal.filter(r => !(gap && r.Tanggal.startsWith('2024-02'))).map(r => ({ Date: r.Tanggal, Tahun: r.Tahun, BulanNo: r.BulanNo, Bulan: r.Bulan, Kuartal: r.Kuartal, NamaHari: r.NamaHari, AkhirPekan: r.AkhirPekan }));
+  const show = ['Date', ...ks];
+  BI.table('#dt-tbl', { cols: show.map(k => ({ k, l: k })), rows: rows.filter(r => r.Date >= '2024-01-29').slice(0, 14), limit: 14, sort: false, maxH: 230 });
+  const days = rows.length;
+  $('#dt-val').className = 'callout ' + (gap ? 'bad' : 'ok');
+  $('#dt-val').innerHTML = gap ? `<b class="t">❌ Tidak valid: ${days} baris, seharusnya 731 (2023–2024)</b>Terlihat loncat dari 31 Jan ke 1 Mar. SAMEPERIODLASTYEAR/TOTALYTD akan error atau memberi hasil keliru pada Februari–Maret.` : `<b class="t">✅ Valid: ${days} baris</b>Kontinu, unik, mencakup 1 Jan 2023 – 31 Des 2024. Tandai sebagai Date Table (Table tools → Mark as date table) dan hubungkan ke Fakta[Tanggal].`;
+}
+dt();
+
+/* 3. bandingkan periode */
+const tp = { m: 10, kind: 'yoy', met: 'rev', cum: false };
+BI.select('#tp-ctl', 'Metrik', [['rev', 'Revenue'], ['ord', 'Jumlah order']], 'rev', v => { tp.met = v; tpr(); });
+BI.select('#tp-ctl', 'Perbandingan', [['yoy', 'YoY (tahun lalu)'], ['mom', 'MoM (bulan lalu)'], ['ytd', 'YTD vs YTD tahun lalu']], 'yoy', v => { tp.kind = v; tpr(); });
+BI.slider('#tp-ctl', 'Bulan dipilih', 1, 12, 1, 11, v => { tp.m = v - 1; tpr(); }, v => BI.MON[v - 1] + ' 2024');
+const DAX = { yoy: 'Revenue LY =\nCALCULATE ( [Revenue], SAMEPERIODLASTYEAR ( Dim_Tanggal[Date] ) )\n\nYoY % =\nDIVIDE ( [Revenue] - [Revenue LY], [Revenue LY] )', mom: 'Revenue PM =\nCALCULATE ( [Revenue], DATEADD ( Dim_Tanggal[Date], -1, MONTH ) )\n\nMoM % =\nDIVIDE ( [Revenue] - [Revenue PM], [Revenue PM] )', ytd: 'Revenue YTD =\nTOTALYTD ( [Revenue], Dim_Tanggal[Date] )\n\nYTD LY =\nCALCULATE ( [Revenue YTD], SAMEPERIODLASTYEAR ( Dim_Tanggal[Date] ) )' };
+function tpr() {
+  const D = tp.met === 'rev' ? R : O, f = tp.met === 'rev' ? v => 'Rp ' + short(v) : fmt, m = tp.m;
+  const cum = a => a.reduce((o, v, i) => (o.push((o[i - 1] || 0) + v), o), []);
+  let cur, prev, lab;
+  if (tp.kind === 'yoy') { cur = D.y24[m]; prev = D.y23[m]; lab = ['Bulan ini', 'Bulan sama 2023']; }
+  else if (tp.kind === 'mom') { cur = D.y24[m]; prev = m ? D.y24[m - 1] : null; lab = ['Bulan ini', 'Bulan lalu']; }
+  else { cur = cum(D.y24)[m]; prev = cum(D.y23)[m]; lab = ['YTD 2024', 'YTD 2023']; }
+  const d = prev ? cur / prev - 1 : null;
+  BI.kpi('#tp-kpi', [{ label: lab[0], value: f(cur) }, { label: lab[1], value: prev == null ? 'n/a' : f(prev) }, { label: 'Selisih %', value: d == null ? 'n/a' : pct(d), delta: d }]);
+  const a = tp.kind === 'ytd' ? cum(D.y24) : D.y24, b = tp.kind === 'ytd' ? cum(D.y23) : D.y23;
+  BI.line('#tp-chart', { labels: BI.MON, series: [{ name: '2024', data: a }, { name: '2023', data: b, dash: true, color: 'var(--c8)' }], height: 260, zero: true, annotate: [{ i: m, text: '◀ dipilih' }] });
+  $('#tp-dax').textContent = DAX[tp.kind];
+  $('#tp-note').innerHTML = tp.kind === 'mom' ? '<b class="t">Hati-hati</b>MoM pada data musiman mudah salah baca. Pakai bersama YoY.' : tp.kind === 'ytd' ? '<b class="t">YTD</b>Akumulasi sejak 1 Januari; cocok untuk memantau capaian target tahunan.' : '<b class="t">YoY</b>Bandingan paling adil untuk bisnis musiman.';
+}
+tpr();
+
+/* 4. MA & musiman */
+const wk = []; { const start = new Date(Date.UTC(2023, 0, 2)); for (let i = 0; i < 104; i++) { const a = new Date(start.getTime() + i * 7 * 864e5).toISOString().slice(0, 10), b = new Date(start.getTime() + (i + 1) * 7 * 864e5).toISOString().slice(0, 10); wk.push(sum(F.filter(r => r.Tanggal >= a && r.Tanggal < b).map(r => r.Pendapatan))); } }
+let win = 4;
+BI.slider('#ma-ctl', 'Jendela rata-rata bergerak (minggu)', 1, 12, 1, win, v => { win = v; mar(); }, v => v + ' mgg');
+function mar() {
+  const ma = wk.map((_, i) => (i < win - 1 ? null : avg(wk.slice(i - win + 1, i + 1))));
+  BI.line('#ma-chart', { labels: wk.map((_, i) => 'M' + (i + 1)), series: [{ name: 'Mingguan', data: wk, color: 'var(--c8)', width: 1.5 }, { name: 'Rata-rata bergerak', data: ma, color: 'var(--c1)', width: 3.2 }], height: 260, zero: true, markers: false, maxLabels: 14 });
+}
+mar();
+const all = [...R.y23, ...R.y24], mean = avg(all), si = BI.MON.map((_, i) => (avg([R.y23[i], R.y24[i]]) / mean) * 100);
+BI.bar('#si-chart', { labels: BI.MON, series: [{ name: 'Indeks', data: si }], height: 220, colorBy: (i, v) => (v >= 100 ? 'var(--c2)' : 'var(--c1)'), fmt: v => v.toFixed(0), target: 100, targetLabel: '100' });
+const hiI = si.indexOf(Math.max(...si)), low = si.indexOf(Math.min(...si));
+$('#si-txt').innerHTML = `<b class="t">Pola musiman</b>Puncak <b>${BI.MON[hiI]}</b> (indeks ${si[hiI].toFixed(0)}), terendah <b>${BI.MON[low]}</b> (${si[low].toFixed(0)}). Target bulanan sebaiknya menyesuaikan indeks musiman, bukan rata-rata datar.`;
+
+/* Praktik */
+const dl = $('#dl');
+[['penjualan_fakta.csv', F], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+BI.steps('#steps', [
+  { t: 'Muat penjualan', tm: '5\'', b: 'Muat <code>penjualan_fakta.csv</code> dan dimensi. Tipe Tanggal = Date.' },
+  { t: 'Buat tabel kalender', tm: '20\'', b: 'Modeling → New table → tempel DAX <i>Dim_Tanggal</i>. Tambah kolom Tahun, BulanNo, Bulan. <b>Sort by column</b>: Bulan oleh BulanNo.' },
+  { t: 'Relasi &amp; tandai', tm: '15\'', b: 'Hubungkan <code>Dim_Tanggal[Date]</code> 1→* <code>Fakta[Tanggal]</code>. Table tools → <b>Mark as date table</b>. Sembunyikan Fakta[Tanggal] dari tampilan laporan.' },
+  { t: 'Measure waktu', tm: '25\'', b: 'Revenue, Revenue LY, YoY %, Revenue PM, MoM %, Revenue YTD. Uji pada tabel (Bulan × measure) dan cocokkan dengan hitungan manual untuk 1 bulan.' },
+  { t: 'Grafik tren', tm: '20\'', b: 'Line chart: Axis = Bulan; Values = Revenue &amp; Revenue LY (garis putus-putus). Kartu YoY % dengan warna kondisional (hijau/merah).' },
+  { t: 'Validasi', tm: '10\'', b: 'Gunakan daftar validasi di bawah.' },
+  { t: 'Refleksi', tm: '5\'', b: 'Dalam kasus apa YoY menyesatkan? (mis. promo besar yang bergeser tanggal.)' }
+]);
+BI.checklist('#val', ['Tabel kalender kontinu (jumlah baris = jumlah hari)', 'Rentang mencakup seluruh data fakta', 'Tidak ada tanggal duplikat', 'Ditandai sebagai Date Table', 'Bulan terurut Jan–Des (Sort by column)', 'Periode terakhir belum lengkap tidak dibandingkan dengan periode penuh'], 'p12val');
+BI.checklist('#chk', ['Dim_Tanggal dibuat dan berelasi', 'YoY, MoM, YTD berfungsi dan diverifikasi', 'Line chart 2 tahun tampil', 'Kartu growth dengan warna kondisional', 'Validasi periode selesai'], 'p12');
+
+BI.quiz('#quiz', [
+  { q: 'Tabel kalender untuk time intelligence harus…', o: ['Berisi hanya hari kerja', 'Kontinu dan unik', 'Satu baris per bulan', 'Tidak berelasi'], a: 1, e: 'Setiap hari harus ada tepat sekali.' },
+  { q: 'Pada bisnis musiman, perbandingan paling adil adalah…', o: ['MoM', 'YoY', 'Acak', 'Total tahun'], a: 1, e: 'Bulan yang sama tahun lalu.' },
+  { q: 'Fungsi DAX untuk akumulasi sejak awal tahun:', o: ['TOTALYTD', 'SUMX', 'ALL', 'RELATED'], a: 0, e: 'TOTALYTD = year-to-date.' },
+  { q: 'Rata-rata bergerak berguna untuk…', o: ['Menambah derau', 'Menghaluskan fluktuasi sehingga tren terlihat', 'Menghapus data', 'Mengurutkan'], a: 1, e: 'Smoothing.' },
+  { q: 'SAMEPERIODLASTYEAR membutuhkan…', o: ['Kolom Date pada tabel kalender', 'Kolom teks', 'Slicer', 'Gateway'], a: 0, e: 'Argumen kolom tanggal pada Date Table.' },
+  { q: 'Indeks musiman 150 pada Desember berarti…', o: ['Desember 50% di atas rata-rata bulan', '150 order', 'Turun 50%', 'Tidak bermakna'], a: 0, e: '100 = rata-rata.' }
+]);
+</script>

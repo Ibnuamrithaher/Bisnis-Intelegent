@@ -1,0 +1,88 @@
+<section class="pane" id="teori">
+ <h2>1. Garbage in, garbage out: temukan masalahnya</h2>
+ <div class="card">
+  <p>Analis sering menghabiskan sebagian besar waktunya untuk menyiapkan data, bukan menganalisis. Satu kolom kota yang ditulis "Jakarta", "jakarta ", dan "JKT" dihitung sebagai <b>tiga kota berbeda</b> di grafik. Pembersihan menentukan apakah angka di dashboard layak dipercaya.</p>
+  <div class="callout"><b class="t">Tantangan 60 detik</b>Klik sel yang menurut Anda bermasalah pada tabel di bawah (ada <b>13</b> masalah di sel berbeda, belum termasuk fakta bahwa kolom Harga bertipe teks). Tekan "Tampilkan jawaban" bila sudah.</div>
+  <div class="tblwrap"><table class="tbl" id="hunt"></table></div>
+  <div class="row"><button class="btn pri" id="hunt-ans">Tampilkan jawaban</button><button class="btn" id="hunt-reset">⟲ Ulangi</button><span class="chip" id="hunt-sc">Belum ada sel ditandai</span></div>
+  <div id="hunt-txt" class="callout" style="display:none"></div>
+ </div>
+
+ <h2>2. Delapan jenis masalah kualitas data</h2>
+ <div class="card">
+  <p class="muted">Setiap masalah punya cara mendeteksi dan cara memperbaiki yang berbeda. Klik satu per satu.</p>
+  <div id="tx-sel" class="flow"></div><div id="tx-info" class="grid3"></div>
+ </div>
+
+ <h2>3. Lima C (5 Cs of Data)</h2>
+ <div class="card"><div id="cs-sel" class="flow"></div><div id="cs-info" class="grid2"></div></div>
+
+ <h2>4. Profiling: membaca "kesehatan" sebuah kolom</h2>
+ <div class="card">
+  <p>Sebelum memperbaiki, <b>ukur dulu</b>. Power Query menyediakan <i>Column quality</i> (valid / error / kosong), <i>Column distribution</i> (jumlah nilai unik) dan <i>Column profile</i> (sebaran nilai). Pilih kolom pada 300 baris data kotor, lalu bandingkan sebelum dan sesudah dibersihkan.</p>
+  <div class="controls" id="pf-ctl"></div><div id="pf-seg"></div>
+  <div class="grid2"><div id="pf-chart"></div><div><div id="pf-kpi"></div><div id="pf-txt" class="callout"></div></div></div>
+ </div>
+
+ <h2>5. Tipe data: kesalahan kecil, dampak besar</h2>
+ <div class="card">
+  <p>Tipe data menentukan operasi apa yang boleh dilakukan. Tiga jebakan klasik:</p>
+  <div class="grid3">
+   <div class="card"><h4>a) Angka tersimpan sebagai teks</h4><div id="ty-a-seg"></div><div id="ty-a"></div></div>
+   <div class="card"><h4>b) Urutan teks ≠ urutan angka</h4><div id="ty-b-seg"></div><div id="ty-b"></div></div>
+   <div class="card"><h4>c) Tanggal dan locale</h4><div id="ty-c-ctl" class="controls"></div><div id="ty-c"></div></div>
+  </div>
+ </div>
+
+ <h2>6. Lab: Power Query mini</h2>
+ <div class="card">
+  <p class="muted">Terapkan langkah satu per satu pada tabel kotor tadi. Perhatikan profil kualitas kolom dan <b>Applied Steps</b> bertambah. Target: skor kualitas 100%.</p>
+  <div class="row" id="pq-btns"></div>
+  <div class="grid2" style="grid-template-columns:2fr 1fr;align-items:start">
+   <div><div id="pq-tbl"></div></div>
+   <div><h4>Applied Steps</h4><ol id="pq-steps" class="small" style="padding-left:20px"></ol><div class="row"><button class="btn sm" id="pq-undo">↶ Urungkan</button><button class="btn sm" id="pq-reset">⟲ Ulang</button></div></div>
+  </div>
+  <h4 class="mt">Profil kualitas kolom</h4>
+  <div id="pq-prof"></div>
+  <div class="kpis" id="pq-score"></div>
+  <div id="pq-hint" class="callout"></div>
+ </div>
+
+ <h2>7. Transformasi struktur: pecah, gabung, bersyarat, unpivot</h2>
+ <div class="card">
+  <p>Setelah isinya bersih, bentuk tabel harus sesuai kebutuhan analisis. Ubah pengaturan dan lihat kolom baru muncul.</p>
+  <div class="controls" id="st-ctl"></div>
+  <div id="st-tbl"></div><pre><code id="st-code"></code></pre>
+  <h4 class="mt">Unpivot: dari tabel lebar ke tabel panjang</h4>
+  <p class="small muted">Laporan Excel sering menaruh bulan sebagai kolom. Grafik dan DAX membutuhkan satu kolom <i>Bulan</i> dan satu kolom <i>Nilai</i>.</p>
+  <div id="up-seg"></div>
+  <div class="grid2"><div id="up-tbl"></div><div><div id="up-chart"></div><div id="up-txt" class="callout"></div></div></div>
+ </div>
+
+ <h2>8. Duplikat: persis atau berdasarkan kunci?</h2>
+ <div class="card">
+  <p>Pesanan T100 tercatat tiga kali: dua baris identik dan satu revisi 5 menit kemudian (Qty 3). Pilih strategi dan lihat dampaknya pada total Qty. Jawaban yang benar adalah <b>8</b>.</p>
+  <div id="dp-seg"></div>
+  <div class="grid2"><div id="dp-tbl"></div><div><div id="dp-kpi"></div><div id="dp-txt" class="callout"></div></div></div>
+ </div>
+
+ <h2>9. Null dan outlier: hapus, isi, atau biarkan?</h2>
+ <div class="card">
+  <p>Nilai order (ribu rupiah) dari 12 transaksi: dua kosong dan satu salah ketik (5000 seharusnya 500).</p>
+  <div id="nl-seg"></div>
+  <div class="grid2"><div id="nl-chart"></div><div><div id="nl-kpi"></div><div id="nl-txt" class="callout"></div></div></div>
+  <h4 class="mt">Mendeteksi outlier: aturan IQR</h4>
+  <p class="small muted">Batas wajar = Q1 − k·IQR hingga Q3 + k·IQR. Ubah k untuk melihat nilai mana yang ditandai.</p>
+  <div class="controls" id="iq-ctl"></div><div id="iq-out" class="callout"></div>
+ </div>
+
+ <h2>10. Studi kasus: mengapa dua laporan memberi angka berbeda?</h2>
+ <div class="card">
+  <p>Analis A dan B sama-sama menghitung total penjualan dari <b>file yang sama</b> (300 baris data kotor), tetapi hasilnya berbeda. Telusuri langkah demi langkah mana saja penyebab selisihnya.</p>
+  <div id="rc-seg"></div>
+  <div class="grid2"><div id="rc-chart"></div><div><div id="rc-kpi"></div><div id="rc-txt" class="callout"></div></div></div>
+ </div>
+
+ <h2>11. Urutan kerja aman dan peta teknik</h2>
+ <div class="card"><div class="flow" id="order"></div><div id="sum-tbl" class="mt"></div></div>
+</section>

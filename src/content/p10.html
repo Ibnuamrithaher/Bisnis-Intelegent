@@ -1,0 +1,155 @@
+<section class="pane" id="teori">
+ <h2>1. Berapa biaya satu karyawan yang keluar?</h2>
+ <div class="card">
+  <p>Karyawan keluar berarti biaya rekrutmen, pelatihan, penurunan produktivitas, dan pengetahuan yang hilang. Riset praktik SDM sering memperkirakannya sebesar 0,5 hingga 2 kali gaji tahunan, tergantung jabatan. Gunakan kalkulator untuk memperkirakan nilai di organisasi Anda (asumsi, bukan angka pasti).</p>
+  <div class="controls" id="tc-ctl"></div>
+  <div id="tc-kpi"></div><div id="tc-txt" class="callout"></div>
+ </div>
+
+ <h2>2. Dashboard HR interaktif</h2>
+ <div class="card">
+  <p class="muted">Klik batang departemen untuk memfilter seluruh dashboard. Perhatikan metrik, sebaran usia, dan alasan keluar berubah.</p>
+  <div class="controls" id="hr-ctl"></div>
+  <div class="dash-frame">
+   <div id="hr-kpi"></div>
+   <div class="grid3">
+    <div class="card"><h4>Karyawan per departemen</h4><div id="hr-dep"></div></div>
+    <div class="card"><h4>Sebaran usia</h4><div id="hr-age"></div></div>
+    <div class="card"><h4>Gender</h4><div id="hr-gen"></div></div>
+   </div>
+   <div class="grid2">
+    <div class="card"><h4>Attrition per departemen</h4><div id="hr-att"></div></div>
+    <div class="card"><h4>Alasan keluar</h4><div id="hr-rsn"></div></div>
+   </div>
+  </div>
+ </div>
+
+ <h2>3. Mencari pola: masa kerja, kehadiran, kinerja</h2>
+ <div class="card">
+  <div class="grid2"><div><h4>Attrition: departemen × masa kerja</h4><div id="hm"></div></div><div><h4>Kehadiran vs skor kinerja</h4><div id="sc"></div></div></div>
+  <div id="pat-txt" class="callout"></div>
+  <p class="small muted">Korelasi bukan kausalitas. Pola ini adalah hipotesis untuk diverifikasi lewat wawancara keluar (exit interview) dan survei.</p>
+ </div>
+
+ <h2>4. Etika &amp; privasi data karyawan</h2>
+ <div class="card">
+  <p>Data HR sensitif. Dua praktik dasar: <b>agregasi minimum</b> (jangan tampilkan kelompok kurang dari 5 orang) dan <b>akses berdasarkan peran</b> (RLS, Pertemuan 13). Coba filter di bawah.</p>
+  <div class="controls" id="pv-ctl"></div>
+  <div class="grid2"><div id="pv-out" class="callout"></div><div><label class="small"><input type="checkbox" id="pv-mask" checked> Terapkan ambang minimum (n &lt; 5 disembunyikan)</label><div id="pv-tbl"></div></div></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b><code>P10_HRDashboard.pbix</code> (1 halaman utama + catatan etika) dan 3 rekomendasi retensi berbasis data.</div>
+ <div class="card"><h3>⬇ Dataset</h3><p class="small">320 karyawan fiktif (tanpa nama). Kolom: ID, Departemen, Gender, Usia, MasaKerjaTahun, Gaji, KehadiranPct, SkorKinerja, Status, AlasanKeluar.</p><div id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧾 Measure HR</h3><pre><code>Headcount Total = COUNTROWS ( HR )
+Karyawan Aktif = CALCULATE ( [Headcount Total], HR[Status] = "Aktif" )
+Karyawan Keluar = CALCULATE ( [Headcount Total], HR[Status] = "Keluar" )
+Attrition % = DIVIDE ( [Karyawan Keluar], [Headcount Total] )
+Rata-rata Masa Kerja = AVERAGE ( HR[MasaKerjaTahun] )
+Rata-rata Kehadiran = AVERAGE ( HR[KehadiranPct] ) / 100
+
+Kelompok Usia (calculated column) =
+SWITCH ( TRUE (),
+  HR[Usia] &lt; 25, "&lt;25",
+  HR[Usia] &lt; 35, "25–34",
+  HR[Usia] &lt; 45, "35–44",
+  "45+" )</code></pre></div>
+ <div class="card"><h3>🧠 Template rekomendasi retensi</h3><div id="rec"></div><div id="rec-out" class="callout ok"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Binning: klik kanan Usia → Create → Bins (size 5). Parameter untuk ambang minimum; filter pada <code>COUNTD([ID]) &gt;= 5</code>.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 10</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const HR = BI.data.hr(320, 5), sum = BI.sum, avg = BI.avg;
+const DEP = [...new Set(HR.map(r => r.Departemen))];
+const bucket = t => (t < 1 ? '<1 th' : t < 2 ? '1–2 th' : t < 5 ? '2–5 th' : '5+ th');
+const BK = ['<1 th', '1–2 th', '2–5 th', '5+ th'];
+
+/* 1. biaya turnover */
+const tc = { hc: 300, at: 15, gaji: 8500000, mult: 0.8 };
+BI.slider('#tc-ctl', 'Headcount', 50, 2000, 10, tc.hc, v => { tc.hc = v; tcc(); }, fmt);
+BI.slider('#tc-ctl', 'Attrition tahunan', 2, 40, 1, tc.at, v => { tc.at = v; tcc(); }, v => v + '%');
+BI.slider('#tc-ctl', 'Gaji rata-rata/bulan', 3000000, 25000000, 500000, tc.gaji, v => { tc.gaji = v; tcc(); }, rp);
+BI.slider('#tc-ctl', 'Biaya per keluar (× gaji tahunan)', 0.3, 2, 0.1, tc.mult, v => { tc.mult = v; tcc(); }, v => v.toFixed(1) + '×');
+function tcc() {
+  const out = tc.hc * tc.at / 100, unit = tc.gaji * 12 * tc.mult, tot = out * unit, saved = tot * 0.2;
+  BI.kpi('#tc-kpi', [{ label: 'Karyawan keluar/tahun', value: fmt(out) }, { label: 'Biaya per keluar', value: 'Rp ' + short(unit) }, { label: 'Total biaya turnover', value: 'Rp ' + short(tot) }]);
+  $('#tc-txt').innerHTML = `Menurunkan attrition sebesar 20% (mis. dari ${tc.at}% ke ${(tc.at * 0.8).toFixed(1).replace('.', ',')}%) menghemat sekitar <b>Rp ${short(saved)}</b>/tahun. Angka ini batas atas anggaran program retensi yang masih masuk akal.`;
+}
+tcc();
+
+/* 2. dashboard */
+let dep = '', gen = '';
+BI.select('#hr-ctl', 'Gender', [['', '(semua)'], 'Perempuan', 'Laki-laki'], '', v => { gen = v; hr(); });
+$('#hr-ctl').append(h('button', { class: 'btn sm', onclick() { dep = ''; gen = ''; $('#hr-ctl select').value = ''; hr(); } }, '⟲ Reset'));
+function hr() {
+  const rows = HR.filter(r => (!dep || r.Departemen === dep) && (!gen || r.Gender === gen)), left = rows.filter(r => r.Status === 'Keluar'), act = rows.filter(r => r.Status === 'Aktif');
+  BI.kpi('#hr-kpi', [{ label: 'Headcount aktif', value: fmt(act.length), sub: 'total tercatat ' + rows.length }, { label: 'Attrition', value: pct(left.length / (rows.length || 1)), delta: left.length / (rows.length || 1) - 0.12, good: 'down', note: 'vs patokan 12%' }, { label: 'Rata-rata masa kerja', value: avg(rows.map(r => r.MasaKerjaTahun)).toFixed(1).replace('.', ',') + ' th' }, { label: 'Kehadiran', value: avg(rows.map(r => r.KehadiranPct)).toFixed(1).replace('.', ',') + '%' }, { label: 'Skor kinerja', value: avg(rows.map(r => r.SkorKinerja)).toFixed(2).replace('.', ',') + ' / 5' }]);
+  const dc = DEP.map(d => HR.filter(r => r.Departemen === d && (!gen || r.Gender === gen)).length);
+  BI.hbar('#hr-dep', { labels: DEP, data: dc, rowH: 24, highlight: dep ? DEP.indexOf(dep) : null, onClick: i => { dep = dep === DEP[i] ? '' : DEP[i]; hr(); } });
+  const ab = ['<25', '25–29', '30–34', '35–39', '40–44', '45+'], ar = a => (a < 25 ? 0 : a < 30 ? 1 : a < 35 ? 2 : a < 40 ? 3 : a < 45 ? 4 : 5);
+  const ad = ab.map((_, i) => rows.filter(r => ar(r.Usia) === i).length);
+  BI.bar('#hr-age', { labels: ab, series: [{ name: 'Karyawan', data: ad }], height: 200, gap: 0.95, fmt: v => v });
+  const g = ['Perempuan', 'Laki-laki'].map(x => rows.filter(r => r.Gender === x).length);
+  BI.pie('#hr-gen', { labels: ['Perempuan', 'Laki-laki'], data: g, donut: true, center: { big: String(rows.length), small: 'karyawan' }, colors: ['var(--c7)', 'var(--c1)'] });
+  const ar2 = DEP.map(d => { const r = HR.filter(x => x.Departemen === d && (!gen || x.Gender === gen)); return r.filter(x => x.Status === 'Keluar').length / (r.length || 1); });
+  BI.hbar('#hr-att', { labels: DEP, data: ar2, rowH: 24, fmt: v => (v * 100).toFixed(0) + '%', valFmt: v => pct(v), target: 0.12, colorBy: (i, v) => (v > 0.12 ? 'var(--c4)' : 'var(--c3)'), highlight: dep ? DEP.indexOf(dep) : null });
+  const rs = BI.groupBy(left, 'AlasanKeluar', null, 'count').sort((a, b) => b.value - a.value);
+  $('#hr-rsn').innerHTML = ''; if (rs.length) BI.hbar('#hr-rsn', { labels: rs.map(x => x.key), data: rs.map(x => x.value), rowH: 26, fmt: v => v, valFmt: v => v + ' org' }); else $('#hr-rsn').textContent = 'Tidak ada data keluar.';
+}
+hr();
+
+/* 3. pola */
+const rate = (rows) => rows.length ? rows.filter(r => r.Status === 'Keluar').length / rows.length : 0;
+BI.heat('#hm', { rows: DEP, cols: BK, matrix: DEP.map(d => BK.map(b => rate(HR.filter(r => r.Departemen === d && bucket(r.MasaKerjaTahun) === b)))), show: true, fmt: v => (v * 100).toFixed(0) + '%', tipFmt: v => pct(v), color: 'var(--c4)', cellH: 30 });
+BI.scatter('#sc', { points: HR.map(r => ({ x: r.KehadiranPct, y: r.SkorKinerja + (Math.sin(r.Gaji) * 0.15), g: r.Status, label: r.ID })), groupColors: { Aktif: 'var(--c1)', Keluar: 'var(--c4)' }, xLabel: 'Kehadiran %', yLabel: 'Skor kinerja', yZero: false, xFmt: v => v, yFmt: v => v.toFixed(0), r: 4, height: 280 });
+const byB = BK.map(b => rate(HR.filter(r => bucket(r.MasaKerjaTahun) === b))), lowAtt = rate(HR.filter(r => r.KehadiranPct < 85)), hiAtt = rate(HR.filter(r => r.KehadiranPct >= 85));
+$('#pat-txt').innerHTML = `<b class="t">Temuan awal</b>Attrition pada masa kerja &lt;1 tahun adalah <b>${pct(byB[0])}</b> vs <b>${pct(byB[3])}</b> pada 5+ tahun. Karyawan dengan kehadiran &lt;85% keluar <b>${pct(lowAtt)}</b> vs <b>${pct(hiAtt)}</b>. Prioritaskan onboarding 12 bulan pertama dan pantau tren kehadiran sebagai sinyal dini.`;
+
+/* 4. privasi */
+const pv = { d: '', a: '', g: '' };
+BI.select('#pv-ctl', 'Departemen', [['', '(semua)'], ...DEP], '', v => { pv.d = v; pvr(); });
+BI.select('#pv-ctl', 'Kelompok usia', [['', '(semua)'], ['<25', '<25'], ['25-34', '25–34'], ['35-44', '35–44'], ['45+', '45+']], '', v => { pv.a = v; pvr(); });
+BI.select('#pv-ctl', 'Gender', [['', '(semua)'], 'Perempuan', 'Laki-laki'], '', v => { pv.g = v; pvr(); });
+$('#pv-mask').onchange = pvr;
+function pvr() {
+  const ag = u => (u < 25 ? '<25' : u < 35 ? '25-34' : u < 45 ? '35-44' : '45+');
+  const rows = HR.filter(r => (!pv.d || r.Departemen === pv.d) && (!pv.a || ag(r.Usia) === pv.a) && (!pv.g || r.Gender === pv.g));
+  const hide = $('#pv-mask').checked && rows.length < 5;
+  $('#pv-out').innerHTML = hide ? `<b class="t">🔒 Disembunyikan</b>Kelompok ini hanya ${rows.length} orang (&lt;5). Menampilkan rata-rata gaji/kinerja dapat mengungkap identitas individu.` : `<b class="t">Kelompok: ${rows.length} orang</b>Rata-rata gaji: <b>${rows.length ? rp(avg(rows.map(r => r.Gaji))) : '-'}</b><br>Attrition: <b>${pct(rate(rows))}</b>${rows.length < 5 ? '<br><span class="chip bad">⚠ kelompok kecil, risiko identifikasi</span>' : ''}`;
+  BI.table('#pv-tbl', { cols: [{ k: 'ID', l: 'ID' }, { k: 'Departemen', l: 'Dept' }, { k: 'Usia', l: 'Usia', r: 1 }, { k: 'Gaji', l: 'Gaji', r: 1, f: v => (hide ? '•••' : fmt(v)) }], rows: hide ? [] : rows, limit: 8, maxH: 200, sort: false });
+}
+pvr();
+
+/* Praktik */
+BI.dlButton('#dl', 'Unduh data HR', 'data_hr.csv', () => BI.data.hr(320, 5));
+BI.steps('#steps', [
+  { t: 'Muat & tipe data', tm: '5\'', b: 'Muat CSV; MasaKerjaTahun, Gaji, KehadiranPct, SkorKinerja = Number; Status = Text.' },
+  { t: 'Measure HR', tm: '20\'', b: 'Buat 6 measure pada kotak di atas dan kolom <i>Kelompok Usia</i> (SWITCH TRUE).' },
+  { t: 'Demografi', tm: '20\'', b: 'Bar Kelompok Usia (urut manual dengan Sort by column), donut Gender (warna netral), bar Departemen.' },
+  { t: 'Analisis attrition', tm: '20\'', b: 'Bar Attrition % per Departemen dengan garis patokan 12% (Analytics → Constant line). Bar Alasan Keluar (filter Status = Keluar). Matriks Departemen × kelompok masa kerja dengan background color gradient.' },
+  { t: 'Privasi & layout', tm: '20\'', b: 'Tidak menampilkan nama/ID di dashboard. Beri catatan "Kelompok &lt;5 orang disembunyikan" (measure IF COUNT &lt; 5, BLANK()).' },
+  { t: 'Rekomendasi', tm: '10\'', b: 'Gunakan template di bawah.' },
+  { t: 'Refleksi', tm: '5\'', b: 'Data apa yang sebaiknya tidak pernah masuk dashboard publik?' }
+]);
+const rec = { f: 'Attrition tinggi pada karyawan <1 tahun', a: 'Program onboarding 90 hari + mentor', m: 'Attrition <1 th turun dari 24% ke 15%' };
+const opts = { f: ['Attrition tinggi pada karyawan <1 tahun', 'Departemen Customer Care melampaui patokan 12%', 'Kehadiran <85% berkaitan dengan keluar'], a: ['Program onboarding 90 hari + mentor', 'Tinjau beban kerja dan penjadwalan shift', 'Survei pulse bulanan dan intervensi dini'], m: ['Attrition <1 th turun dari 24% ke 15%', 'Attrition departemen turun 3 poin dalam 2 kuartal', 'Kehadiran rata-rata naik ke 92%'] };
+[['f', 'Temuan'], ['a', 'Tindakan'], ['m', 'Target terukur']].forEach(([k, l]) => BI.select('#rec', l, opts[k], rec[k], v => { rec[k] = v; rc(); }));
+function rc() { $('#rec-out').innerHTML = `<b class="t">Rekomendasi</b>Karena <b>${rec.f}</b>, kami usulkan <b>${rec.a}</b> dengan target <b>${rec.m}</b>.`; }
+rc();
+BI.checklist('#chk', ['Measure HR berfungsi (Attrition % cocok dengan hitungan manual)', 'Kelompok usia terurut benar', 'Attrition per departemen dengan garis patokan', 'Alasan keluar ditampilkan', 'Tidak ada nama/ID individual di dashboard', '3 rekomendasi retensi ditulis'], 'p10');
+
+BI.quiz('#quiz', [
+  { q: 'Attrition % (sederhana) =', o: ['Aktif ÷ total', 'Keluar ÷ total karyawan pada periode', 'Gaji ÷ headcount', 'Kehadiran ÷ 100'], a: 1, e: 'Proporsi karyawan yang keluar.' },
+  { q: 'Mengapa kelompok <5 orang disembunyikan?', o: ['Terlalu kecil untuk grafik', 'Mencegah identifikasi individu', 'Software membatasi', 'Warna'], a: 1, e: 'Agregasi minimum melindungi privasi.' },
+  { q: 'Attrition tinggi di tahun pertama menyarankan…', o: ['Naikkan harga', 'Perbaiki onboarding & ekspektasi peran', 'Hentikan rekrutmen', 'Tidak ada tindakan'], a: 1, e: 'Intervensi pada fase awal.' },
+  { q: 'Korelasi antara kehadiran rendah dan keluar berarti…', o: ['Absen menyebabkan keluar', 'Hubungan yang perlu diselidiki, belum tentu kausal', 'Selalu salah', 'Selalu benar'], a: 1, e: 'Korelasi ≠ kausalitas.' },
+  { q: 'Pengelompokan usia ke kelompok dibuat dengan…', o: ['Slicer', 'Calculated column (SWITCH) atau binning', 'Relasi', 'Gateway'], a: 1, e: 'SWITCH(TRUE(),…) membuat kelompok.' },
+  { q: 'Garis patokan 12% pada grafik berguna untuk…', o: ['Dekorasi', 'Membandingkan tiap departemen dengan acuan', 'Mengurutkan', 'Menyembunyikan data'], a: 1, e: 'Pembanding memberi makna angka.' }
+]);
+</script>

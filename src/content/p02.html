@@ -1,0 +1,300 @@
+<section class="pane" id="teori">
+ <h2>1. Mengapa data harus dipindahkan dulu?</h2>
+ <div class="card">
+  <p>Data bisnis tersebar: kasir (POS), website, marketplace, spreadsheet tim, bahkan chat. Format, nama kolom, dan satuannya berbeda. Menganalisis langsung di sumber itu lambat, berisiko mengganggu sistem transaksi, dan hasilnya tidak konsisten. Solusinya <b>integrasi data</b> lewat proses <b>ETL</b>.</p>
+ </div>
+
+ <h2>2. Alur ETL langkah demi langkah</h2>
+ <div class="card">
+  <p class="muted">Tekan tombol berurutan dan perhatikan bagaimana dua sumber yang berbeda menjadi satu tabel seragam.</p>
+  <div id="etl-seg"></div>
+  <div class="grid2">
+   <div><h4>Sumber A: Kasir toko (CSV)</h4><div id="etl-a"></div></div>
+   <div><h4>Sumber B: Website (database)</h4><div id="etl-b"></div></div>
+  </div>
+  <h4 class="mt" id="etl-t">Hasil</h4><div id="etl-out"></div>
+  <div id="etl-note" class="callout"></div>
+ </div>
+
+ <h2>3. OLTP vs OLAP</h2>
+ <div class="card">
+  <p>Pertanyaan: <i>"Berapa total penjualan per wilayah per bulan?"</i>. Jalankan benchmark nyata di browser Anda. Sistem OLTP harus menyaring dan menjumlahkan baris transaksi; sistem OLAP/warehouse sudah menyimpan agregat.</p>
+  <div class="controls"><span id="bm-size"></span><button class="btn pri" id="bm-run">▶ Jalankan benchmark</button></div>
+  <div class="grid2"><div id="bm-chart"></div><div id="bm-text" class="callout">Tekan tombol untuk mulai.</div></div>
+  <div class="tblwrap mt"><table class="tbl"><thead><tr><th>Aspek</th><th>OLTP (operasional)</th><th>OLAP / Data Warehouse</th></tr></thead><tbody>
+   <tr><td>Tujuan</td><td>Mencatat transaksi harian</td><td>Menganalisis dan mengambil keputusan</td></tr>
+   <tr><td>Operasi dominan</td><td>INSERT / UPDATE kecil</td><td>SELECT agregasi besar</td></tr>
+   <tr><td>Struktur</td><td>Ternormalisasi (banyak tabel)</td><td>Dimensional (fakta + dimensi)</td></tr>
+   <tr><td>Data</td><td>Terkini, rinci</td><td>Historis, terintegrasi</td></tr>
+   <tr><td>Pengguna</td><td>Kasir, aplikasi</td><td>Analis, manajer</td></tr>
+   <tr><td>Contoh</td><td>Database aplikasi toko</td><td>Warehouse penjualan</td></tr>
+  </tbody></table></div>
+ </div>
+
+ <h2>4. Arsitektur data warehouse</h2>
+ <div class="card">
+  <div class="flow" id="arch"></div>
+  <div id="arch-info" class="callout"></div>
+ </div>
+
+ <h2>5. Jenis sumber data dan jebakannya</h2>
+ <div class="card">
+  <div id="src-seg"></div>
+  <div id="src-info" class="grid2"></div>
+ </div>
+
+ <h2>6. Import atau DirectQuery?</h2>
+ <div class="card">
+  <div class="controls" id="iq-ctl"></div>
+  <div id="iq-res" class="callout"></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b>Satu file <code>P02_NamaAnda.pbix</code> berisi tabel Penjualan (CSV), Produk (Excel), dan Pelanggan (database/SQL), dengan jumlah baris yang sudah diverifikasi terhadap sumber.</div>
+ <div class="card"><h3>⬇ Dataset</h3>
+  <p class="small">CSV dapat dibuka di Excel lalu <b>Save As .xlsx</b> untuk latihan konektor Excel. File SQL dipakai untuk membuat database contoh (SQLite/MySQL).</p>
+  <div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧪 Simulator error umum: perbaiki pratinjau</h3>
+  <div id="tsim"></div></div>
+ <div class="card"><h3>✅ Checklist verifikasi</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Connect → To a file → Text file / Microsoft Excel; Connect → To a Server → MySQL/PostgreSQL. Pilih <b>Live</b> (setara DirectQuery) atau <b>Extract</b> (setara Import).</div>
+</section>
+
+<section class="pane" id="soal"><h2>Bank Soal Tes &amp; Latihan</h2><div class="callout"><b class="t">Cara pakai</b>Setiap set memakai <b>dataset berbeda</b> dan perintah berbeda. Unduh dataset, kerjakan di tool BI, lalu masukkan jawaban untuk dicek otomatis. Soal bertanda <i>Kerjakan</i> dinilai dengan rubrik.</div><div id="soal-box"></div></section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 2</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short} = BI;
+const sales = BI.data.sales(600);
+
+/* ETL demo */
+const A = [
+  { kode: 'A1', tgl: '05/01/2024', kota: 'jakarta', total: 'Rp 255.000' },
+  { kode: 'A2', tgl: '06/01/2024', kota: 'BANDUNG', total: 'Rp 490.000' },
+  { kode: 'A3', tgl: '07/01/2024', kota: 'Sby', total: 'Rp 85.000' }];
+const B = [
+  { order_id: 9101, order_date: '2024-01-05T09:14:00', city: 'Jakarta', amount_usd: 21.5 },
+  { order_id: 9102, order_date: '2024-01-06T11:02:00', city: 'Bandung', amount_usd: 8.2 },
+  { order_id: 9103, order_date: '2024-01-07T20:47:00', city: 'Surabaya', amount_usd: 15 }];
+const kurs = 16000;
+const T = [
+  { id: 'A1', tanggal: '2024-01-05', kota: 'Jakarta', rupiah: 255000, sumber: 'Kasir' },
+  { id: 'A2', tanggal: '2024-01-06', kota: 'Bandung', rupiah: 490000, sumber: 'Kasir' },
+  { id: 'A3', tanggal: '2024-01-07', kota: 'Surabaya', rupiah: 85000, sumber: 'Kasir' },
+  { id: 'B9101', tanggal: '2024-01-05', kota: 'Jakarta', rupiah: 21.5 * kurs, sumber: 'Web' },
+  { id: 'B9102', tanggal: '2024-01-06', kota: 'Bandung', rupiah: 8.2 * kurs, sumber: 'Web' },
+  { id: 'B9103', tanggal: '2024-01-07', kota: 'Surabaya', rupiah: 15 * kurs, sumber: 'Web' }];
+const tA = BI.table('#etl-a', { cols: Object.keys(A[0]).map(k => ({ k, l: k })), rows: A, sort: false });
+const tB = BI.table('#etl-b', { cols: Object.keys(B[0]).map(k => ({ k, l: k })), rows: B, sort: false });
+const tO = BI.table('#etl-out', { cols: [], rows: [], sort: false });
+function etl(s) {
+  const notes = [
+    'Tahap 0: dua sumber dengan nama kolom, format tanggal, mata uang, dan penulisan kota berbeda.',
+    'EXTRACT: salin data mentah apa adanya ke staging area. Jangan ubah dulu agar bisa ditelusuri jika ada masalah.',
+    'TRANSFORM: samakan nama kolom, format tanggal ISO, kota baku (Sby → Surabaya), mata uang (USD × ' + fmt(kurs) + ') dan tambahkan kolom sumber.',
+    'LOAD: tulis hasil ke tabel warehouse. Catat jumlah baris dan waktu muat; lakukan rekonsiliasi (6 baris masuk = 6 baris tersimpan).'
+  ];
+  $('#etl-note').textContent = notes[s];
+  if (s === 0) { tO.set([]); $('#etl-t').textContent = 'Hasil (belum ada)'; return; }
+  if (s === 1) { $('#etl-t').textContent = 'Staging (mentah)'; tO.set([]); $('#etl-out').innerHTML = '<p class="muted small">Tabel staging berisi 6 baris dalam bentuk asli.</p>'; return; }
+  const cols = [{ k: 'id', l: 'ID' }, { k: 'tanggal', l: 'Tanggal' }, { k: 'kota', l: 'Kota' }, { k: 'rupiah', l: 'Total (Rp)', r: 1, f: fmt }, { k: 'sumber', l: 'Sumber' }];
+  $('#etl-out').innerHTML = '';
+  BI.table('#etl-out', { cols, rows: T, sort: false });
+  $('#etl-t').textContent = s === 2 ? 'Hasil transformasi' : 'Tabel warehouse: fakta_penjualan (6 baris dimuat)';
+}
+BI.seg('#etl-seg', [[0, '0 Mentah'], [1, '1 Extract'], [2, '2 Transform'], [3, '3 Load']], 0, etl);
+
+/* Benchmark */
+let N = 300000;
+BI.slider('#bm-size', 'Jumlah baris transaksi', 50000, 1000000, 50000, N, v => N = v, fmt);
+$('#bm-run').onclick = () => {
+  const r = BI.rng(5), reg = new Uint8Array(N), mon = new Uint8Array(N), val = new Float64Array(N);
+  for (let i = 0; i < N; i++) { reg[i] = Math.floor(r() * 5); mon[i] = Math.floor(r() * 12); val[i] = Math.round(r() * 500) * 1000; }
+  const agg = new Float64Array(60);
+  let t0 = performance.now(), res = new Float64Array(60);
+  for (let rep = 0; rep < 5; rep++) { res.fill(0); for (let i = 0; i < N; i++) res[reg[i] * 12 + mon[i]] += val[i]; }
+  const t1 = (performance.now() - t0) / 5;
+  for (let i = 0; i < N; i++) agg[reg[i] * 12 + mon[i]] += val[i];
+  t0 = performance.now(); let s = 0;
+  for (let rep = 0; rep < 5000; rep++) { for (let k = 0; k < 60; k++) s += agg[k]; }
+  const t2 = Math.max((performance.now() - t0) / 5000, 0.0005);
+  BI.hbar('#bm-chart', { labels: ['OLTP: hitung dari transaksi', 'OLAP: baca agregat'], data: [t1, t2], fmt: v => v.toFixed(2), valFmt: v => v.toFixed(3) + ' ms', height: 110, rowH: 36, colorBy: i => i ? 'var(--c3)' : 'var(--c4)', title: 'Waktu menjawab satu pertanyaan (ms)' });
+  $('#bm-text').innerHTML = `Membaca <b>${fmt(N)}</b> baris: <b>${t1.toFixed(2)} ms</b>. Membaca <b>60</b> sel agregat: <b>${t2.toFixed(3)} ms</b>, sekitar <b>${fmt(t1 / t2)}×</b> lebih cepat. Di database sungguhan ditambah join banyak tabel, kunci (locking), dan beban aplikasi yang sedang berjalan.`;
+};
+
+/* Arsitektur */
+const arch = [['Sumber', 'ERP, POS, e-commerce, file, API. Dikelola pihak lain; format beragam.'], ['Staging', 'Area transit tempat data mentah mendarat dan divalidasi sebelum diubah.'], ['Data Warehouse', 'Repositori terintegrasi, historis, bentuk dimensional (fakta + dimensi).'], ['Data Mart', 'Subset warehouse untuk satu fungsi: penjualan, keuangan, HR.'], ['BI / Dashboard', 'Lapisan penyajian: laporan, dashboard, self-service analytics.']];
+arch.forEach((a, i) => { if (i) $('#arch').append(h('span', { class: 'arr' }, '→')); $('#arch').append(h('span', { class: 'node', id: 'ar' + i, onclick: () => ap(i) }, a[0])); });
+function ap(i) { arch.forEach((_, k) => $('#ar' + k).classList.toggle('on', k === i)); $('#arch-info').innerHTML = `<b class="t">${arch[i][0]}</b>${arch[i][1]}`; }
+ap(2);
+
+/* Sumber */
+const SRC = {
+  CSV: ['Teks datar, ringan, universal.', 'Jebakan: delimiter (; vs ,), encoding (UTF-8), tidak ada tipe data, koma di dalam nilai.'],
+  Excel: ['Populer di bisnis, mudah dibuat manual.', 'Jebakan: sel gabung, banyak header, rumus/format campur, sheet berganti nama, input manual rawan salah.'],
+  'Database relasional': ['Terstruktur, skema jelas, bisa dikueri SQL.', 'Jebakan: akses dan kredensial, beban pada sistem produksi, nama tabel teknis, perubahan skema.'],
+  'API / Web': ['Data real time dari layanan lain (JSON).', 'Jebakan: batas request, perubahan format, token kedaluwarsa, paginasi.']
+};
+BI.seg('#src-seg', Object.keys(SRC).map(k => [k, k]), 'CSV', k => { $('#src-info').innerHTML = ''; $('#src-info').append(h('div', { class: 'card' }, h('h4', {}, 'Karakter'), SRC[k][0]), h('div', { class: 'card' }, h('h4', {}, 'Waspadai'), SRC[k][1])); });
+
+/* Import vs DQ */
+const iq = { size: 3, fresh: 3 };
+BI.slider('#iq-ctl', 'Ukuran data (1=kecil, 5=sangat besar)', 1, 5, 1, 3, v => { iq.size = v; upd(); });
+BI.slider('#iq-ctl', 'Kebutuhan data real time (1=harian, 5=detik)', 1, 5, 1, 3, v => { iq.fresh = v; upd(); });
+function upd() {
+  let m = 'Import', why = 'Data kecil–menengah dan kebutuhan pembaruan tidak ketat: Import memberi kecepatan terbaik dan semua fitur DAX.';
+  if (iq.fresh >= 4 && iq.size >= 4) { m = 'DirectQuery'; why = 'Data sangat besar dan butuh nyaris real time: DirectQuery membaca langsung dari sumber, tetapi kinerja bergantung sumber.'; }
+  else if (iq.fresh >= 4) { m = 'Import + refresh sering / Composite'; why = 'Butuh data segar tetapi ukuran masih wajar: refresh terjadwal sering atau model komposit.'; }
+  else if (iq.size >= 4) { m = 'Import dengan agregasi / DirectQuery'; why = 'Data besar tetapi tidak real time: pertimbangkan agregasi di warehouse atau tabel agregat.'; }
+  $('#iq-res').innerHTML = `<b class="t">Saran: ${m}</b>${why}`;
+}
+upd();
+
+/* Praktik */
+const star = BI.data.star(sales);
+const dl = $('#dl');
+dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('penjualan.csv', star.fakta) }, '⬇ penjualan.csv'),
+  h('button', { class: 'btn pri', onclick: () => BI.download('produk.csv', star.dimProduk) }, '⬇ produk.csv'),
+  h('button', { class: 'btn pri', onclick: () => BI.download('pelanggan.csv', star.dimPelanggan) }, '⬇ pelanggan.csv'),
+  h('button', { class: 'btn', onclick: () => BI.downloadText('toko_online.sql', BI.sqlDump({ pelanggan: star.dimPelanggan, produk: star.dimProduk })) }, '⬇ toko_online.sql'));
+BI.steps('#steps', [
+  { t: 'Siapkan sumber', tm: '10\'', b: 'Simpan <code>penjualan.csv</code>. Buka <code>produk.csv</code> di Excel → Save As <code>produk.xlsx</code>. Jalankan <code>toko_online.sql</code> di SQLite/MySQL (atau minta dosen menyediakan server lab).' },
+  { t: 'Extract CSV', tm: '20\'', b: '<b>Get data → Text/CSV</b> → pilih <code>penjualan.csv</code>. Periksa pratinjau: Delimiter = Comma, File Origin = 65001 UTF-8. Klik <b>Transform Data</b> (bukan Load) agar bisa memeriksa tipe data di Power Query.' },
+  { t: 'Extract Excel', tm: '20\'', b: '<b>Get data → Excel workbook</b> → pilih sheet <i>produk</i> → Transform Data → <b>Use First Row as Headers</b> bila perlu.' },
+  { t: 'Extract database', tm: '20\'', b: '<b>Get data → Database</b> (SQL Server/MySQL/ODBC SQLite). Masukkan server &amp; database, pilih tabel <code>pelanggan</code>. Pilih mode <b>Import</b>.' },
+  { t: 'Load & verifikasi', tm: '15\'', b: '<b>Close &amp; Apply</b>. Di Data view cek jumlah baris: penjualan 600, produk 16, pelanggan sesuai SQL. Buat visual Card <i>Count of OrderID</i> untuk membuktikan 600.' },
+  { t: 'Simulator & dokumentasi', tm: '15\'', b: 'Selesaikan simulator error di atas, lalu tulis catatan: sumber, metode koneksi, jumlah baris, masalah yang muncul.' }
+]);
+BI.checklist('#chk', ['CSV termuat; delimiter &amp; encoding benar', 'Excel termuat; header benar', 'Tabel database termuat (Import)', 'Jumlah baris = sumber (600 / 16 / sesuai SQL)', 'Tidak ada error di Query Settings', 'Catatan rekonsiliasi dibuat'], 'p2');
+
+/* Simulator error */
+const scen = [
+  { t: 'Semua data masuk ke satu kolom', raw: 'OrderID;Tanggal;Qty\nORD-1;2024-01-05;3\nORD-2;2024-01-06;2', bad: [['OrderID;Tanggal;Qty'], ['ORD-1;2024-01-05;3'], ['ORD-2;2024-01-06;2']], badH: ['Column1'], o: ['Ubah delimiter ke Semicolon', 'Ganti tipe data ke Number', 'Hapus baris pertama'], a: 0, good: [['ORD-1', '2024-01-05', '3'], ['ORD-2', '2024-01-06', '2']], goodH: ['OrderID', 'Tanggal', 'Qty'] },
+  { t: 'Karakter aneh (Ã©) pada nama', raw: 'Pelanggan\nJosÃ© (file UTF-8 dibaca sebagai ANSI)', bad: [['JosÃ©']], badH: ['Pelanggan'], o: ['Hapus duplikat', 'Atur File Origin = UTF-8 (65001)', 'Ubah ke huruf besar'], a: 1, good: [['José']], goodH: ['Pelanggan'] },
+  { t: 'Header menjadi baris data', raw: 'Kolom1,Kolom2\nOrderID,Qty\nORD-1,3', bad: [['OrderID', 'Qty'], ['ORD-1', '3']], badH: ['Column1', 'Column2'], o: ['Use First Row as Headers', 'Transpose', 'Unpivot'], a: 0, good: [['ORD-1', '3']], goodH: ['OrderID', 'Qty'] },
+  { t: 'Tanggal 05/01/2024 terbaca 1 Mei, seharusnya 5 Januari', raw: 'Tanggal\n05/01/2024', bad: [['2024-05-01']], badH: ['Tanggal'], o: ['Ganti tipe data dengan Locale (Indonesia)', 'Hapus kolom', 'Ubah ke Text lalu abaikan'], a: 0, good: [['2024-01-05']], goodH: ['Tanggal'] }
+];
+scen.forEach((s, i) => {
+  const box = h('div', { class: 'card' }), view = h('div'), fb = h('div', { class: 'small' });
+  const show = (H, R) => BI.table(view, { cols: H.map((l, k) => ({ k, l })), rows: R.map(r => Object.assign({}, r)), sort: false });
+  show(s.badH, s.bad);
+  box.append(h('b', {}, `Kasus ${i + 1}: ${s.t}`), h('pre', {}, s.raw), view, h('div', { class: 'row' }, s.o.map((t, k) => h('button', { class: 'btn sm', onclick(e) {
+    if (k === s.a) { fb.innerHTML = '✅ Benar. Pratinjau diperbaiki.'; show(s.goodH, s.good); e.currentTarget.classList.add('on'); } else fb.innerHTML = '❌ Belum tepat. Coba opsi lain.'; } }, t))), fb);
+  $('#tsim').append(box);
+});
+
+BI.quiz('#quiz', [
+  { q: 'Urutan ETL yang benar:', o: ['Load, Extract, Transform', 'Extract, Transform, Load', 'Transform, Extract, Load', 'Extract, Load, Report'], a: 1, e: 'Ambil, ubah, lalu muat ke tujuan.' },
+  { q: 'Karakteristik OLAP adalah…', o: ['Transaksi cepat berskala kecil', 'Agregasi data historis untuk analisis', 'Hanya menyimpan data hari ini', 'Dipakai kasir'], a: 1, e: 'OLAP/DW untuk analisis historis.' },
+  { q: 'Mengapa memakai staging area?', o: ['Agar dashboard cantik', 'Menyimpan data mentah sebelum diubah untuk validasi dan penelusuran', 'Menghemat lisensi', 'Menggantikan warehouse'], a: 1, e: 'Staging memisahkan ekstraksi dari transformasi.' },
+  { q: 'CSV dengan semua kolom menyatu di satu kolom biasanya karena…', o: ['Tipe data salah', 'Delimiter tidak sesuai', 'Kolom hilang', 'Data korup'], a: 1, e: 'Ganti delimiter (mis. titik koma).' },
+  { q: 'Cara terbaik memastikan Load berhasil:', o: ['Lihat visual saja', 'Bandingkan jumlah baris dan total dengan sumber', 'Tanya teman', 'Tidak perlu'], a: 1, e: 'Rekonsiliasi jumlah baris dan total.' },
+  { q: 'DirectQuery paling relevan saat…', o: ['Data kecil, update bulanan', 'Data sangat besar dan butuh nyaris real time', 'Tidak ada koneksi internet', 'Sumber CSV'], a: 1, e: 'DirectQuery tidak menyalin data ke model.' }
+]);
+
+/* ===== Bank Soal P2: ETL, dataset & kasus berbeda ===== */
+const _R = BI.rng, _sum = BI.sum;
+const _grp = (rows, k, f, agg) => BI.groupBy(rows, k, f, agg).sort((a, b) => b.value - a.value);
+const _pad = (n, l = 3) => String(n).padStart(l, '0');
+const _dt = (r, y, m) => `${y}-${_pad(m, 2)}-${_pad(1 + Math.floor(r() * 28), 2)}`;
+const NL = String.fromCharCode(10);
+
+/* Set A: distribusi sembako, pemisah titik koma */
+const sem = (() => {
+  const r = _R(11), brg = [['Beras 5kg', 68000], ['Minyak 2L', 36000], ['Gula 1kg', 17500], ['Telur 1kg', 29000], ['Tepung 1kg', 13500], ['Mie Instan Dus', 112000]], gd = ['Jakarta', 'Surabaya', 'Medan', 'Makassar'], rows = [];
+  for (let i = 0; i < 200; i++) { const b = brg[Math.floor(r() * 6)]; rows.push({ PesananID: 'PS' + _pad(i + 1, 4), Tanggal: _dt(r, 2024, 1 + Math.floor(r() * 3)), Gudang: gd[Math.floor(r() * 4)], Barang: b[0], Jumlah: 1 + Math.floor(r() * r() * 30), HargaSatuan: b[1] }); }
+  return rows;
+})();
+const semCsv = () => { const ks = Object.keys(sem[0]); return [ks.join(';'), ...sem.map(r => ks.map(k => r[k]).join(';'))].join(NL); };
+
+/* Set B: tiket travel 3 bulan */
+const tiket = (() => {
+  const r = _R(22), rute = ['JKT-SUB', 'JKT-DPS', 'SUB-DPS', 'JKT-KNO', 'BDO-DPS'], hrg = { 'JKT-SUB': 950000, 'JKT-DPS': 1250000, 'SUB-DPS': 700000, 'JKT-KNO': 1450000, 'BDO-DPS': 1100000 }, kls = ['Ekonomi', 'Bisnis'], out = {};
+  [[1, 90], [2, 110], [3, 130]].forEach(([m, n]) => { out[m] = []; for (let i = 0; i < n; i++) { const rt = rute[Math.floor(r() * 5)], k = kls[r() < 0.8 ? 0 : 1]; out[m].push({ TiketID: `TK${m}${_pad(i + 1)}`, Tanggal: _dt(r, 2024, m), Rute: rt, Kelas: k, Harga: Math.round(hrg[rt] * (k === 'Bisnis' ? 1.8 : 1) / 5000) * 5000, Jumlah: 1 + Math.floor(r() * 4) }); } });
+  return out;
+})();
+const tkAll = [].concat(tiket[1], tiket[2], tiket[3]);
+
+/* Set C: laporan kasir berantakan */
+const kasir = (() => {
+  const r = _R(33), it = [['Sabun', 12000], ['Sampo', 22000], ['Pasta Gigi', 15000], ['Deterjen', 28000]], rows = [];
+  for (let i = 0; i < 60; i++) { const x = it[Math.floor(r() * 4)], q = 1 + Math.floor(r() * 5); rows.push({ KasirID: 'KS' + (1 + Math.floor(r() * 3)), Tanggal: _dt(r, 2024, 3), Item: x[0], Qty: q, Subtotal: q * x[1] }); }
+  return rows;
+})();
+const kasirTxt = () => ['LAPORAN PENJUALAN HARIAN', 'Toko Sinar Jaya', 'Dicetak: 2024-04-01', '', 'KasirID,Tanggal,Item,Qty,Subtotal', ...kasir.map(x => `${x.KasirID},${x.Tanggal},${x.Item},${x.Qty},${x.Subtotal}`), `TOTAL,,,${_sum(kasir.map(x => x.Qty))},${_sum(kasir.map(x => x.Subtotal))}`].join(NL);
+
+/* Set D: database elektronik (SQL) */
+const db = (() => {
+  const r = _R(44), kota = ['Bandung', 'Semarang', 'Malang', 'Palembang'], pel = [], ps = [];
+  for (let i = 0; i < 80; i++) pel.push({ PelangganID: 'C' + _pad(i + 1, 3), Nama: 'Pelanggan ' + (i + 1), Kota: kota[Math.floor(r() * 4)] });
+  for (let i = 0; i < 150; i++) ps.push({ PesananID: 'O' + _pad(i + 1, 4), PelangganID: pel[Math.floor(r() * r() * 70)].PelangganID, Tanggal: _dt(r, 2024, 1 + Math.floor(r() * 3)), Total: Math.round((150000 + r() * 4850000) / 1000) * 1000 });
+  return { pel, ps };
+})();
+const dbKota = {}; db.pel.forEach(p => dbKota[p.PelangganID] = p.Kota);
+
+const T2 = [
+  { title: 'Distribusi sembako: CSV dengan titik koma', lvl: 'D', mnt: 25, desc: 'Skenario: distributor sembako mengekspor pesanan dari sistem lama. File memakai <b>titik koma (;)</b> sebagai pemisah. Muat dengan delimiter yang benar, lalu rekonsiliasi.',
+    files: [{ name: 'soal2A_pesanan_sembako.csv', get: semCsv }],
+    tasks: [
+      { type: 'choice', tip: "Lihat pratinjau di jendela Get Data: jika semua data tampil di satu kolom, pemisah antar kolom belum dikenali. Buka file di Notepad untuk melihat karakter pemisahnya.", q: 'Saat dibuka, semua kolom menyatu menjadi satu kolom. Pengaturan yang harus diubah pada pratinjau Get Data:', o: ['Tipe data', 'Delimiter menjadi Semicolon', 'File Origin menjadi Excel', 'Menambah kolom baru'], a: 1, ex: 'Delimiter harus sesuai pemisah di file.' },
+      { type: 'num', tip: "Setelah memuat dengan delimiter benar, lihat jumlah baris di Data view atau buat kartu <b>Count of PesananID</b>. Pastikan baris header tidak ikut terhitung.", q: 'Berapa <b>jumlah baris</b> setelah dimuat dengan benar (tanpa header)?', ans: () => sem.length, tol: 0, ex: 'Rekonsiliasi: bandingkan dengan jumlah baris sumber.' },
+      { type: 'num', q: 'Berapa <b>total nilai pesanan</b> (Σ Jumlah × HargaSatuan, Rp)?', ans: () => _sum(sem.map(x => x.Jumlah * x.HargaSatuan)), tol: 1, tip: 'Buat Custom Column: [Jumlah] * [HargaSatuan] sebelum menjumlah.' },
+      { type: 'text', tip: "Visual bar: Axis = <code>Barang</code>, Values = <b>Sum of Jumlah</b> (bukan Count). Urutkan menurun. Pastikan Jumlah bertipe angka.", q: 'Barang dengan <b>total Jumlah terbanyak</b>?', ans: () => _grp(sem, 'Barang', x => x.Jumlah)[0].key, ex: () => _grp(sem, 'Barang', x => x.Jumlah).map(x => x.key + ' ' + x.value).join('<br>') },
+      { type: 'num', q: 'Berapa <b>jumlah gudang unik</b> pada data?', ans: () => new Set(sem.map(x => x.Gudang)).size, tol: 0, tip: 'Count (Distinct) pada kolom Gudang.' },
+      { type: 'num', tip: "Ubah <code>Tanggal</code> ke tipe Date. Gunakan filter pane: <code>Gudang</code> = Surabaya dan bulan Tanggal = Februari (atau tambah kolom Bulan di Power Query). Values = Count of PesananID.", q: 'Berapa pesanan dari gudang <b>Surabaya</b> pada bulan Februari?', ans: () => sem.filter(x => x.Gudang === 'Surabaya' && x.Tanggal.slice(5, 7) === '02').length, tol: 0, hint: 'Pastikan kolom Tanggal bertipe Date lalu filter bulan 2.' }
+    ] },
+  { title: 'Travel "TripKu": menggabung 3 file bulanan (Append)', lvl: 'M', mnt: 30, desc: 'Skenario: sistem tiket mengekspor satu file per bulan dengan struktur kolom sama. Gabungkan dengan <b>Append Queries</b> (atau <i>Folder</i> connector) sebelum analisis.',
+    files: [{ name: 'soal2B_tiket_jan.csv', get: () => tiket[1] }, { name: 'soal2B_tiket_feb.csv', get: () => tiket[2] }, { name: 'soal2B_tiket_mar.csv', get: () => tiket[3] }],
+    tasks: [
+      { type: 'num', tip: "Query → <b>Home → Append Queries → Append as New</b> → Three or more tables → tambahkan Jan, Feb, Mar. Lihat jumlah baris query hasil. Seharusnya 90 + 110 + 130 bila semua file masuk tepat sekali.", q: 'Berapa <b>jumlah baris</b> setelah ketiga file digabung?', ans: () => tkAll.length, tol: 0, hint: 'Jan 90 + Feb 110 + Mar 130 jika benar; periksa file yang terlewat atau terhitung dua kali.' },
+      { type: 'num', tip: "Pada query hasil Append: kartu dengan <b>Sum of Jumlah</b>. Jangan memakai Count (itu jumlah transaksi, bukan jumlah tiket).", q: 'Berapa <b>total tiket terjual</b> (Σ Jumlah)?', ans: () => _sum(tkAll.map(x => x.Jumlah)), tol: 0 },
+      { type: 'text', tip: "Buat kolom <code>Pendapatan</code> = [Jumlah] * [Harga] di Power Query. Bar: Axis = Rute, Values = Sum of Pendapatan, urutkan menurun.", q: 'Rute dengan <b>pendapatan</b> (Σ Jumlah × Harga) tertinggi?', ans: () => _grp(tkAll, 'Rute', x => x.Jumlah * x.Harga)[0].key, ex: () => _grp(tkAll, 'Rute', x => x.Jumlah * x.Harga).map(x => x.key + ': ' + BI.rp(x.value)).join('<br>') },
+      { type: 'num', tip: "<b>Tujuan:</b> total pendapatan tiket kelas Bisnis pada bulan Maret, dari data gabungan 3 bulan (hasil Append).<br><b>1) Kolom Pendapatan:</b> Add Column → Custom Column, nama <code>Pendapatan</code>, rumus <code>[Jumlah] * [Harga]</code> (tipe Whole Number).<br><b>2) Kolom bulan:</b> pastikan Tanggal bertipe Date, klik header Tanggal → <b>Add Column → Date → Month → Month</b>. Muncul kolom berisi angka bulan; Maret = <b>3</b>.<br><b>3) Card:</b> Close &amp; Apply, lalu di Report view buat visual <b>Card</b> dengan <code>Pendapatan</code> (agregasi Sum).<br><b>4) Filter:</b> pada panel Filters bagian \"Filters on this visual\", tarik <code>Kelas</code> (centang Bisnis saja) dan <code>Month</code> (centang 3 saja).<br><b>5) Jawaban:</b> angka di Card. Jangan memakai Sum of Harga karena itu tidak mengalikan jumlah tiket.", q: 'Berapa <b>pendapatan bulan Maret</b> kelas Bisnis (Rp)?', ans: () => _sum(tiket[3].filter(x => x.Kelas === 'Bisnis').map(x => x.Jumlah * x.Harga)), tol: 1 },
+      { type: 'choice', tip: "Tiga file dengan <b>kolom sama</b> cukup ditumpuk baris-barisnya. Bedakan dengan operasi yang menyambung kolom dari tabel lain berdasarkan kunci.", q: 'Tiga file bulanan dengan kolom sama sebaiknya digabung memakai…', o: ['Merge (join)', 'Append (menumpuk baris)', 'Pivot', 'Group By'], a: 1, ex: 'Append menumpuk baris dari tabel berstruktur sama; Merge menggabung kolom berdasarkan kunci.' },
+      { type: 'do', tip: "Langkah: (1) muat 3 file sebagai query terpisah, (2) tambah Custom Column <code>SumberFile</code> = \"Jan\"/\"Feb\"/\"Mar\" pada tiap query, (3) Append as New, (4) catat jumlah baris tiap query dan hasil gabungan.", q: 'Dokumentasikan langkah <b>Append</b>: nama query, jumlah baris tiap file, jumlah baris gabungan, dan tambahkan kolom <i>SumberFile</i> agar bisa ditelusuri.', rubric: ['3 query dimuat', 'Query gabungan Append', 'Kolom SumberFile ada', 'Total baris direkonsiliasi'] }
+    ] },
+  { title: 'Kasir "Sinar Jaya": file dengan judul laporan & baris total', lvl: 'M', mnt: 25, desc: 'Skenario: laporan kasir ini dicetak dari aplikasi lama. Ada <b>judul di atas header</b> dan <b>baris TOTAL di bawah</b>. Bersihkan agar hanya data transaksi yang termuat.',
+    files: [{ name: 'soal2C_laporan_kasir.csv', get: kasirTxt, text: true }],
+    tasks: [
+      { type: 'num', tip: "Buka file di Notepad dan hitung baris sebelum baris header (<code>KasirID,Tanggal,Item,Qty,Subtotal</code>), termasuk baris kosong. Di Power Query: <b>Home → Remove Rows → Remove Top Rows</b>.", q: 'Berapa <b>baris teratas</b> yang harus dibuang (Remove Top Rows) sebelum header kolom?', ans: 4, tol: 0, ex: 'Judul, nama toko, tanggal cetak, dan satu baris kosong = 4 baris.' },
+      { type: 'num', q: 'Berapa <b>baris data transaksi</b> sebenarnya (tanpa baris TOTAL)?', ans: () => kasir.length, tol: 0, tip: 'Remove Bottom Rows 1, atau filter KasirID ≠ "TOTAL".' },
+      { type: 'num', tip: "Setelah judul di atas dan baris TOTAL di bawah dibuang, buat kartu <b>Sum of Subtotal</b>. Jika hasilnya dua kali lipat, baris TOTAL masih ikut. Hapus dengan <b>Remove Rows → Remove Bottom Rows (1)</b>.", q: 'Berapa <b>total Subtotal</b> yang benar (Rp)?', ans: () => _sum(kasir.map(x => x.Subtotal)), tol: 1, hint: 'Jika angka Anda dua kali lipat, baris TOTAL ikut dijumlahkan.' },
+      { type: 'choice', tip: "Bayangkan Sum of Subtotal dihitung dengan baris TOTAL masih ada. Apa yang terjadi pada hasilnya?", q: 'Mengapa baris "TOTAL" harus dibuang sebelum analisis?', o: ['Agar file kecil', 'Karena akan terhitung ganda saat dijumlahkan', 'Karena berwarna berbeda', 'Tidak perlu dibuang'], a: 1, ex: 'Total bawaan sumber menggandakan hasil.' },
+      { type: 'text', tip: "Bar: Axis = <code>KasirID</code>, Values = <b>Sum of Qty</b>, urutkan menurun. Pastikan baris TOTAL sudah dibuang agar tidak muncul sebagai kasir.", q: 'Kasir dengan <b>jumlah Qty terbanyak</b>? (misal KS2)', ans: () => _grp(kasir, 'KasirID', x => x.Qty)[0].key, ex: () => _grp(kasir, 'KasirID', x => x.Qty).map(x => x.key + ' ' + x.value).join(', ') },
+      { type: 'choice', tip: "Setelah baris judul dibuang, baris pertama berisi nama kolom tetapi masih terbaca sebagai data (Column1, Column2). Cari perintah yang menaikkan baris itu menjadi header (tab Transform atau Home).", q: 'Langkah Power Query yang tepat untuk mengubah baris pertama (setelah baris dibuang) menjadi nama kolom:', o: ['Transpose', 'Use First Row as Headers', 'Unpivot', 'Fill Down'], a: 1 }
+    ] },
+  { title: 'Database toko elektronik (SQL): dua tabel', lvl: 'M', mnt: 30, desc: 'Skenario: data berada di database relasional. Jalankan skrip SQL pada SQLite/MySQL lab, lalu <b>Get Data → Database</b> dan muat tabel <i>pelanggan</i> dan <i>pesanan</i>. Jika belum ada server, jawab dengan memuat tabel dari file (kolom sama).',
+    files: [{ name: 'soal2D_toko_elektronik.sql', get: () => BI.sqlDump({ pelanggan: db.pel, pesanan: db.ps }), text: true }, { name: 'soal2D_pelanggan.csv', get: () => db.pel }, { name: 'soal2D_pesanan.csv', get: () => db.ps }],
+    tasks: [
+      { type: 'num', tip: "Muat tabel <code>pelanggan</code> (dari SQL atau CSV). Kartu dengan <b>Count of PelangganID</b>, atau lihat jumlah baris di Data view.", q: 'Berapa <b>jumlah pelanggan</b> terdaftar?', ans: () => db.pel.length, tol: 0 },
+      { type: 'num', q: 'Berapa <b>pelanggan unik yang pernah memesan</b>?', ans: () => new Set(db.ps.map(x => x.PelangganID)).size, tol: 0, tip: 'Count (Distinct) PelangganID pada tabel pesanan.' },
+      { type: 'num', tip: "Hitung dua angka: jumlah pelanggan terdaftar dan jumlah pelanggan unik yang punya pesanan. Selisihnya adalah pelanggan tanpa pesanan. Atau gunakan Merge dengan jenis Left Anti di Power Query.", q: 'Berapa <b>pelanggan yang belum pernah memesan</b>?', ans: () => db.pel.length - new Set(db.ps.map(x => x.PelangganID)).size, tol: 0, ex: 'Pelanggan − pelanggan yang memesan. Dasar analisis pelanggan tidak aktif.' },
+      { type: 'num', tip: "Pada tabel <code>pesanan</code>, kartu dengan <b>Sum of Total</b>. Cek tipe data kolom Total (angka).", q: 'Berapa <b>total nilai seluruh pesanan</b> (Rp)?', ans: () => _sum(db.ps.map(x => x.Total)), tol: 1 },
+      { type: 'text', tip: "Di Model view seret <code>pesanan[PelangganID]</code> ke <code>pelanggan[PelangganID]</code> (relasi many-to-one). Bar: Axis = <code>pelanggan[Kota]</code>, Values = <b>Sum of pesanan[Total]</b>, urutkan menurun.", q: 'Kota pelanggan dengan <b>total nilai pesanan tertinggi</b>? (butuh gabungan tabel)', ans: () => _grp(db.ps.map(x => ({ k: dbKota[x.PelangganID], t: x.Total })), 'k', x => x.t)[0].key, ex: () => 'Hubungkan pesanan[PelangganID] ke pelanggan[PelangganID]; hasil per kota: ' + _grp(db.ps.map(x => ({ k: dbKota[x.PelangganID], t: x.Total })), 'k', x => x.t).map(x => x.key + ' ' + BI.short(x.value)).join(', ') },
+      { type: 'choice', tip: "Pertimbangkan dua hal: ukuran data (jutaan baris) dan kebutuhan kesegaran (menit-menit). Mode mana yang tidak menyalin seluruh data ke model?", q: 'Tabel pesanan berisi jutaan baris dan perlu data terbaru menit-menit. Mode koneksi yang paling relevan:', o: ['Import saja', 'DirectQuery', 'CSV manual', 'Tidak bisa'], a: 1, ex: 'DirectQuery tidak menyalin data; pertimbangkan kinerja sumber.' },
+      { type: 'do', tip: "Struktur jawaban: (1) ukuran data, (2) seberapa sering data harus diperbarui, (3) dampak ke database operasional (OLTP), (4) kesimpulan dan risiko. Bandingkan Import (cepat, perlu refresh) dengan DirectQuery (segar, bergantung kinerja sumber).", q: 'Tulis <b>alasan memilih Import atau DirectQuery</b> untuk kasus ini (ukuran data, frekuensi pembaruan, beban pada database operasional).', rubric: ['Menyebut ukuran data', 'Menyebut kebutuhan kesegaran', 'Menyebut dampak ke sistem OLTP'] }
+    ] },
+  { title: 'Konsep ETL, OLTP vs OLAP (pilihan ganda kasus)', lvl: 'D', mnt: 15, desc: 'Tanpa dataset. Tentukan jenis sistem atau tahap ETL untuk tiap situasi.',
+    tasks: [
+      { type: 'choice', tip: "Pikirkan siapa penggunanya dan jenis operasinya: mencatat transaksi kecil dengan cepat, atau menganalisis data historis?", q: 'Menyimpan pembayaran pelanggan saat checkout adalah beban kerja…', o: ['OLTP', 'OLAP', 'Data mart', 'Staging'], a: 0 },
+      { type: 'choice', tip: "Pertanyaan ini mengagregasi data historis dalam jumlah besar. Sistem mana yang dirancang untuk analisis semacam itu?", q: 'Menghitung tren penjualan per wilayah per bulan selama 5 tahun cocok pada…', o: ['OLTP', 'OLAP / data warehouse', 'Spreadsheet kasir', 'Email'], a: 1 },
+      { type: 'choice', tip: "Tahap mana yang mengubah atau menyeragamkan isi data?", q: 'Mengubah "Sby", "SBY", "sby" menjadi "Surabaya" adalah tahap…', o: ['Extract', 'Transform', 'Load', 'Report'], a: 1 },
+      { type: 'choice', tip: "Tahap mana yang hanya mengambil data dari sumber tanpa mengubahnya?", q: 'Menyalin tabel penjualan dari server ke area transit tanpa mengubah isi adalah tahap…', o: ['Extract', 'Transform', 'Load', 'Visualize'], a: 0 },
+      { type: 'choice', tip: "Tahap mana yang menulis hasil akhir ke tujuan?", q: 'Hasil akhir yang sudah bersih ditulis ke tabel fakta di warehouse adalah tahap…', o: ['Extract', 'Transform', 'Load', 'Profil'], a: 2 },
+      { type: 'choice', tip: "Selisih jumlah baris sebelum dan sesudah load menandakan data hilang atau berlipat. Apa yang seharusnya dilakukan analis?", q: 'Setelah Load, 10.000 baris sumber menjadi 9.870 baris. Tindakan terbaik:', o: ['Abaikan', 'Telusuri 130 baris yang hilang (rekonsiliasi)', 'Hapus data', 'Tambah visual'], a: 1 },
+      { type: 'choice', tip: "Staging adalah tempat singgah. Apa yang disimpan di sana, dan mengapa tidak langsung diubah?", q: 'Fungsi utama staging area:', o: ['Menampilkan dashboard', 'Menampung data mentah sebelum transformasi', 'Menyimpan password', 'Mempercantik tabel'], a: 1 },
+      { type: 'choice', tip: "Pikirkan keandalan otomatisasi: apakah struktur file seperti ini selalu sama setiap kali diekspor?", q: 'File Excel dengan sel gabungan dan banyak baris judul sebagai sumber data berisiko karena…', o: ['Terlalu aman', 'Struktur tidak konsisten sehingga sulit diotomatisasi', 'Ukuran kecil', 'Tidak ada alasan'], a: 1 }
+    ] },
+  { title: 'Tantangan: rancang pipeline ETL marketplace', lvl: 'T', mnt: 30, desc: 'Skenario: marketplace punya 3 sumber: database pesanan (MySQL), file CSV iklan dari agensi, dan Excel target dari tim sales. Rancang alur ETL.',
+    tasks: [
+      { type: 'do', tip: "Gambar 3 sumber di kiri (MySQL pesanan, CSV iklan, Excel target) → Extract ke Staging → Transform (bersihkan, standarisasi) → Load ke tabel fakta (<code>fakta_pesanan</code>, <code>fakta_iklan</code>) dan dimensi (tanggal, produk, kanal) → Dashboard. Beri nama tabel dan panah.", q: 'Buat <b>diagram alur</b> Extract → Staging → Transform → Load → Dashboard dengan nama sumber dan tabel tujuan.', rubric: ['3 sumber digambar', 'Ada staging', 'Tabel fakta & dimensi tujuan disebut'] },
+      { type: 'do', tip: "Contoh aturan: format tanggal ISO, kota baku, hapus duplikat berdasarkan OrderID, mata uang seragam, trim spasi, kapitalisasi nama produk, penanganan null pada harga, hapus baris uji. Tiap aturan beri contoh sebelum → sesudah.", q: 'Daftarkan <b>8 aturan transformasi</b> (mis. standarisasi kota, format tanggal, mata uang, deduplikasi pesanan).', rubric: ['≥ 8 aturan', 'Tiap aturan punya contoh sebelum/sesudah', 'Ada aturan penanganan null'] },
+      { type: 'do', tip: "Pemeriksaan minimal: (1) jumlah baris sumber = tujuan, (2) total nilai (Sum Total) sumber = tujuan, (3) tanggal transaksi terakhir di tujuan sesuai kemarin/hari ini (kesegaran). Tentukan toleransi dan tindakan jika gagal.", q: 'Rancang <b>uji rekonsiliasi</b> setelah Load: minimal 3 pemeriksaan (jumlah baris, total nilai, tanggal terbaru).', rubric: ['Pemeriksaan jumlah baris', 'Pemeriksaan total nilai', 'Pemeriksaan kesegaran data'] }
+    ] }
+];
+BI.soal('#soal-box', T2);
+
+</script>

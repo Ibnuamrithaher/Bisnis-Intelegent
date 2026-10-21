@@ -1,0 +1,286 @@
+<section class="pane" id="teori">
+ <h2>1. Mengapa BI? Data tidak sama dengan keputusan</h2>
+ <div class="card">
+  <p>Dua toko online menjual produk yang sama dan punya data yang sama. Toko A <b>menambah stok Desember</b> setelah melihat grafik musiman; Toko B baru sadar stok habis saat pelanggan komplain. Perbedaannya bukan jumlah data, melainkan <b>kemampuan mengubah data menjadi keputusan</b>. Itulah Business Intelligence.</p>
+  <div class="callout"><b class="t">Definisi kerja</b>Business Intelligence (BI) adalah proses, teknologi, dan praktik untuk mengumpulkan, mengintegrasikan, menganalisis, dan menyajikan data bisnis agar keputusan dapat diambil lebih cepat dan akurat.</div>
+ </div>
+
+ <h2>2. Dari data mentah ke wawasan (DIKW)</h2>
+ <div class="card">
+  <p class="muted">Klik tombol untuk menaiki piramida. Data transaksi yang sama berubah bentuk di tiap tingkat.</p>
+  <div id="dikw-seg"></div>
+  <div class="grid2" style="align-items:start">
+   <div id="dikw-pyr"></div>
+   <div><div id="dikw-view"></div><div id="dikw-txt" class="callout" style="margin-top:10px"></div></div>
+  </div>
+ </div>
+
+ <h2>3. Siklus data BI end-to-end</h2>
+ <div class="card">
+  <p class="muted">Klik tiap tahap. Titik data bergerak sesuai tahap yang dipilih.</p>
+  <div class="flow" id="pipe"></div>
+  <div id="pipe-track" style="height:14px;background:var(--line);border-radius:99px;position:relative;margin:6px 0 12px"><i id="pipe-dot" style="position:absolute;top:-3px;left:0;width:20px;height:20px;border-radius:50%;background:var(--acc);transition:left .6s"></i></div>
+  <div id="pipe-info" class="callout"></div>
+ </div>
+
+ <h2>4. Empat jenis analitik</h2>
+ <div class="card">
+  <p>Klasifikasikan setiap pertanyaan bisnis. Pilih jenis analitik yang paling sesuai.</p>
+  <div id="ana"></div>
+  <div id="ana-score" class="score"></div>
+  <div class="grid4 mt" id="ana-legend"></div>
+ </div>
+
+ <h2>5. Peta tools BI</h2>
+ <div class="card">
+  <p>Atur kondisi organisasi Anda; bar menunjukkan kecocokan relatif (ilustrasi pembelajaran, bukan penilaian produk).</p>
+  <div class="controls" id="tool-ctl"></div>
+  <div id="tool-chart"></div>
+  <div class="grid2 mt">
+   <div class="card"><h4>Power BI</h4><ul class="small"><li>Power BI Desktop gratis (Windows); berbagi lewat Power BI Service (berlisensi).</li><li>Terintegrasi ekosistem Microsoft (Excel, Teams, Azure).</li><li>Bahasa formula: DAX; transformasi: Power Query (M).</li></ul></div>
+   <div class="card"><h4>Tableau</h4><ul class="small"><li>Sangat kuat untuk eksplorasi visual yang bebas (drag &amp; drop).</li><li>Tableau Public gratis namun karya bersifat publik; Desktop/Cloud berlisensi.</li><li>Perhitungan lewat calculated field, LOD expression.</li></ul></div>
+  </div>
+  <div class="callout warn"><b class="t">Catatan</b>Praktik di kuliah ini memakai Power BI Desktop. Padanan Tableau diberikan di kotak "Padanan Tableau" pada tiap tab Praktik.</div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <h2>Tujuan praktik (100 menit)</h2>
+ <div class="callout ok"><b class="t">Output</b>File <code>P01_NamaAnda.pbix</code> berisi 3 visual (kartu total pendapatan, bar per kategori, garis tren bulanan) + tangkapan layar tur interface.</div>
+
+ <div class="card"><h3>⬇ Dataset latihan</h3><p>Unduh data penjualan fiktif 600 baris (2023–2024).</p><div id="dl"></div></div>
+
+ <div class="card"><h3>🖥 Tur interface Power BI Desktop (interaktif)</h3>
+  <p class="muted">Klik area pada tiruan layar di bawah untuk melihat fungsinya.</p>
+  <div class="mock"><div class="bar">Power BI Desktop · Report view</div>
+   <div style="display:grid;grid-template-columns:44px 1fr 150px 150px;min-height:230px">
+    <div class="zone" data-z="nav" style="background:var(--soft);padding:8px 4px;text-align:center;font-size:20px;line-height:2.1">📊<br>🗂<br>🔗</div>
+    <div class="zone" data-z="canvas" style="padding:12px"><div style="border:1px dashed var(--mut);border-radius:8px;height:100%;display:grid;place-items:center;color:var(--mut)">Kanvas laporan<br><small>letakkan visual di sini</small></div></div>
+    <div class="zone" data-z="viz" style="padding:8px;font-size:.8rem;border-left:1px solid var(--line)"><b>Visualizations</b><div style="font-size:22px;letter-spacing:4px">▮▬▲◔▦</div><small>Format · Analytics</small></div>
+    <div class="zone" data-z="fields" style="padding:8px;font-size:.8rem;border-left:1px solid var(--line)"><b>Data / Fields</b><br>▸ Penjualan<br>&nbsp;&nbsp;▢ Tanggal<br>&nbsp;&nbsp;▢ Kategori<br>&nbsp;&nbsp;Σ Pendapatan</div>
+   </div>
+   <div class="zone" data-z="ribbon" style="padding:6px 12px;border-top:1px solid var(--line);font-size:.8rem">Pita menu: Home · Insert · Modeling · View · Help (Get data, Transform data, Refresh, Publish)</div>
+  </div>
+  <div id="mock-info" class="callout" style="margin-top:10px">Klik salah satu area.</div>
+ </div>
+
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Connect → Text file → pilih CSV. Seret <b>Kategori</b> ke Columns dan <b>Pendapatan</b> ke Rows untuk bar; seret <b>Tanggal</b> (Month) ke Columns untuk garis.</div>
+
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>🛠 Troubleshooting</h3>
+  <details><summary>Power BI Desktop tidak bisa dipasang</summary>Gunakan Microsoft Store atau unduh installer resmi. Jika lab dibatasi, gunakan PC lab yang sudah terpasang atau Power BI Service di browser (dengan akun institusi).</details>
+  <details><summary>Kolom tanggal terbaca teks</summary>Pilih kolom → tab Column tools → Data type → Date. Akan dibahas mendalam di Pertemuan 3.</details>
+  <details><summary>Angka total tidak sama dengan Excel</summary>Cek apakah ada filter aktif, dan apakah kolom diringkas Sum/Average/Count.</details>
+ </div>
+ <div class="card"><h3>💬 Refleksi (3 menit)</h3><ol><li>Visual mana yang paling cepat memberi jawaban? Mengapa?</li><li>Satu keputusan bisnis apa yang terbantu oleh dashboard Anda?</li></ol></div>
+</section>
+
+<section class="pane" id="soal"><h2>Bank Soal Tes &amp; Latihan</h2><div class="callout"><b class="t">Cara pakai</b>Setiap set memakai <b>dataset berbeda</b> dan perintah berbeda. Unduh dataset, kerjakan di tool BI, lalu masukkan jawaban untuk dicek otomatis. Soal bertanda <i>Kerjakan</i> dinilai dengan rubrik.</div><div id="soal-box"></div></section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 1</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short} = BI;
+const sales = BI.data.sales(600);
+
+/* DIKW */
+const lv = ['Data', 'Informasi', 'Pengetahuan', 'Wawasan → Keputusan'];
+const txt = [
+  'Data: fakta mentah tanpa konteks. Sulit dipakai karena terlalu banyak dan tidak terurut.',
+  'Informasi: data dirapikan dan diringkas (per bulan). Sudah menjawab "berapa?".',
+  'Pengetahuan: pola terlihat; ada musiman dengan puncak di akhir tahun.',
+  'Wawasan: puncak Nov–Des bernilai ±1,5× rata-rata. Keputusan: tambah stok dan anggaran iklan mulai Oktober.'
+];
+let dk = 0;
+function renderDikw(i) {
+  dk = i;
+  const pyr = $('#dikw-pyr'); pyr.innerHTML = '';
+  [...lv].reverse().forEach((t, k) => {
+    const idx = 3 - k;
+    pyr.append(h('div', { class: 'node' + (idx <= i ? ' on' : ''), style: `display:block;margin:5px auto;width:${45 + k * 18}%;text-align:center`, onclick: () => renderDikw(idx) }, t));
+  });
+  const v = $('#dikw-view'); v.innerHTML = '';
+  if (i === 0) BI.table(v, { cols: [{ k: 'OrderID', l: 'Order' }, { k: 'Tanggal', l: 'Tanggal' }, { k: 'Produk', l: 'Produk' }, { k: 'Qty', l: 'Qty', r: 1 }, { k: 'Pendapatan', l: 'Rp', r: 1, f: fmt }], rows: sales.slice(0, 40), limit: 8, maxH: 260, sort: false });
+  else {
+    const m = BI.MON.map((_, k) => BI.sum(sales.filter(r => +r.Tanggal.slice(5, 7) === k + 1).map(r => r.Pendapatan)));
+    if (i === 1) BI.table(v, { cols: [{ k: 'b', l: 'Bulan' }, { k: 'v', l: 'Pendapatan', r: 1, f: fmt }], rows: m.map((x, k) => ({ b: BI.MON[k], v: x })), limit: 12, sort: false, maxH: 300 });
+    else BI.bar(v, { labels: BI.MON, series: [{ name: 'Pendapatan', data: m }], height: 240, colorBy: (k, val) => (i === 3 && k >= 10 ? 'var(--c2)' : 'var(--c1)'), title: i === 3 ? 'Puncak musiman: Nov & Des' : 'Pendapatan per bulan (2023–2024)' });
+  }
+  $('#dikw-txt').textContent = txt[i];
+}
+BI.seg('#dikw-seg', lv.map((t, i) => [i, `${i + 1}. ${t}`]), 0, renderDikw);
+
+/* Pipeline */
+const stages = [
+  ['Sumber data', 'ERP, POS, CRM, e-commerce, file Excel, API. Data berbeda format dan kualitas.'],
+  ['ETL / Integrasi', 'Extract, Transform (bersihkan, standarisasi), Load. Dibahas Pertemuan 2–3.'],
+  ['Data Warehouse', 'Repositori terpusat berbentuk fakta & dimensi untuk analisis historis.'],
+  ['Model semantik', 'Relasi, measure, hierarki. Satu definisi KPI untuk semua orang. Pertemuan 4–5, 13.'],
+  ['Dashboard / Laporan', 'Visualisasi interaktif untuk pengambil keputusan. Pertemuan 6–12.'],
+  ['Keputusan & aksi', 'Insight yang tidak ditindaklanjuti tidak bernilai. Umpan balik kembali ke sumber data.']
+];
+const pipe = $('#pipe');
+stages.forEach((s, i) => {
+  if (i) pipe.append(h('span', { class: 'arr' }, '→'));
+  pipe.append(h('span', { class: 'node', id: 'st' + i, onclick: () => pick(i) }, s[0]));
+});
+function pick(i) {
+  stages.forEach((_, k) => $('#st' + k).classList.toggle('on', k === i));
+  $('#pipe-dot').style.left = `calc(${(i / (stages.length - 1)) * 100}% - ${(i / (stages.length - 1)) * 20}px)`;
+  $('#pipe-info').innerHTML = `<b class="t">${stages[i][0]}</b>${stages[i][1]}`;
+}
+pick(0);
+
+/* Jenis analitik */
+const types = ['Deskriptif', 'Diagnostik', 'Prediktif', 'Preskriptif'];
+const qs = [
+  ['Berapa total penjualan bulan lalu?', 0], ['Mengapa penjualan Sumatera turun 12%?', 1], ['Berapa perkiraan penjualan Desember?', 2],
+  ['Berapa stok yang sebaiknya dipesan agar tidak habis dan tidak menumpuk?', 3], ['Produk apa yang paling laris tahun ini?', 0], ['Pelanggan mana yang kemungkinan berhenti membeli?', 2],
+  ['Apa penyebab retur tinggi di kategori fashion?', 1], ['Diskon berapa persen yang memaksimalkan laba?', 3]
+];
+let sc = 0, an = 0;
+const ana = $('#ana');
+qs.forEach(([q, a]) => {
+  const row = h('div', { class: 'row', style: 'justify-content:space-between;border-bottom:1px dashed var(--line);padding:6px 0' }, h('span', { style: 'flex:1;min-width:220px' }, q));
+  const bs = types.map((t, i) => h('button', { class: 'btn sm', onclick() {
+    if (row.dataset.d) return; row.dataset.d = 1; an++;
+    bs.forEach((b, k) => { if (k === a) b.classList.add('on'); });
+    if (i === a) { sc++; bs[i].style.background = '#dcfce7'; } else bs[i].style.background = '#fee2e2';
+    $('#ana-score').textContent = `Benar ${sc} dari ${an} terjawab (total ${qs.length})`;
+  } }, t));
+  row.append(h('span', { class: 'row' }, bs)); ana.append(row);
+});
+[['Deskriptif', 'Apa yang terjadi?'], ['Diagnostik', 'Mengapa terjadi?'], ['Prediktif', 'Apa yang akan terjadi?'], ['Preskriptif', 'Apa yang harus dilakukan?']].forEach(([a, b], i) => $('#ana-legend').append(h('div', { class: 'card', style: 'border-top:4px solid ' + BI.col(i) }, h('b', {}, a), h('div', { class: 'small muted' }, b))));
+
+/* Tools */
+const prof = { budget: 6, ms: 6, viz: 5, share: 5 };
+const toolDefs = [['Budget terbatas', 'budget'], ['Pengguna Excel/Microsoft 365', 'ms'], ['Butuh eksplorasi visual bebas', 'viz'], ['Berbagi dalam organisasi', 'share']];
+const ctl = $('#tool-ctl');
+toolDefs.forEach(([l, k]) => BI.slider(ctl, l, 0, 10, 1, prof[k], v => { prof[k] = v; calc(); }));
+function calc() {
+  const pb = 40 + prof.budget * 3 + prof.ms * 5 + prof.viz * 1 + prof.share * 2;
+  const tb = 40 + prof.budget * 1 + prof.ms * 0 + prof.viz * 5 + prof.share * 2;
+  BI.hbar('#tool-chart', { labels: ['Power BI', 'Tableau'], data: [pb, tb], fmt: v => v, valFmt: v => Math.round(v) + ' poin', height: 100, rowH: 36 });
+}
+calc();
+
+/* Mock interface */
+const zinfo = {
+  nav: 'Navigasi tampilan: <b>Report</b> (kanvas visual), <b>Data</b> (lihat isi tabel), <b>Model</b> (relasi antar tabel).',
+  canvas: '<b>Kanvas</b>: tempat meletakkan visual, teks, dan bentuk. Satu file bisa memiliki banyak halaman.',
+  viz: '<b>Visualizations</b>: pilih jenis visual, lalu isi sumbu/nilai di bidang Build, ubah tampilan di Format.',
+  fields: '<b>Data</b>: daftar tabel dan kolom. Seret kolom ke kanvas atau ke bidang visual. Ikon Σ = kolom numerik yang bisa diagregasi.',
+  ribbon: '<b>Pita menu</b>: Get data, Transform data (Power Query), Refresh, New measure, Publish.'
+};
+$('.mock').addEventListener('click', e => {
+  const z = e.target.closest('.zone'); if (!z) return;
+  $$('.zone').forEach(x => x.classList.toggle('on', x === z)); $('#mock-info').innerHTML = zinfo[z.dataset.z];
+});
+function $$(s) { return BI.$$(s); }
+
+/* Praktik */
+BI.dlButton('#dl', 'Unduh data penjualan', 'data_penjualan.csv', () => BI.data.sales(600));
+BI.steps('#steps', [
+  { t: 'Siapkan lingkungan', tm: '10\'', b: 'Buka Power BI Desktop (login opsional). Simpan file kosong sebagai <code>P01_NamaAnda.pbix</code>. Letakkan CSV di folder yang mudah ditemukan.' },
+  { t: 'Tur interface', tm: '15\'', b: 'Pindah antara Report, Data, Model view. Buka <b>Home → Get data</b> untuk melihat daftar konektor. Ambil screenshot tiap view.' },
+  { t: 'Impor CSV', tm: '20\'', b: '<b>Home → Get data → Text/CSV</b> → pilih <code>data_penjualan.csv</code> → periksa pratinjau (delimiter koma, UTF-8) → <b>Load</b>. Cek di Data view: 600 baris.' },
+  { t: 'Visual 1 – Kartu', tm: '8\'', b: 'Pilih visual <b>Card</b>, seret <code>Pendapatan</code> (Sum). Format angka menjadi mata uang/ringkas.' },
+  { t: 'Visual 2 – Bar per kategori', tm: '8\'', b: 'Clustered bar: Axis = <code>Kategori</code>, Values = <code>Pendapatan</code>. Urutkan menurun.' },
+  { t: 'Visual 3 – Tren bulanan', tm: '9\'', b: 'Line chart: Axis = <code>Tanggal</code> (hierarki → turun ke Bulan), Values = <code>Pendapatan</code>.' },
+  { t: 'Eksplorasi', tm: '15\'', b: 'Klik batang kategori dan perhatikan visual lain ikut menyorot. Coba filter pane, tooltip, dan tema (View → Themes).' },
+  { t: 'Simpan & kumpulkan', tm: '10\'', b: 'Simpan file, kumpulkan .pbix dan 4 screenshot sesuai instruksi dosen.' }
+]);
+BI.checklist('#chk', ['Power BI Desktop terbuka dan file tersimpan', 'Saya bisa menyebut fungsi panel Fields dan Visualizations', 'CSV berhasil dimuat (600 baris)', 'Kartu total pendapatan dibuat', 'Bar kategori dan line bulanan dibuat', 'Saya mencoba klik silang antar visual', 'File .pbix dan screenshot dikumpulkan'], 'p1');
+
+BI.quiz('#quiz', [
+  { q: 'Pernyataan mana yang paling tepat tentang BI?', o: ['Membuat grafik indah', 'Mengubah data menjadi informasi untuk keputusan', 'Menyimpan data di cloud', 'Menggantikan Excel sepenuhnya'], a: 1, e: 'Inti BI adalah mendukung keputusan, bukan hanya visualisasi.' },
+  { q: 'Urutan yang benar pada piramida DIKW adalah…', o: ['Wawasan → data → informasi', 'Data → informasi → pengetahuan → wawasan', 'Informasi → data → wawasan', 'Data → wawasan → informasi'], a: 1, e: 'Nilai bertambah saat data dikonteks dan diinterpretasi.' },
+  { q: '"Mengapa retur naik di Maret?" termasuk analitik…', o: ['Deskriptif', 'Diagnostik', 'Prediktif', 'Preskriptif'], a: 1, e: 'Pertanyaan "mengapa" mencari penyebab: diagnostik.' },
+  { q: 'Tahap yang menggabungkan dan membersihkan data dari banyak sumber adalah…', o: ['Dashboard', 'ETL', 'Model semantik', 'Keputusan'], a: 1, e: 'ETL = Extract, Transform, Load.' },
+  { q: 'Panel mana di Power BI untuk memilih jenis grafik?', o: ['Fields/Data', 'Visualizations', 'Model view', 'Filters'], a: 1, e: 'Panel Visualizations memuat jenis visual dan format.' },
+  { q: 'Mengapa insight tanpa tindakan tidak bernilai?', o: ['Karena dashboard mahal', 'Karena nilai BI ada pada keputusan yang diambil', 'Karena data cepat usang', 'Karena tidak ada alasan'], a: 1, e: 'Keputusan/aksi adalah output akhir siklus BI.' }
+]);
+
+/* ===== Bank Soal P1: 5 set, dataset & perintah berbeda ===== */
+const _R = BI.rng, _sum = BI.sum;
+const _grp = (rows, k, f, agg) => BI.groupBy(rows, k, f, agg).sort((a, b) => b.value - a.value);
+const _pad = (n, l = 3) => String(n).padStart(l, '0');
+const _date = (r, y, m, span = 28) => `${y}-${_pad(m, 2)}-${_pad(1 + Math.floor(r() * span), 2)}`;
+
+/* Set A: kafe */
+const kafe = (() => {
+  const r = _R(101), menu = [['Kopi Susu', 'Kopi', 22000], ['Americano', 'Kopi', 20000], ['Latte', 'Kopi', 28000], ['Teh Tarik', 'Non-Kopi', 18000], ['Matcha', 'Non-Kopi', 26000], ['Roti Bakar', 'Makanan', 20000], ['Croissant', 'Makanan', 25000]];
+  const cab = ['Bandung', 'Jakarta', 'Yogyakarta'], met = ['Tunai', 'QRIS', 'Kartu'], rows = [];
+  for (let i = 0; i < 240; i++) { const m = menu[Math.floor(r() * r() * 7 + r() * 0.5) % 7], bl = 1 + Math.floor(r() * 3); rows.push({ TransaksiID: 'K' + _pad(i + 1), Tanggal: _date(r, 2024, bl), Cabang: cab[Math.floor(r() * 3)], Menu: m[0], Kategori: m[1], Qty: 1 + Math.floor(r() * 4), Harga: m[2], Metode: met[Math.floor(r() * 3)] }); }
+  rows.forEach(x => x.Total = x.Qty * x.Harga);
+  return rows;
+})();
+const BLN = ['', 'januari', 'februari', 'maret'];
+/* Set B: ride-hailing */
+const trip = (() => {
+  const r = _R(202), kota = ['Jakarta', 'Surabaya', 'Medan', 'Makassar'], lay = ['Motor', 'Mobil', 'Kirim Barang'], rows = [];
+  for (let i = 0; i < 400; i++) { const l = lay[Math.floor(r() * 3)], km = Math.round((1 + r() * r() * 24) * 10) / 10, rate = l === 'Motor' ? 2800 : l === 'Mobil' ? 4200 : 3200, kt = kota[Math.floor(Math.pow(r(), 1.4) * 4)]; rows.push({ TripID: 'T' + _pad(i + 1, 4), Tanggal: _date(r, 2024, 1 + Math.floor(r() * 3)), Kota: kt, Layanan: l, JarakKm: km, Tarif: Math.round((8000 + km * rate) / 500) * 500, DurasiMenit: Math.round(km * 3.2 + 5 + r() * 8), Rating: Math.max(1, Math.min(5, Math.round(5 - r() * r() * 3.6))) }); }
+  return rows;
+})();
+/* Set C: kursus online */
+const kursus = (() => {
+  const r = _R(303), kr = [['Excel Bisnis', 350000], ['Dasar SQL', 450000], ['Digital Marketing', 500000], ['Power BI', 650000]], kn = ['Instagram', 'Google', 'Referral', 'TikTok'], rows = [];
+  for (let i = 0; i < 300; i++) { const k = kr[Math.floor(r() * 4)], x = r(), st = x < 0.55 ? 'Lulus' : x < 0.8 ? 'Berhenti' : 'Aktif'; rows.push({ PesertaID: 'P' + _pad(i + 1, 4), TglDaftar: _date(r, 2024, 1 + Math.floor(r() * 4)), Kursus: k[0], Kanal: kn[Math.floor(Math.pow(r(), 1.3) * 4)], Biaya: k[1], Status: st, Skor: st === 'Lulus' ? Math.round(70 + r() * 30) : '' }); }
+  return rows;
+})();
+
+const T1 = [
+  { title: 'Kafe "Kopi Nusantara": ringkasan transaksi', lvl: 'D', mnt: 25, desc: 'Skenario: pemilik 3 cabang kafe ingin tahu kinerja Januari–Maret 2024. Dataset: 240 transaksi. <b>Tambahkan kolom Total = Qty × Harga</b> sebelum menjawab.',
+    files: [{ name: 'soal1A_kafe.csv', get: () => kafe }],
+    tasks: [
+      { type: 'num', tip: "Home → <b>Get data → Text/CSV</b> → pilih <code>soal1A_kafe.csv</code> → <b>Load</b>. Lalu tambahkan visual <b>Card</b>, seret <code>TransaksiID</code> ke Fields, ubah agregasi menjadi <b>Count</b>. Bandingkan dengan jumlah baris di Data view.", q: 'Impor CSV. Berapa <b>jumlah baris</b> transaksi?', ans: () => kafe.length, tol: 0, ex: 'Home → Get data → Text/CSV → Load. Cek jumlah baris di Data view atau visual Card Count of TransaksiID.' },
+      { type: 'num', q: 'Berapa <b>total pendapatan</b> (Rp) seluruh cabang?', ans: () => _sum(kafe.map(x => x.Total)), tol: 1, tip: 'Buat kolom Total (Qty × Harga) lalu Sum. Jangan menjumlah kolom Harga.', ex: () => 'Total = ' + BI.rp(_sum(kafe.map(x => x.Total))) },
+      { type: 'text', tip: "Buat kolom <code>Total</code> (Transform data → Add Column → Custom Column: <code>[Qty] * [Harga]</code>). Visual bar: Axis = <code>Cabang</code>, Values = <b>Sum of Total</b>. Urutkan menurun (⋯ → Sort descending) dan baca batang tertinggi.", q: 'Cabang mana yang pendapatannya <b>tertinggi</b>? (nama cabang)', ans: () => _grp(kafe, 'Cabang', x => x.Total)[0].key, ex: () => _grp(kafe, 'Cabang', x => x.Total).map(x => x.key + ': ' + BI.rp(x.value)).join('<br>') },
+      { type: 'num', q: 'Berapa <b>persen kontribusi kategori "Kopi"</b> terhadap total pendapatan? (satu desimal)', ans: () => _sum(kafe.filter(x => x.Kategori === 'Kopi').map(x => x.Total)) / _sum(kafe.map(x => x.Total)) * 100, tol: 0.15, tip: 'Pakai visual donut atau Show value as → Percent of grand total.' },
+      { type: 'text', tip: "Ubah <code>Tanggal</code> menjadi tipe Date. Bar/line dengan Axis = bulan dari hierarki tanggal (turun ke level Month), Values = Sum of Total. Atau tambah kolom <code>Bulan</code> di Power Query. Jawab dengan nama bulan atau angkanya.", q: 'Pada bulan apa pendapatan <b>tertinggi</b>? (nama bulan)', ans: () => { const b = _grp(kafe, x => +x.Tanggal.slice(5, 7), x => x.Total)[0].key; return [BLN[b], String(b)]; }, ex: () => [1, 2, 3].map(b => BLN[b] + ': ' + BI.rp(_sum(kafe.filter(x => +x.Tanggal.slice(5, 7) === b).map(x => x.Total)))).join('<br>') },
+      { type: 'num', q: 'Berapa <b>jumlah transaksi dengan metode QRIS</b> di cabang Jakarta?', ans: () => kafe.filter(x => x.Metode === 'QRIS' && x.Cabang === 'Jakarta').length, tol: 0, tip: 'Gunakan filter pane atau slicer Cabang + Metode lalu Count.' },
+      { type: 'do', tip: "Langkah ringkas: (1) 3 visual Card: Total (Sum), Jumlah transaksi (Count of TransaksiID), Rata-rata per transaksi (Total, <b>Average</b>). (2) Clustered bar Cabang × Sum of Total, urutkan menurun. (3) Line chart Axis = Bulan, Values = Sum of Total. (4) Slicer dari <code>Metode</code>. Ubah judul visual menjadi kalimat insight.", q: 'Bangun <b>dashboard 1 halaman</b>: 3 kartu (Total, Jumlah transaksi, Rata-rata per transaksi), bar pendapatan per cabang, line tren per bulan, dan slicer Metode.', rubric: ['3 kartu angka benar', 'Bar cabang terurut menurun', 'Line tren per bulan', 'Slicer Metode berfungsi', 'Judul visual berupa insight'] }
+    ] },
+  { title: 'Aplikasi transportasi "GoTrip": perilaku perjalanan', lvl: 'M', mnt: 30, desc: 'Skenario: analis operasional ingin memahami 400 perjalanan Jan–Mar 2024 di 4 kota. Fokus: agregasi bersyarat dan rata-rata.',
+    files: [{ name: 'soal1B_gotrip.csv', get: () => trip }],
+    tasks: [
+      { type: 'num', q: 'Berapa <b>rata-rata tarif</b> (Rp) layanan <i>Motor</i>?', ans: () => BI.avg(trip.filter(x => x.Layanan === 'Motor').map(x => x.Tarif)), tol: 50, tip: 'Pilih agregasi Average (bukan Sum) dan filter Layanan = Motor.' },
+      { type: 'text', tip: "Visual bar/tabel: Axis = <code>Kota</code>, Values = <b>Count of TripID</b>. Urutkan menurun; kota paling atas adalah jawabannya.", q: 'Kota dengan <b>jumlah trip terbanyak</b>?', ans: () => _grp(trip, 'Kota', null, 'count')[0].key, ex: () => _grp(trip, 'Kota').map(x => x.key + ' ' + x.n).join(', ') },
+      { type: 'num', tip: "Pada visual Card gunakan filter pane: <code>Rating</code> → Filter type <b>Advanced filtering</b> → \"is less than or equal to\" 3. Values = Count of TripID.", q: 'Berapa trip dengan <b>rating ≤ 3</b>?', ans: () => trip.filter(x => x.Rating <= 3).length, tol: 0 },
+      { type: 'num', tip: "Jangan merata-ratakan tarif per km tiap baris. Hitung Sum of Tarif dan Sum of JarakKm lalu bagi. Di Power BI: New measure <code>TarifPerKm = DIVIDE(SUM(GoTrip[Tarif]), SUM(GoTrip[JarakKm]))</code> (DAX dibahas di Pertemuan 5).", q: 'Berapa <b>tarif rata-rata per km</b> secara keseluruhan (total tarif ÷ total jarak)? Bulatkan ke rupiah.', ans: () => _sum(trip.map(x => x.Tarif)) / _sum(trip.map(x => x.JarakKm)), tol: 5, hint: 'Hitung ratio-of-sums (jumlah ÷ jumlah), bukan rata-rata dari tarif per km tiap baris.', ex: 'Ini pelajaran awal measure rasio (Pertemuan 5).' },
+      { type: 'num', tip: "Kartu dengan dua filter sekaligus: <code>Layanan</code> = Kirim Barang dan <code>Kota</code> = Surabaya. Values = Sum of Tarif.", q: 'Berapa <b>total tarif</b> layanan Kirim Barang di kota Surabaya (Rp)?', ans: () => _sum(trip.filter(x => x.Layanan === 'Kirim Barang' && x.Kota === 'Surabaya').map(x => x.Tarif)), tol: 1 },
+      { type: 'choice', tip: "Kata kunci \"<b>mengapa</b>\" berarti mencari penyebab. Empat jenis analitik: apa yang terjadi, mengapa, apa yang akan terjadi, apa yang harus dilakukan.", q: '"Mengapa rating layanan Mobil di Makassar turun pada Maret?" termasuk jenis analitik…', o: ['Deskriptif', 'Diagnostik', 'Prediktif', 'Preskriptif'], a: 1, ex: 'Pertanyaan "mengapa" = mencari penyebab: diagnostik.' },
+      { type: 'do', tip: "Scatter: X = <code>JarakKm</code>, Y = <code>Tarif</code>, Legend = <code>Layanan</code>. Aktifkan trend line di tab Analytics pada panel Visualizations. Bandingkan kemiringan garis tiap layanan untuk menilai harga per km.", q: 'Buat <b>scatter</b> JarakKm (X) vs Tarif (Y), warna = Layanan, aktifkan trend line. Tulis 2 kalimat insight tentang layanan yang paling mahal per km.', rubric: ['Scatter dengan 3 warna layanan', 'Trend line aktif', '2 kalimat insight tertulis'] }
+    ] },
+  { title: 'Kursus online "Belajar.id": funnel peserta', lvl: 'M', mnt: 30, desc: 'Skenario: tim produk menilai 300 pendaftar kursus. Status: Lulus, Berhenti, Aktif. Skor hanya ada untuk peserta Lulus (sel kosong = null).',
+    files: [{ name: 'soal1C_kursus.csv', get: () => kursus }],
+    tasks: [
+      { type: 'num', tip: "(1) Filter <code>Status</code> bukan \"Aktif\". (2) Hitung Count of PesertaID untuk Lulus dan untuk Berhenti. (3) Lulus ÷ (Lulus + Berhenti) × 100. Hitung manual dulu dengan dua kartu sebelum membuat measure.", q: '<b>Completion rate</b> = Lulus ÷ (Lulus + Berhenti), dalam persen (satu desimal). Peserta Aktif tidak dihitung.', ans: () => { const l = kursus.filter(x => x.Status === 'Lulus').length, b = kursus.filter(x => x.Status === 'Berhenti').length; return l / (l + b) * 100; }, tol: 0.15, hint: 'Filter Status ≠ Aktif dulu.' },
+      { type: 'text', tip: "Bar: Axis = <code>Kanal</code>, Values = <b>Count of PesertaID</b>, urutkan menurun.", q: 'Kanal pendaftaran dengan <b>peserta terbanyak</b>?', ans: () => _grp(kursus, 'Kanal', null, 'count')[0].key, ex: () => _grp(kursus, 'Kanal').map(x => x.key + ' ' + x.n).join(', ') },
+      { type: 'num', tip: "Filter visual <code>Status</code>: centang Lulus dan Aktif, hapus Berhenti. Values = <b>Sum of Biaya</b> (bukan Count).", q: 'Total <b>biaya kursus</b> (Rp) dari peserta berstatus Lulus atau Aktif (bukan yang Berhenti)?', ans: () => _sum(kursus.filter(x => x.Status !== 'Berhenti').map(x => x.Biaya)), tol: 1 },
+      { type: 'num', tip: "Kartu: Values = <code>Skor</code> dengan agregasi <b>Average</b>, filter Status = Lulus. Pastikan Skor bertipe angka; sel kosong tidak ikut dihitung. Format dua desimal di Format → Callout value.", q: '<b>Rata-rata skor</b> peserta Lulus (dua desimal).', ans: () => BI.avg(kursus.filter(x => x.Status === 'Lulus').map(x => x.Skor)), tol: 0.06, hint: 'Skor kosong tidak ikut dihitung oleh Average; pastikan kolom bertipe angka.' },
+      { type: 'text', q: 'Kursus dengan <b>completion rate tertinggi</b>? (nama kursus)', ans: () => { const g = [...new Set(kursus.map(x => x.Kursus))].map(k => { const l = kursus.filter(x => x.Kursus === k && x.Status === 'Lulus').length, b = kursus.filter(x => x.Kursus === k && x.Status === 'Berhenti').length; return { k, v: l / (l + b) }; }).sort((a, b) => b.v - a.v); return g[0].k; }, tip: 'Perlu measure rasio per kursus; atau hitung Lulus & Berhenti per kursus lalu bagi.' },
+      { type: 'choice', tip: "Soal ini membandingkan nilai antar <b>kategori</b> (kursus). Ingat tabel pemilihan grafik di Pertemuan 6.", q: 'Visual terbaik untuk membandingkan completion rate antar 4 kursus:', o: ['Pie chart', 'Bar chart terurut', 'Line chart', 'Peta'], a: 1, ex: 'Perbandingan antar kategori = bar. Pie sulit dibandingkan.' },
+      { type: 'do', tip: "Format: pertanyaan bisnis → visual yang menjawab → satu rekomendasi dengan angka. Contoh: \"Kanal X punya completion rate Y%, lebih tinggi dari rata-rata Z%; tambahkan 20% anggaran ke kanal X.\" Sertakan 1 bar atau scatter sebagai bukti.", q: 'Tulis <b>1 pertanyaan bisnis</b> dan <b>1 rekomendasi</b> untuk tim produk berdasar dashboard Anda (misal: kanal mana yang perlu ditambah anggaran?). Sertakan 1 visual pendukung.', rubric: ['Pertanyaan bisnis jelas', 'Visual mendukung', 'Rekomendasi spesifik dan terukur'] }
+    ] },
+  { title: 'Konsep BI: pilihan ganda kasus', lvl: 'D', mnt: 15, desc: 'Tanpa dataset. Latihan konsep: ruang lingkup BI, DIKW, siklus data, jenis analitik, dan pemilihan tool.',
+    tasks: [
+      { type: 'choice', tip: "Tabel ringkasan = data yang dirangkum dan diberi konteks, tetapi belum menjelaskan pola atau tindakan. Tingkat DIKW: Data → Informasi → Pengetahuan → Wawasan.", q: 'Toko mencatat 10.000 transaksi. Tabel ringkasan penjualan per bulan berada di tingkat DIKW…', o: ['Data', 'Informasi', 'Pengetahuan', 'Wawasan'], a: 1, ex: 'Data yang diringkas dan diberi konteks = informasi.' },
+      { type: 'choice', tip: "Cari pernyataan yang berlebihan atau keliru tentang peran BI. BI mendukung keputusan manusia.", q: 'Manakah yang BUKAN tujuan utama BI?', o: ['Mempercepat keputusan', 'Menyatukan data dari banyak sumber', 'Menggantikan semua keputusan manajer', 'Menyajikan KPI terpercaya'], a: 2, ex: 'BI mendukung, bukan menggantikan, pengambil keputusan.' },
+      { type: 'choice', tip: "\"Berapa yang <b>sebaiknya</b>…\" meminta rekomendasi tindakan optimal, bukan deskripsi atau prediksi saja.", q: '"Berapa stok optimal agar tidak kehabisan saat promo 12.12?" adalah analitik…', o: ['Deskriptif', 'Diagnostik', 'Prediktif', 'Preskriptif'], a: 3, ex: 'Merekomendasikan tindakan terbaik = preskriptif.' },
+      { type: 'choice', tip: "Tahap mana yang menyimpan definisi KPI, relasi, dan measure sehingga semua laporan memakai angka yang sama?", q: 'Tahap yang menjaga satu definisi KPI untuk seluruh perusahaan:', o: ['Sumber data', 'Model semantik', 'Slicer', 'Warna'], a: 1, ex: 'Model semantik menyimpan measure dan relasi bersama.' },
+      { type: 'choice', tip: "Pertimbangkan ekosistem yang sudah dipakai organisasi, biaya, dan kemudahan integrasi dengan Excel dan Microsoft 365.", q: 'Perusahaan sangat bergantung pada Microsoft 365 dan Excel dengan anggaran terbatas. Tool yang paling mudah diadopsi:', o: ['Power BI', 'Tidak perlu tool', 'Hanya kertas', 'Bahasa assembly'], a: 0, ex: 'Integrasi ekosistem Microsoft memudahkan adopsi (pertimbangan, bukan aturan mutlak).' },
+      { type: 'choice', tip: "Nilai BI ada pada tindakan. Cari tahap siklus tempat insight seharusnya berubah menjadi aksi.", q: 'Dashboard menunjukkan penjualan turun, namun tim tidak melakukan apa pun. Dari sudut pandang BI, nilai yang hilang ada di tahap…', o: ['ETL', 'Keputusan & aksi', 'Warehouse', 'Visual'], a: 1, ex: 'Insight tanpa tindakan tidak bernilai.' },
+      { type: 'choice', tip: "Ikuti arah aliran data: sumber, diolah, disimpan, dimodelkan, ditampilkan, lalu dipakai untuk keputusan. Lihat peta siklus di tab Teori bagian 3.", q: 'Urutan siklus yang benar:', o: ['Dashboard → ETL → Sumber → Keputusan', 'Sumber → ETL → Warehouse → Model → Dashboard → Keputusan', 'ETL → Sumber → Dashboard', 'Keputusan → Sumber → Model'], a: 1, ex: 'Lihat peta siklus di tab Teori.' }
+    ] },
+  { title: 'Tantangan: rancang rencana BI untuk UMKM', lvl: 'T', mnt: 30, desc: 'Tanpa dataset khusus. Pilih satu UMKM (laundry, toko kue, bengkel, bimbel). Susun rencana singkat 1 halaman.',
+    tasks: [
+      { type: 'do', tip: "Format tiap keputusan: <b>Keputusan</b> → <b>Data</b> → <b>Sumber</b> → <b>Jenis analitik</b>. Contoh laundry: menentukan jam buka tambahan; data = jumlah order per jam; sumber = buku pesanan.", q: 'Tulis <b>3 keputusan bisnis</b> yang bisa dibantu BI beserta data yang dibutuhkan dan sumbernya.', rubric: ['3 keputusan spesifik', 'Data & sumber tiap keputusan', 'Dikelompokkan jenis analitik'] },
+      { type: 'do', tip: "Gambar 6 kotak berurutan: Sumber (kasir, WhatsApp, Excel) → ETL (rapikan nama, format tanggal) → Warehouse (satu tabel terpusat) → Dashboard → Pengguna → Keputusan. Tandai di mana data biasanya kotor.", q: 'Gambar <b>alur siklus data</b> (sumber → ETL → warehouse → dashboard → keputusan) untuk UMKM tersebut.', rubric: ['Sumber realistis (kasir, WhatsApp, Excel)', 'Ada langkah pembersihan', 'Jelas siapa pengguna dashboard'] },
+      { type: 'do', tip: "Letakkan KPI terpenting di kiri atas. Pilih 4 KPI yang menjawab keputusan pemilik (mis. omzet, jumlah order, rata-rata nilai order, pelanggan baru). Dua grafik: satu tren waktu (line) dan satu perbandingan (bar). Jelaskan alasan memilih tiap grafik.", q: 'Sketsa <b>wireframe dashboard</b> pemilik: 4 KPI + 2 grafik. Jelaskan alasan pemilihan tiap visual.', rubric: ['4 KPI beralasan', '2 grafik tepat', 'Tata letak kiri-atas penting'] }
+    ] }
+];
+BI.soal('#soal-box', T1);
+
+</script>

@@ -1,0 +1,151 @@
+<section class="pane" id="teori">
+ <h2>1. Laporan yang hanya ada di laptop Anda tidak berguna</h2>
+ <div class="card">
+  <p>Mengirim file .pbix lewat email berarti: versi ganda, data tidak ter-refresh, dan siapa pun yang memegang file bisa melihat semua data. Layanan cloud (Power BI Service / Tableau Cloud) memberi <b>satu sumber kebenaran</b>, refresh terjadwal, kolaborasi, dan kontrol akses.</p>
+ </div>
+
+ <h2>2. Alur publikasi</h2>
+ <div class="card">
+  <div class="flow" id="fl"></div>
+  <div class="grid2"><div id="fl-info" class="callout"></div><div id="fl-err" class="callout warn"></div></div>
+ </div>
+
+ <h2>3. Peran &amp; hak akses workspace</h2>
+ <div class="card">
+  <p class="muted">Klik peran untuk menyorot kemampuannya. Prinsip <b>least privilege</b>: berikan akses minimum yang cukup. (Ringkasan untuk belajar; periksa dokumentasi produk terbaru untuk detail.)</p>
+  <div id="rl-seg"></div>
+  <div class="tblwrap"><table class="tbl" id="rl-tbl"></table></div>
+  <div id="rl-txt" class="callout"></div>
+ </div>
+
+ <h2>4. Row-Level Security (RLS): simulator</h2>
+ <div class="card">
+  <p>RLS menyaring <b>baris</b> data berdasarkan identitas pembaca. Satu laporan, banyak pembaca, masing-masing hanya melihat bagiannya.</p>
+  <div class="controls" id="rls-ctl"></div>
+  <pre><code id="rls-dax"></code></pre>
+  <div class="grid2"><div><div id="rls-kpi"></div><div id="rls-chart"></div></div><div><h4>Tabel akses (Akses[Email] → Wilayah)</h4><div id="rls-acc"></div><div id="rls-txt" class="callout" style="margin-top:10px"></div></div></div>
+ </div>
+
+ <h2>5. Refresh &amp; tata kelola</h2>
+ <div class="card">
+  <div class="grid2">
+   <div><h4>Perencana refresh</h4><div class="controls" id="rf-ctl"></div><div id="rf-out"></div></div>
+   <div><h4>Praktik tata kelola</h4><ul class="small"><li><b>Workspace terpisah</b>: Dev → Test → Prod (deployment pipeline).</li><li><b>Sertifikasi dataset</b>: tandai dataset resmi agar tim tidak membuat KPI sendiri-sendiri.</li><li><b>Sensitivity label</b> untuk data rahasia.</li><li><b>Penamaan konsisten</b> dan dokumentasi pemilik laporan.</li><li><b>Tinjau akses</b> berkala; hapus yang sudah pindah tugas.</li></ul></div>
+  </div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b>Laporan ter-publish di workspace, dibagikan ke 1 rekan (Viewer), 2 role RLS (Manajer Jawa, Manajer Sumatera) teruji dengan "View as", serta screenshot bukti.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧾 Aturan RLS</h3>
+  <pre><code>-- RLS statis: role "Manajer Jawa" pada tabel Dim_Wilayah
+[Wilayah] = "Jawa"
+
+-- RLS dinamis: tabel Akses (Email, Wilayah) + role "Manajer" pada Dim_Wilayah
+[Wilayah] = LOOKUPVALUE ( Akses[Wilayah], Akses[Email], USERPRINCIPALNAME () )</code></pre>
+  <p class="small muted">Catatan: RLS hanya berlaku bagi pengguna dengan peran Viewer. Admin/Member/Contributor workspace melihat semua data.</p></div>
+ <div class="card"><h3>🧪 Skenario uji</h3><div id="test"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Publish: Server → Publish Workbook ke Tableau Cloud. Keamanan baris: User Filter (Server → Create User Filter) atau <code>USERNAME()</code> pada Data Source Filter.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 13</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const star = BI.data.star(BI.data.sales(900, 7));
+const wm = {}; star.dimWilayah.forEach(w => wm[w.WilayahID] = w.Wilayah);
+const E = star.fakta.map(r => ({ ...r, Wilayah: wm[r.WilayahID] }));
+const sum = BI.sum;
+
+/* 2. alur */
+const FL = [
+  ['Desktop (.pbix)', 'Laporan dibuat dan diuji di Power BI Desktop. Sumber data, model, dan visual berada dalam satu file.', 'Menggunakan path lokal (C:\\...) yang tidak bisa diakses cloud.'],
+  ['Publish', 'Home → Publish → pilih workspace. Dataset dan report diunggah sebagai dua item.', 'Publish ke "My workspace" (pribadi) sehingga tim tidak bisa melihat.'],
+  ['Workspace', 'Ruang kerja kolaboratif berisi dataset, report, dashboard. Akses diatur lewat peran.', 'Semua orang dijadikan Admin.'],
+  ['Konfigurasi dataset', 'Kredensial sumber data, gateway (untuk sumber on-premises), dan jadwal refresh.', 'Lupa gateway: refresh gagal karena sumber tidak terjangkau.'],
+  ['Bagikan / App', 'Share link, atau kemas sebagai App untuk audiens luas dengan navigasi rapi.', 'Membagikan ke grup besar tanpa RLS.'],
+  ['Pengguna', 'Pembaca membuka lewat browser/ponsel. RLS menyaring data sesuai identitas.', 'Tidak menguji "View as" sebelum membagikan.']
+];
+FL.forEach((f, i) => { if (i) $('#fl').append(h('span', { class: 'arr' }, '→')); $('#fl').append(h('span', { class: 'node', id: 'fl' + i, onclick: () => fp(i) }, f[0])); });
+function fp(i) { FL.forEach((_, k) => $('#fl' + k).classList.toggle('on', k === i)); $('#fl-info').innerHTML = `<b class="t">${FL[i][0]}</b>${FL[i][1]}`; $('#fl-err').innerHTML = `<b class="t">⚠ Kesalahan umum</b>${FL[i][2]}`; }
+fp(0);
+
+/* 3. peran */
+const ROLES = ['Admin', 'Member', 'Contributor', 'Viewer'];
+const PERM = [
+  ['Melihat &amp; berinteraksi dengan laporan', ['✔', '✔', '✔', '✔']],
+  ['Membuat / mengedit laporan di workspace', ['✔', '✔', '✔', '—']],
+  ['Publish laporan ke workspace', ['✔', '✔', '✔', '—']],
+  ['Publish / memperbarui App', ['✔', '✔', '—', '—']],
+  ['Membagikan item ke pengguna lain', ['✔', '✔', '—', '—']],
+  ['Mengelola anggota workspace', ['✔', '◐ terbatas', '—', '—']],
+  ['Menghapus workspace', ['✔', '—', '—', '—']],
+  ['Dibatasi oleh RLS', ['tidak', 'tidak', 'tidak', 'YA']]
+];
+const tb = $('#rl-tbl');
+tb.append(h('thead', {}, h('tr', {}, h('th', {}, 'Kemampuan'), ROLES.map(r => h('th', { id: 'rh-' + r }, r)))));
+tb.append(h('tbody', {}, PERM.map(([p, v]) => h('tr', {}, h('td', { html: p }), v.map((x, i) => h('td', { class: 'rc' + i + ' ' + (x === '✔' || x === 'YA' ? 'good' : x.startsWith('◐') ? 'warnc' : ''), style: 'text-align:center' }, x))))));
+const rdesc = ['Pemilik penuh: konfigurasi, akses, penghapusan. Berikan hanya pada sedikit orang.', 'Dapat bekerja penuh pada konten dan menerbitkan App; bagus untuk analis utama.', 'Dapat menerbitkan dan mengedit laporan, tetapi tidak membagikan atau mengelola akses.', 'Hanya melihat. RLS berlaku untuk peran ini; ideal untuk pemakai bisnis.'];
+BI.seg('#rl-seg', ROLES.map((r, i) => [i, r]), 0, i => { BI.$$('#rl-tbl td').forEach(td => { td.style.opacity = td.className.includes('rc' + i) ? 1 : 0.35; }); $('#rl-txt').innerHTML = `<b class="t">${ROLES[i]}</b>${rdesc[i]}`; });
+
+/* 4. RLS */
+const ACC = [{ Email: 'andi@perusahaan.co.id', Peran: 'Manajer Jawa', Wilayah: 'Jawa' }, { Email: 'sari@perusahaan.co.id', Peran: 'Manajer Sumatera', Wilayah: 'Sumatera' }, { Email: 'budi@perusahaan.co.id', Peran: 'Manajer Sulawesi', Wilayah: 'Sulawesi' }, { Email: 'direktur@perusahaan.co.id', Peran: 'Direktur', Wilayah: '*' }, { Email: 'tamu@gmail.com', Peran: '(tidak terdaftar)', Wilayah: null }];
+const RS = { user: ACC[0].Email, on: true, mode: 'dyn' };
+BI.select('#rls-ctl', 'Lihat sebagai (View as)', ACC.map(a => [a.Email, a.Email + ' — ' + a.Peran]), RS.user, v => { RS.user = v; rl(); });
+BI.select('#rls-ctl', 'Metode', [['dyn', 'RLS dinamis (tabel Akses)'], ['static', 'RLS statis (role per wilayah)']], 'dyn', v => { RS.mode = v; rl(); });
+$('#rls-ctl').append(h('label', {}, h('input', { type: 'checkbox', checked: '', onchange(e) { RS.on = e.target.checked; rl(); } }), ' RLS aktif'));
+BI.table('#rls-acc', { cols: [{ k: 'Email', l: 'Email' }, { k: 'Wilayah', l: 'Wilayah', f: v => (v == null ? '∅' : v === '*' ? '(semua)' : v) }], rows: ACC, sort: false });
+function rl() {
+  const u = ACC.find(a => a.Email === RS.user);
+  $('#rls-dax').textContent = RS.mode === 'dyn' ? '[Wilayah] = LOOKUPVALUE ( Akses[Wilayah], Akses[Email], USERPRINCIPALNAME () )\n-- USERPRINCIPALNAME() saat ini = "' + u.Email + '"' : '-- Role "' + (u.Wilayah && u.Wilayah !== '*' ? 'Manajer ' + u.Wilayah : '(tidak ada role)') + '"\n[Wilayah] = "' + (u.Wilayah && u.Wilayah !== '*' ? u.Wilayah : '?') + '"';
+  let allowed;
+  if (!RS.on) allowed = BI.REGION; else if (u.Wilayah == null) allowed = []; else if (u.Wilayah === '*') allowed = RS.mode === 'dyn' ? BI.REGION : []; else allowed = BI.REGION.filter(w => w.startsWith(u.Wilayah));
+  const rows = E.filter(r => allowed.includes(r.Wilayah));
+  BI.kpi('#rls-kpi', [{ label: 'Revenue terlihat', value: 'Rp ' + short(sum(rows.map(r => r.Pendapatan))) }, { label: 'Order terlihat', value: fmt(rows.length) }]);
+  BI.bar('#rls-chart', { labels: BI.REGION.map(x => x.split(' ')[0]), series: [{ name: 'Revenue', data: BI.REGION.map(w => (allowed.includes(w) ? sum(E.filter(r => r.Wilayah === w).map(r => r.Pendapatan)) : 0)) }], height: 200 });
+  let t;
+  if (!RS.on) t = '<span class="chip bad">❌ RLS nonaktif</span> Semua pembaca melihat semua wilayah. Itulah risiko membagikan tanpa RLS.';
+  else if (u.Wilayah == null) t = '<span class="chip warn">∅</span> Email tidak ada di tabel Akses → filter menghasilkan kosong → pengguna tidak melihat data (aman secara bawaan).';
+  else if (u.Wilayah === '*' && RS.mode === 'static') t = '<span class="chip warn">⚠</span> Pada RLS statis, Direktur tidak punya role: tidak melihat apa pun. Perlu role tanpa filter (atau gunakan RLS dinamis dengan "*").';
+  else t = `<span class="chip ok">✔</span> ${u.Email} hanya melihat: <b>${allowed.join(', ')}</b>.`;
+  $('#rls-txt').innerHTML = t;
+}
+rl();
+
+/* 5. refresh */
+const rf = { n: 4, lic: 'pro' };
+BI.slider('#rf-ctl', 'Refresh per hari', 1, 12, 1, 4, v => { rf.n = v; rfr(); });
+BI.select('#rf-ctl', 'Kapasitas', [['pro', 'Lisensi per pengguna (Pro) · umumnya maks. 8/hari'], ['prem', 'Kapasitas Premium · umumnya maks. 48/hari']], 'pro', v => { rf.lic = v; rfr(); });
+function rfr() {
+  const max = rf.lic === 'pro' ? 8 : 48, gap = (24 / rf.n).toFixed(1).replace('.', ',');
+  $('#rf-out').innerHTML = `<div class="callout ${rf.n > max ? 'bad' : 'ok'}"><b class="t">Setiap ±${gap} jam</b>${rf.n > max ? 'Melebihi batas umum kapasitas ini. Kurangi frekuensi atau pakai kapasitas lebih tinggi.' : 'Sesuai batas umum. Pastikan sumber data siap sebelum jadwal dimulai.'} Jadwalkan di luar jam sibuk sumber data.</div>`;
+}
+rfr();
+
+/* Praktik */
+const dl = $('#dl');
+[['penjualan_fakta.csv', star.fakta], ['dim_wilayah.csv', star.dimWilayah], ['dim_produk.csv', star.dimProduk], ['dim_tanggal.csv', star.dimTanggal], ['akses_wilayah.csv', ACC.filter(a => a.Wilayah && a.Wilayah !== '*').map(a => ({ Email: a.Email, Wilayah: a.Wilayah === 'Jawa' ? 'Jawa' : a.Wilayah }))]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+BI.steps('#steps', [
+  { t: 'Siapkan akun', tm: '5\'', b: 'Masuk ke app.powerbi.com dengan akun institusi. Buat workspace "BI-NamaAnda" (jika diizinkan).' },
+  { t: 'Publish', tm: '15\'', b: 'Di Desktop: <b>Home → Publish → pilih workspace</b>. Buka tautan hasil. Periksa bahwa dataset dan report muncul.' },
+  { t: 'Bagikan', tm: '15\'', b: 'Report → Share → masukkan email rekan (atau tambahkan sebagai Viewer pada workspace). Coba juga membuat App.' },
+  { t: 'Buat RLS', tm: '25\'', b: 'Desktop: <b>Modeling → Manage roles</b> → New: "Manajer Jawa" (Dim_Wilayah: [Wilayah] = "Jawa") dan "Manajer Sumatera". Uji dengan <b>View as</b>. Publish ulang, lalu di Service: Dataset → Security → tambahkan anggota ke role.' },
+  { t: 'Refresh terjadwal', tm: '20\'', b: 'Dataset → Settings → Data source credentials → Scheduled refresh (aktifkan, 1–2 kali sehari). Catat bila membutuhkan gateway.' },
+  { t: 'Uji skenario', tm: '15\'', b: 'Kerjakan tabel uji di bawah dengan teman sebagai pengguna Viewer.' },
+  { t: 'Refleksi', tm: '5\'', b: 'Risiko apa bila laporan dibagikan lewat file .pbix?' }
+]);
+[['Pengguna Jawa membuka laporan', 'Hanya data Jawa tampil'], ['Pengguna Sumatera membuka laporan', 'Hanya data Sumatera tampil'], ['Pengguna tanpa role dibuka', 'Tidak ada data / akses ditolak'], ['Admin membuka laporan', 'Melihat semua (RLS tidak berlaku)'], ['Refresh dijadwalkan', 'Status refresh berhasil di Refresh history']].forEach(([a, b], i) => { const r = h('div', { class: 'row', style: 'border-bottom:1px dashed var(--line);padding:6px 0' }, h('label', { style: 'flex:1;min-width:220px' }, h('input', { type: 'checkbox' }), ' ' + a), h('span', { class: 'chip' }, 'Hasil harapan: ' + b)); $('#test').append(r); });
+BI.checklist('#chk', ['Laporan ter-publish di workspace', 'Dibagikan ke rekan (Viewer)', 'Dua role RLS dibuat & diuji View as', 'Anggota ditambahkan ke role di Service', 'Refresh terjadwal diatur', 'Screenshot bukti dikumpulkan'], 'p13');
+
+BI.quiz('#quiz', [
+  { q: 'Keuntungan utama publish ke cloud dibanding mengirim file .pbix:', o: ['Ukuran file kecil', 'Satu sumber kebenaran, refresh, dan kontrol akses', 'Grafik lebih bagus', 'Tidak perlu data'], a: 1, e: 'Kolaborasi & tata kelola.' },
+  { q: 'Prinsip least privilege berarti…', o: ['Semua Admin', 'Beri akses minimum yang dibutuhkan', 'Tanpa akses', 'Akses sementara selamanya'], a: 1, e: 'Kurangi risiko kebocoran.' },
+  { q: 'RLS membatasi…', o: ['Kolom', 'Baris data yang boleh dilihat pengguna', 'Ukuran file', 'Warna'], a: 1, e: 'Row-Level Security.' },
+  { q: 'Email tidak ada di tabel Akses (RLS dinamis) →', o: ['Melihat semua', 'Tidak melihat data', 'Error server', 'Menjadi Admin'], a: 1, e: 'Filter menghasilkan kosong.' },
+  { q: 'Pengujian RLS dilakukan dengan…', o: ['Menebak', 'View as role', 'Menghapus data', 'Mengubah tema'], a: 1, e: 'Uji sebelum dibagikan.' },
+  { q: 'RLS tidak membatasi pengguna dengan peran…', o: ['Viewer', 'Admin/Member/Contributor pada workspace', 'Semua', 'Tidak ada'], a: 1, e: 'Peran penyunting melewati RLS.' }
+]);
+</script>

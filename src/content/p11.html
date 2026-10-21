@@ -1,0 +1,155 @@
+<section class="pane" id="teori">
+ <h2>1. Dua jenis dashboard, dua pertanyaan berbeda</h2>
+ <div class="card">
+  <p>Direktur bertanya <i>"apakah performa pengiriman membaik?"</i> (strategis). Koordinator gudang bertanya <i>"paket mana yang bermasalah sekarang, dan siapa yang harus saya telepon?"</i> (operasional). Desainnya sangat berbeda.</p>
+  <div id="so-seg"></div>
+  <div class="grid2" style="align-items:start"><div id="so-view"></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Aspek</th><th>Strategis</th><th>Operasional</th></tr></thead><tbody>
+   <tr><td>Pertanyaan</td><td>Apakah kita di jalur?</td><td>Apa yang harus ditindak sekarang?</td></tr>
+   <tr><td>Pengguna</td><td>Direksi, manajer senior</td><td>Supervisor, koordinator</td></tr>
+   <tr><td>Rentang waktu</td><td>Bulan/kuartal/tahun</td><td>Jam/hari ini</td></tr>
+   <tr><td>Pembaruan</td><td>Harian/mingguan</td><td>Menit/real time</td></tr>
+   <tr><td>Isi utama</td><td>Tren, target, perbandingan</td><td>Status, pengecualian, alert</td></tr>
+   <tr><td>Detail</td><td>Ringkas, drill bila perlu</td><td>Rinci, daftar yang bisa ditindak</td></tr>
+  </tbody></table></div></div>
+ </div>
+
+ <h2>2. Monitor operasional (simulasi langsung)</h2>
+ <div class="card">
+  <p class="muted">Data bergerak tiap 1,5 detik. Ubah ambang alert, atau tekan <b>Injeksi gangguan</b> untuk mensimulasikan kurir yang memburuk, lalu lihat seberapa cepat dashboard memberi tahu.</p>
+  <div class="row"><button class="btn pri" id="lv-play">⏸ Jeda</button><button class="btn" id="lv-bad">⚠ Injeksi gangguan kurir</button><button class="btn" id="lv-fix">✔ Pulihkan</button><span class="chip" id="lv-clock"></span></div>
+  <div class="controls" id="lv-ctl"></div>
+  <div id="lv-alert"></div>
+  <div class="dash-frame"><div id="lv-kpi"></div>
+   <div class="grid3">
+    <div class="card"><h4>On-time keseluruhan</h4><div id="lv-gauge"></div></div>
+    <div class="card"><h4>On-time per kurir</h4><div id="lv-cur"></div></div>
+    <div class="card"><h4>Status saat ini</h4><div id="lv-pie"></div></div>
+   </div>
+   <div class="card"><h4>Daftar pengecualian (perlu tindakan)</h4><div id="lv-tbl"></div></div>
+  </div>
+ </div>
+
+ <h2>3. Warna alert yang fungsional</h2>
+ <div class="card">
+  <p>±8% pria dan ±0,5% wanita mengalami buta warna merah-hijau. Warna <b>tidak boleh menjadi satu-satunya pembawa makna</b>. Tekan tombol untuk menyimulasikan tampilan hitam-putih.</p>
+  <div class="row"><button class="btn" id="cb-btn">🎨 Simulasi tanpa warna</button></div>
+  <div class="grid2" id="cb-box"><div class="card"><h4>❌ Hanya warna</h4><div id="cb-bad"></div></div><div class="card"><h4>✅ Warna + ikon + teks</h4><div id="cb-good"></div></div></div>
+ </div>
+
+ <h2>4. Stok: bullet chart</h2>
+ <div class="card"><div id="stk"></div><div id="stk-txt" class="callout"></div></div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b><code>P11_OperationalDashboard.pbix</code>: KPI On-time %, status per kurir, daftar pengecualian berwarna, bullet stok vs minimum, dan catatan frekuensi refresh.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div id="dl" class="row"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧾 Measure operasional</h3><pre><code>Jumlah Pengiriman = COUNTROWS ( Logistik )
+Terkirim = CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Terkirim" )
+Terkirim Tepat Waktu = CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Terkirim",
+                         FILTER ( Logistik, Logistik[AktualHari] &lt;= Logistik[EstimasiHari] ) )
+On-time % = DIVIDE ( [Terkirim Tepat Waktu], [Terkirim] )
+Error Rate = DIVIDE ( CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Gagal/Retur" ), [Jumlah Pengiriman] )
+Rata-rata Hari Kirim = AVERAGE ( Logistik[AktualHari] )
+Status Stok = IF ( MIN ( Stok[Stok] ) &lt; MIN ( Stok[StokMinimum] ), "Kritis", "Aman" )</code></pre></div>
+ <div class="card"><h3>🚦 Aturan warna</h3><div id="rule"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Parameter ambang + calculated field status; Dashboard Actions untuk filter; Data Source → Refresh schedule di Tableau Cloud.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 11</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const sum = BI.sum, avg = BI.avg;
+const LOG = BI.data.logistics(500, 3), STK = BI.data.stok();
+const KUR = [...new Set(LOG.map(r => r.Kurir))];
+
+/* 1. strategis vs operasional */
+BI.seg('#so-seg', [['s', 'Dashboard strategis'], ['o', 'Dashboard operasional']], 's', v => {
+  const el = $('#so-view'); el.innerHTML = '';
+  if (v === 's') {
+    const mon = BI.MON.map((_, i) => 80 + Math.sin(i / 2) * 5 + i * 0.6 + (i === 9 ? -6 : 0));
+    el.append(h('div', { class: 'card' }, h('h4', {}, 'On-time % per bulan vs target 90%'), h('div', { id: 'so1' }))); BI.line('#so1', { labels: BI.MON, series: [{ name: 'On-time %', data: mon }], target: 90, targetLabel: 'target 90%', height: 220, fmt: v => v.toFixed(0) + '%', yMin: 70 });
+  } else {
+    el.append(h('div', { class: 'card' }, h('h4', {}, 'Perlu tindakan sekarang'), h('div', { id: 'so2' })));
+    BI.table('#so2', { cols: [{ k: 'Resi', l: 'Resi' }, { k: 'Kurir', l: 'Kurir' }, { k: 'KotaTujuan', l: 'Kota' }, { k: 'tel', l: 'Telat', r: 1, f: v => '+' + v + ' hari', cls: v => (v > 2 ? 'bad' : 'warnc') }], rows: LOG.filter(r => r.Status === 'Tertunda').slice(0, 6).map(r => ({ ...r, tel: Math.max(1, r.AktualHari - r.EstimasiHari) })), sort: false });
+  }
+});
+
+/* 2. live monitor */
+const TH = { g: 90, y: 80 };
+BI.slider('#lv-ctl', 'Ambang hijau (≥)', 70, 99, 1, TH.g, v => { TH.g = v; lv(); }, v => v + '%');
+BI.slider('#lv-ctl', 'Ambang kuning (≥)', 50, 95, 1, TH.y, v => { TH.y = v; lv(); }, v => v + '%');
+let ship = LOG.slice(0, 300).map(r => ({ ...r, late: r.AktualHari > r.EstimasiHari })), tick = 0, play = true, bad = null, nid = 90001;
+const stColor = s => ({ Terkirim: 'var(--c3)', 'Dalam Perjalanan': 'var(--c1)', Tertunda: 'var(--c2)', 'Gagal/Retur': 'var(--c4)' }[s]);
+function step() {
+  const r = BI.rng(tick++ + 100);
+  for (let i = 0; i < 6; i++) { // selesaikan pengiriman
+    const cand = ship.filter(s => s.Status === 'Dalam Perjalanan'); if (!cand.length) break;
+    const s = cand[Math.floor(r() * cand.length)], pl = (s.Kurir === bad ? 0.55 : 0.14) + s.JarakSkala * 0.012, x = r();
+    if (x < pl * 0.55) { s.Status = 'Tertunda'; s.late = true; s.AktualHari = s.EstimasiHari + 1 + Math.floor(r() * 3); }
+    else if (x < pl * 0.55 + (s.Kurir === bad ? 0.08 : 0.02)) s.Status = 'Gagal/Retur';
+    else { s.Status = 'Terkirim'; s.late = x < pl; }
+  }
+  for (let i = 0; i < 3; i++) { const k = KUR[Math.floor(r() * KUR.length)], d = LOG[Math.floor(r() * LOG.length)]; ship.push({ ...d, Resi: 'RSI' + (nid++), Kurir: k, Status: 'Dalam Perjalanan', late: false }); }
+  if (ship.length > 600) ship = ship.slice(-600);
+  lv();
+}
+const tone = v => (v >= TH.g ? 'var(--c3)' : v >= TH.y ? 'var(--c2)' : 'var(--c4)');
+function lv() {
+  const done = ship.filter(s => s.Status === 'Terkirim'), ot = done.filter(s => !s.late).length / (done.length || 1) * 100;
+  const cnt = s => ship.filter(x => x.Status === s).length;
+  BI.kpi('#lv-kpi', [{ label: 'Total aktif', value: fmt(ship.length) }, { label: 'On-time %', value: ot.toFixed(1).replace('.', ',') + '%', sub: ot >= TH.g ? '🟢 normal' : ot >= TH.y ? '🟡 waspada' : '🔴 kritis' }, { label: 'Dalam perjalanan', value: fmt(cnt('Dalam Perjalanan')) }, { label: 'Tertunda', value: fmt(cnt('Tertunda')), sub: '⚠ perlu follow up' }, { label: 'Gagal/retur', value: fmt(cnt('Gagal/Retur')), sub: 'error rate ' + pct(cnt('Gagal/Retur') / ship.length) }]);
+  BI.gauge('#lv-gauge', { value: ot, min: 50, max: 100, zones: [{ to: TH.y, color: 'var(--c4)' }, { to: TH.g, color: 'var(--c2)' }, { to: 100, color: 'var(--c3)' }], fmt: v => v.toFixed(0) + '%' });
+  const kv = KUR.map(k => { const d = done.filter(s => s.Kurir === k); return d.filter(s => !s.late).length / (d.length || 1) * 100; });
+  BI.hbar('#lv-cur', { labels: KUR, data: kv, rowH: 30, fmt: v => v.toFixed(0), valFmt: v => v.toFixed(0) + '%', colorBy: (i, v) => tone(v) });
+  BI.pie('#lv-pie', { labels: ['Terkirim', 'Dalam Perjalanan', 'Tertunda', 'Gagal/Retur'], data: ['Terkirim', 'Dalam Perjalanan', 'Tertunda', 'Gagal/Retur'].map(cnt), donut: true, colors: ['var(--c3)', 'var(--c1)', 'var(--c2)', 'var(--c4)'] });
+  const worst = KUR.map((k, i) => ({ k, v: kv[i] })).filter(x => x.v < TH.y);
+  $('#lv-alert').innerHTML = worst.length ? worst.map(w => `<div class="callout bad"><b class="t">🔴 ALERT: ${w.k}</b>On-time ${w.v.toFixed(0)}% di bawah ambang kuning (${TH.y}%). Hubungi koordinator kurir dan alihkan paket prioritas.</div>`).join('') : '';
+  const ex = ship.filter(s => s.Status === 'Tertunda' || s.Status === 'Gagal/Retur').slice(-8).reverse();
+  $('#lv-tbl').innerHTML = ''; BI.table('#lv-tbl', { cols: [{ k: 'Resi', l: 'Resi' }, { k: 'Kurir', l: 'Kurir' }, { k: 'KotaTujuan', l: 'Kota' }, { k: 'Status', l: 'Status', f: v => (v === 'Tertunda' ? '⏳ ' : '✖ ') + v, cls: v => (v === 'Tertunda' ? 'warnc' : 'bad') }, { k: 'late', l: 'Telat', r: 1, f: (v, r) => '+' + Math.max(1, r.AktualHari - r.EstimasiHari) + ' hr' }], rows: ex, sort: false });
+  $('#lv-clock').textContent = 'Pembaruan terakhir: tick #' + tick;
+}
+$('#lv-play').onclick = e => { play = !play; e.target.textContent = play ? '⏸ Jeda' : '▶ Lanjut'; };
+$('#lv-bad').onclick = () => { bad = 'Lintas Cepat'; };
+$('#lv-fix').onclick = () => { bad = null; };
+setInterval(() => { if (play) step(); }, 1500);
+lv();
+
+/* 3. buta warna */
+const sts = [['Terkirim', 'var(--c3)', '✔'], ['Tertunda', 'var(--c2)', '⏳'], ['Gagal', 'var(--c4)', '✖']];
+sts.forEach(([t, c]) => $('#cb-bad').append(h('span', { style: `display:inline-block;width:46px;height:20px;border-radius:4px;background:${c};margin:4px` })));
+sts.forEach(([t, c, i]) => $('#cb-good').append(h('span', { style: `display:inline-block;padding:2px 10px;border-radius:99px;background:${c};color:#111;margin:4px;font-weight:700;font-size:.85rem` }, i + ' ' + t)));
+$('#cb-btn').onclick = () => { $('#cb-box').style.filter = $('#cb-box').style.filter ? '' : 'grayscale(1)'; };
+
+/* 4. stok */
+const rows = STK.map(s => ({ ...s, r: s.Stok / s.StokMinimum })).sort((a, b) => a.r - b.r);
+rows.forEach(s => { const d = h('div'); $('#stk').append(d); BI.bullet(d, { label: `${s.Produk} · ${s.Gudang}`, value: s.Stok, target: s.StokMinimum, max: Math.max(s.StokMinimum * 2.2, s.Stok * 1.1), bands: [s.StokMinimum, s.StokMinimum * 1.5] }); });
+const crit = rows.filter(s => s.r < 1);
+$('#stk-txt').innerHTML = `<b class="t">${crit.length} SKU di bawah stok minimum</b>Garis merah = stok minimum. Latar merah &lt; minimum, kuning &lt; 1,5× minimum, hijau aman. ${crit.length ? 'Prioritas pesan ulang: ' + crit.map(s => s.Produk).join(', ') + '.' : ''}`;
+
+/* Praktik */
+const dl = $('#dl');
+dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('data_logistik.csv', LOG) }, '⬇ data_logistik.csv'), h('button', { class: 'btn pri', onclick: () => BI.download('data_stok.csv', STK) }, '⬇ data_stok.csv'));
+BI.steps('#steps', [
+  { t: 'Muat data', tm: '5\'', b: 'Muat dua CSV. Pastikan AktualHari &amp; EstimasiHari Number.' },
+  { t: 'Measure operasional', tm: '20\'', b: 'Buat measure pada kotak di atas; uji On-time % terhadap hitungan manual di Excel (filter Terkirim).' },
+  { t: 'Status per kurir', tm: '20\'', b: 'Stacked bar 100% Status per Kurir (Legend = Status). Atur warna: Terkirim hijau, Dalam Perjalanan biru, Tertunda kuning, Gagal merah.' },
+  { t: 'Alert &amp; stok', tm: '20\'', b: 'Tabel pengecualian (filter Status ∈ Tertunda, Gagal). Conditional formatting aturan warna (lihat di bawah) + ikon. Bullet/KPI untuk stok vs minimum (visual KPI atau gauge).' },
+  { t: 'Refresh &amp; layout', tm: '20\'', b: 'Letakkan alert di kiri atas; tampilkan "Terakhir diperbarui" (measure <code>NOW()</code> pada refresh). Di Service: Scheduled refresh / Automatic page refresh (Premium).' },
+  { t: 'Uji skenario', tm: '10\'', b: 'Ubah 20 baris Lintas Cepat jadi Tertunda di CSV, refresh: apakah alert terlihat dalam 5 detik?' },
+  { t: 'Refleksi', tm: '5\'', b: 'Aksi apa yang bisa diambil koordinator dari tiap visual?' }
+]);
+BI.table('#rule', { sort: false, cols: [{ k: 'a', l: 'Kondisi' }, { k: 'b', l: 'Warna' }, { k: 'c', l: 'Ikon/teks' }, { k: 'd', l: 'Tindakan' }], rows: [{ a: 'On-time ≥ 90%', b: 'Hijau', c: '✔ Normal', d: 'Pantau' }, { a: '80–89%', b: 'Kuning', c: '⚠ Waspada', d: 'Telusuri penyebab' }, { a: '< 80%', b: 'Merah', c: '✖ Kritis', d: 'Eskalasi ke kurir' }] });
+BI.checklist('#chk', ['On-time % cocok dengan hitungan manual', 'Status per kurir tampil dengan warna konsisten', 'Aturan warna memakai ikon/teks juga', 'Daftar pengecualian tersedia', 'Stok vs minimum dengan peringatan', 'Ada keterangan waktu pembaruan terakhir', 'Skenario uji alert berhasil'], 'p11');
+
+BI.quiz('#quiz', [
+  { q: 'Dashboard operasional dibedakan dari strategis karena…', o: ['Warna lebih banyak', 'Fokus pada status terkini dan tindakan segera', 'Lebih panjang', 'Tidak pakai angka'], a: 1, e: 'Operasional: apa yang harus ditindak sekarang.' },
+  { q: 'Warna alert sebaiknya…', o: ['Satu-satunya penanda', 'Dilengkapi ikon/teks', 'Acak', 'Dihindari'], a: 1, e: 'Aksesibilitas buta warna.' },
+  { q: 'On-time % dihitung…', o: ['Tepat waktu ÷ total terkirim', 'Gagal ÷ total', 'Aktual − estimasi', 'Estimasi ÷ aktual'], a: 0, e: 'Proporsi terkirim yang memenuhi SLA.' },
+  { q: 'Keterangan "terakhir diperbarui" penting karena…', o: ['Dekorasi', 'Pengguna perlu tahu kesegaran data', 'Wajib hukum', 'Mengurangi beban server'], a: 1, e: 'Kepercayaan terhadap data.' },
+  { q: 'Bullet chart untuk stok menunjukkan…', o: ['Tren', 'Nilai aktual vs target/minimum dengan pita kualitatif', 'Peta', 'Distribusi'], a: 1, e: 'Aktual dibanding ambang.' },
+  { q: 'Metrik Error Rate pengiriman:', o: ['Gagal/retur ÷ total pengiriman', 'Terkirim ÷ total', 'Biaya ÷ jarak', 'Hari ÷ kota'], a: 0, e: 'Proporsi pengiriman bermasalah.' }
+]);
+</script>

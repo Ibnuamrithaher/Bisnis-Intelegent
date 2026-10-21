@@ -1,0 +1,154 @@
+<section class="pane" id="teori">
+ <h2>1. Grafik bisa menipu</h2>
+ <div class="card">
+  <p>Dua nilai: Produk A = 98, Produk B = 102. Selisihnya hanya 4%. Geser batas bawah sumbu Y dan lihat betapa dramatisnya perbedaan tampak.</p>
+  <div class="controls" id="ax-ctl"></div>
+  <div class="grid2"><div id="ax-chart"></div><div id="ax-txt" class="callout"></div></div>
+ </div>
+
+ <h2>2. Pilih grafik dari pertanyaan</h2>
+ <div class="card">
+  <p>Jawab dua pertanyaan; sistem merekomendasikan grafik dan menampilkan contohnya dari data penjualan.</p>
+  <div class="controls" id="wz-ctl"></div>
+  <div class="grid2"><div id="wz-chart"></div><div id="wz-txt" class="callout"></div></div>
+  <div class="tblwrap mt"><table class="tbl"><thead><tr><th>Pertanyaan</th><th>Grafik</th><th>Hindari</th></tr></thead><tbody>
+   <tr><td>Membandingkan nilai antar kategori</td><td>Bar / column</td><td>Pie, 3D</td></tr>
+   <tr><td>Tren sepanjang waktu</td><td>Line</td><td>Bar dengan terlalu banyak titik</td></tr>
+   <tr><td>Porsi dari keseluruhan (≤5 bagian)</td><td>Donut / stacked bar 100%</td><td>Pie dengan &gt;5 irisan</td></tr>
+   <tr><td>Hubungan dua variabel numerik</td><td>Scatter</td><td>Line</td></tr>
+   <tr><td>Sebaran nilai</td><td>Histogram</td><td>Pie</td></tr>
+   <tr><td>Peringkat</td><td>Bar horizontal terurut</td><td>Acak urutan</td></tr>
+  </tbody></table></div>
+ </div>
+
+ <h2>3. Galeri sebelum &amp; sesudah</h2>
+ <div class="card">
+  <div id="gal-seg"></div>
+  <div class="grid2"><div id="gal-chart"></div><div id="gal-txt" class="callout"></div></div>
+ </div>
+
+ <h2>4. Atribut pra-atensi: mata melihat sebelum berpikir</h2>
+ <div class="card">
+  <p>Klik satu-satunya objek yang berbeda secepat mungkin. 3 ronde per atribut. Kemudian bandingkan waktu Anda.</p>
+  <div id="pa-seg"></div>
+  <div class="row"><button class="btn pri" id="pa-start">▶ Mulai ronde</button><span id="pa-info" class="chip">Pilih atribut lalu mulai</span></div>
+  <div class="grid2" style="align-items:start"><div id="pa-grid" class="chart"></div><div id="pa-res"></div></div>
+ </div>
+ <h2>5. Prinsip ringkas</h2>
+ <div class="grid3">
+  <div class="card"><h4>Kurangi derau</h4><p class="small">Hapus garis grid berlebih, border, 3D, dan dekorasi yang tidak membawa data (data-ink ratio).</p></div>
+  <div class="card"><h4>Sorot yang penting</h4><p class="small">Abu-abu untuk konteks, satu warna aksen untuk pesan utama.</p></div>
+  <div class="card"><h4>Jelaskan dengan judul</h4><p class="small">Judul berupa kesimpulan: "Elektronik menyumbang 41% penjualan", bukan "Penjualan per kategori".</p></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b>Satu halaman <i>Perbandingan Wilayah</i> berisi bar, line, scatter, dan tabel berformat bersyarat, plus daftar 5 perbaikan pada dashboard buruk.</div>
+ <div class="card"><h3>⬇ Dataset</h3><div id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🔍 Audit dashboard buruk</h3><p class="small muted">Tentukan masalah utama setiap panel.</p><div id="bad" class="grid2"></div><div id="bad-score" class="score"></div></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Show Me panel menyarankan grafik; tombol <b>Fit</b> dan <b>Format → Lines</b> untuk merapikan; Axis → Edit Axis → "Include zero".</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 6</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, short, pct} = BI;
+const sales = BI.data.sales(600);
+const sum = BI.sum;
+
+/* 1. sumbu */
+let ymin = 90;
+BI.slider('#ax-ctl', 'Batas bawah sumbu Y', 0, 95, 5, ymin, v => { ymin = v; ax(); });
+function ax() {
+  BI.bar('#ax-chart', { labels: ['Produk A', 'Produk B'], series: [{ name: 'Nilai', data: [98, 102] }], yMin: ymin, height: 240, fmt: v => v, values: true });
+  const vis = (102 - ymin) / (98 - ymin);
+  $('#ax-txt').innerHTML = ymin ? `<b class="t">Sumbu terpotong di ${ymin}</b>Batang B tampak <b>${vis.toFixed(2).replace('.', ',')}×</b> lebih tinggi dari A, padahal selisih nyata hanya <b>4%</b>. Pada bar chart, mulailah dari 0.` : '<b class="t">Sumbu mulai dari 0</b>Tinggi batang proporsional dengan nilai: kesan sesuai fakta.';
+}
+ax();
+
+/* 2. wizard */
+const wz = { g: 'bandingkan', n: 'sedikit' };
+BI.select('#wz-ctl', 'Tujuan', [['bandingkan', 'Membandingkan kategori'], ['tren', 'Melihat tren waktu'], ['bagian', 'Porsi dari keseluruhan'], ['hubungan', 'Hubungan 2 variabel'], ['distribusi', 'Sebaran nilai'], ['peringkat', 'Peringkat']], wz.g, v => { wz.g = v; wiz(); });
+BI.select('#wz-ctl', 'Jumlah kategori', [['sedikit', 'Sedikit (≤5)'], ['banyak', 'Banyak (>5)']], wz.n, v => { wz.n = v; wiz(); });
+function wiz() {
+  const cat = BI.groupBy(sales, 'Kategori', r => r.Pendapatan), prod = BI.groupBy(sales, 'Produk', r => r.Pendapatan).sort((a, b) => b.value - a.value);
+  const mon = BI.MON.map((_, i) => sum(sales.filter(r => +r.Tanggal.slice(5, 7) === i + 1).map(r => r.Pendapatan)));
+  let t, why;
+  const few = wz.n === 'sedikit';
+  const c = $('#wz-chart'); c.innerHTML = '';
+  if (wz.g === 'bandingkan') { t = few ? 'Bar vertikal (column)' : 'Bar horizontal'; why = few ? 'Beberapa kategori muat sebagai kolom vertikal.' : 'Label panjang dan banyak lebih mudah dibaca pada bar horizontal.'; few ? BI.bar(c, { labels: cat.map(x => x.key), series: [{ name: 'Pendapatan', data: cat.map(x => x.value) }], height: 220 }) : BI.hbar(c, { labels: prod.map(x => x.key), data: prod.map(x => x.value), rowH: 22 }); }
+  if (wz.g === 'tren') { t = 'Line chart'; why = 'Garis menonjolkan kesinambungan waktu dan arah perubahan.'; BI.line(c, { labels: BI.MON, series: [{ name: 'Pendapatan', data: mon }], area: true, height: 220 }); }
+  if (wz.g === 'bagian') { t = few ? 'Donut / pie' : 'Stacked bar 100% atau bar terurut'; why = few ? 'Sedikit bagian: pie/donut masih terbaca.' : 'Lebih dari 5 irisan sulit dibandingkan; gunakan bar terurut.'; few ? BI.pie(c, { labels: cat.map(x => x.key), data: cat.map(x => x.value), donut: true }) : BI.hbar(c, { labels: prod.map(x => x.key), data: prod.map(x => x.value), rowH: 22 }); }
+  if (wz.g === 'hubungan') { t = 'Scatter plot'; why = 'Setiap titik memuat dua nilai; pola korelasi terlihat.'; const pts = prod.map(p => { const rr = sales.filter(r => r.Produk === p.key); return { x: BI.avg(rr.map(r => r.HargaSatuan)), y: sum(rr.map(r => r.Qty)), label: p.key }; }); BI.scatter(c, { points: pts, xLabel: 'Harga rata-rata (Rp)', yLabel: 'Total unit', trend: true, height: 260 }); }
+  if (wz.g === 'distribusi') { t = 'Histogram'; why = 'Mengelompokkan nilai ke dalam rentang (bin) untuk melihat bentuk sebaran.'; const vals = sales.map(r => r.Pendapatan), bins = Array(8).fill(0), mx = Math.max(...vals); vals.forEach(v => bins[Math.min(7, Math.floor(v / mx * 8))]++); BI.bar(c, { labels: bins.map((_, i) => short(i * mx / 8)), series: [{ name: 'Jumlah order', data: bins }], gap: 0.95, height: 220 }); }
+  if (wz.g === 'peringkat') { t = 'Bar horizontal terurut'; why = 'Urutan menurun memudahkan membaca peringkat.'; BI.hbar(c, { labels: prod.slice(0, few ? 5 : 10).map(x => x.key), data: prod.slice(0, few ? 5 : 10).map(x => x.value), rowH: 26 }); }
+  $('#wz-txt').innerHTML = `<b class="t">Rekomendasi: ${t}</b>${why}`;
+}
+wiz();
+
+/* 3. galeri */
+const cases = {
+  'Pie 8 irisan': { before: c => { const d = BI.groupBy(sales, 'Produk', r => r.Pendapatan).slice(0, 8); BI.pie(c, { labels: d.map(x => x.key), data: d.map(x => x.value) }); }, after: c => { const d = BI.groupBy(sales, 'Produk', r => r.Pendapatan).sort((a, b) => b.value - a.value).slice(0, 8); BI.hbar(c, { labels: d.map(x => x.key), data: d.map(x => x.value), rowH: 24 }); }, tb: 'Delapan irisan hampir sama besar: mustahil membandingkan sudut.', ta: 'Bar horizontal terurut: peringkat langsung terbaca.' },
+  'Spaghetti line': { before: c => { const ser = BI.REGION.map(w => ({ name: w, data: BI.MON.map((_, i) => sum(sales.filter(r => r.Wilayah === w && +r.Tanggal.slice(5, 7) === i + 1).map(r => r.Pendapatan))) })); BI.line(c, { labels: BI.MON, series: ser, height: 260 }); }, after: c => { const ser = BI.REGION.map(w => ({ name: w, color: w === 'Jawa' ? 'var(--c1)' : 'var(--line)', width: w === 'Jawa' ? 3.5 : 1.5, data: BI.MON.map((_, i) => sum(sales.filter(r => r.Wilayah === w && +r.Tanggal.slice(5, 7) === i + 1).map(r => r.Pendapatan))) })); BI.line(c, { labels: BI.MON, series: ser, height: 260 }); }, tb: 'Lima garis berwarna cerah bersaing: tidak jelas pesan utamanya.', ta: 'Abu-abu untuk konteks, satu warna untuk Jawa: pesan fokus.' },
+  'Pelangi tanpa makna': { before: c => { const d = BI.groupBy(sales, 'Kategori', r => r.Pendapatan); BI.bar(c, { labels: d.map(x => x.key), series: [{ name: 'Pendapatan', data: d.map(x => x.value) }], colorBy: i => BI.col(i * 2), height: 240 }); }, after: c => { const d = BI.groupBy(sales, 'Kategori', r => r.Pendapatan), mx = Math.max(...d.map(x => x.value)); BI.bar(c, { labels: d.map(x => x.key), series: [{ name: 'Pendapatan', data: d.map(x => x.value) }], colorBy: (i, v) => (v === mx ? 'var(--c1)' : 'var(--line)'), values: true, height: 240 }); }, tb: 'Warna berbeda untuk setiap batang padahal sumbu sudah memberi label: warna tidak membawa informasi.', ta: 'Satu warna menyorot kategori tertinggi; angka langsung tertera.' }
+};
+let gk = 'Pie 8 irisan', gs = 'before';
+function gal() { const g = cases[gk]; const c = $('#gal-chart'); g[gs](c); $('#gal-txt').innerHTML = `<b class="t">${gs === 'before' ? '❌ Sebelum' : '✅ Sesudah'}</b>${gs === 'before' ? g.tb : g.ta}`; }
+BI.seg('#gal-seg', Object.keys(cases).flatMap(k => [[k + '|before', k + ' · sebelum'], [k + '|after', k + ' · sesudah']]), 'Pie 8 irisan|before', v => { [gk, gs] = v.split('|'); gal(); });
+
+/* 4. pra-atensi */
+const pa = { attr: 'warna', times: { warna: [], ukuran: [], bentuk: [], kombinasi: [] }, t0: 0, round: 0, on: false };
+const names = { warna: 'Warna', ukuran: 'Ukuran', bentuk: 'Bentuk', kombinasi: 'Kombinasi (merah + kotak)' };
+BI.seg('#pa-seg', Object.keys(names).map(k => [k, names[k]]), 'warna', v => { pa.attr = v; });
+$('#pa-start').onclick = () => { if (pa.on) return; pa.round = 0; next(); };
+function next() {
+  pa.on = true;
+  const r = BI.rng(Date.now() % 1e6), n = 60, tgt = Math.floor(r() * n), svg = BI.S('svg', { viewBox: '0 0 300 220' });
+  for (let i = 0; i < n; i++) {
+    const cx = 18 + (i % 10) * 29 + r() * 6, cy = 18 + Math.floor(i / 10) * 33 + r() * 6, T = i === tgt;
+    let fill = 'var(--c1)', rr = 8, sq = false;
+    if (pa.attr === 'warna' && T) fill = 'var(--c4)';
+    if (pa.attr === 'ukuran' && T) rr = 13;
+    if (pa.attr === 'bentuk' && T) sq = true;
+    if (pa.attr === 'kombinasi') { const dist = i % 2; fill = dist ? 'var(--c4)' : 'var(--c1)'; sq = !dist && i % 4 === 0 ? true : sq; if (!T) { if (i % 3 === 0) { fill = 'var(--c4)'; sq = false; } else { fill = 'var(--c1)'; sq = true; } } else { fill = 'var(--c4)'; sq = true; } }
+    const e = sq ? BI.S('rect', { x: cx - rr, y: cy - rr, width: rr * 2, height: rr * 2, fill }, svg) : BI.S('circle', { cx, cy, r: rr, fill }, svg);
+    e.style.cursor = 'pointer';
+    e.addEventListener('click', () => { if (!pa.on) return; if (!T) { $('#pa-info').textContent = 'Salah target, coba lagi'; return; } const dt = performance.now() - pa.t0; pa.times[pa.attr].push(dt); pa.round++; pa.on = false; $('#pa-info').textContent = `Waktu: ${(dt / 1000).toFixed(2)} dtk`; res(); if (pa.round < 3) setTimeout(next, 600); });
+  }
+  $('#pa-grid').innerHTML = ''; $('#pa-grid').append(svg); pa.t0 = performance.now(); $('#pa-info').textContent = `Ronde ${pa.round + 1}/3: temukan yang berbeda!`;
+}
+function res() {
+  const k = Object.keys(names).filter(a => pa.times[a].length);
+  $('#pa-res').innerHTML = '';
+  if (k.length) BI.hbar('#pa-res', { labels: k.map(a => names[a]), data: k.map(a => BI.avg(pa.times[a]) / 1000), fmt: v => v.toFixed(1), valFmt: v => v.toFixed(2) + ' dtk', rowH: 32, title: 'Rata-rata waktu menemukan target' });
+}
+
+/* Praktik */
+BI.dlButton('#dl', 'Unduh data penjualan', 'data_penjualan.csv', () => BI.data.sales(600));
+BI.steps('#steps', [
+  { t: 'Persiapan', tm: '5\'', b: 'Muat <code>data_penjualan.csv</code>; pastikan Tanggal bertipe Date, Pendapatan Number.' },
+  { t: 'Tiga pertanyaan, tiga grafik', tm: '20\'', b: '(1) Wilayah mana terbesar? → bar horizontal terurut. (2) Bagaimana tren bulanan? → line. (3) Berapa porsi kategori? → donut (hanya 4 kategori).' },
+  { t: 'Scatter & tabel', tm: '20\'', b: 'Scatter: Harga rata-rata (X) vs Total Qty (Y) per Produk; aktifkan Analytics → Trend line. Tabel: Produk, Pendapatan dengan <b>Conditional formatting → Data bars</b>.' },
+  { t: 'Audit grafik buruk', tm: '20\'', b: 'Gunakan hasil audit di atas: dokumentasikan 5 masalah beserta perbaikan (sumbu, warna, urutan, label, judul).' },
+  { t: 'Halaman perbandingan wilayah', tm: '20\'', b: 'Susun 4 visual di satu halaman: judul insight, warna konsisten, tanpa border/3D, label langsung.' },
+  { t: 'Review sejawat', tm: '10\'', b: 'Tukar layar; beri 2 saran dengan rubrik "5 detik: apa pesan utamanya?".' },
+  { t: 'Refleksi', tm: '5\'', b: 'Jawab: pilihan grafik mana yang paling sulit dan mengapa?' }
+]);
+const bads = [
+  ['Bar chart sumbu mulai di 95', 'Sumbu terpotong', ['Sumbu terpotong', 'Judul kurang', 'Warna terlalu sedikit']], ['Pie 9 irisan dengan 3D', 'Terlalu banyak irisan / 3D', ['Terlalu banyak irisan / 3D', 'Sumbu salah', 'Tidak ada legenda']],
+  ['Line 6 warna cerah', 'Terlalu banyak garis berwarna', ['Terlalu banyak garis berwarna', 'Tidak ada target', 'Font kecil']], ['Tabel 40 kolom tanpa format', 'Beban informasi berlebih', ['Beban informasi berlebih', 'Tidak ada tren', 'Judul salah']]];
+let bk = 0, bn = 0;
+bads.forEach(([d, a, os]) => { const box = h('div', { class: 'card' }, h('b', {}, d)); os.forEach(o => box.append(h('button', { class: 'btn sm', style: 'display:block;margin:4px 0', onclick(e) { if (box.dataset.d) return; box.dataset.d = 1; bn++; if (o === a) { bk++; e.currentTarget.style.background = '#dcfce7'; } else e.currentTarget.style.background = '#fee2e2'; $('#bad-score').textContent = `Benar ${bk}/${bn}`; } }, o))); $('#bad').append(box); });
+BI.checklist('#chk', ['Bar chart sumbu mulai 0', 'Line untuk tren, bukan bar', 'Donut hanya ≤5 bagian', 'Scatter dengan trend line', 'Tabel dengan data bars', 'Judul visual berupa insight', 'Review sejawat dilakukan'], 'p6');
+
+BI.quiz('#quiz', [
+  { q: 'Grafik terbaik untuk tren bulanan:', o: ['Pie', 'Line', 'Scatter', 'Treemap'], a: 1, e: 'Line cocok untuk data berurutan waktu.' },
+  { q: 'Mengapa sumbu bar chart harus mulai dari 0?', o: ['Estetika', 'Panjang batang harus proporsional dengan nilai', 'Aturan software', 'Agar warna cerah'], a: 1, e: 'Memotong sumbu melebih-lebihkan perbedaan.' },
+  { q: 'Pie dengan 9 irisan sebaiknya diganti…', o: ['3D pie', 'Bar horizontal terurut', 'Radar', 'Tidak perlu'], a: 1, e: 'Panjang lebih mudah dibandingkan daripada sudut.' },
+  { q: 'Atribut paling efektif menarik perhatian cepat:', o: ['Warna (hue) yang kontras', 'Tulisan panjang', 'Garis tipis', 'Bayangan'], a: 0, e: 'Warna, ukuran, dan posisi diproses pra-atensi.' },
+  { q: 'Judul visual yang baik:', o: ['Penjualan per kategori', 'Elektronik menyumbang 41% penjualan', 'Grafik 1', 'Data'], a: 1, e: 'Judul menyampaikan insight.' },
+  { q: 'Scatter plot dipakai untuk…', o: ['Tren waktu', 'Hubungan dua variabel numerik', 'Porsi', 'Peringkat'], a: 1, e: 'Setiap titik = pasangan nilai X dan Y.' }
+]);
+</script>

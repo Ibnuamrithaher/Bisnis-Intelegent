@@ -1,0 +1,153 @@
+<section class="pane" id="teori">
+ <h2>1. Iklan naik, penjualan naik: untung atau rugi?</h2>
+ <div class="card"><p>Tim marketing melaporkan "penjualan dari iklan naik 30%". Namun biaya iklan naik 60%. Tanpa metrik yang benar, keputusan keliru. Dashboard marketing menerjemahkan biaya, perilaku audiens, dan hasil penjualan menjadi satu bahasa.</p></div>
+
+ <h2>2. Kalkulator metrik (rantai sebab-akibat)</h2>
+ <div class="card">
+  <p class="muted">Geser sumber daya dan lihat semua metrik berubah. Bagian bawah menunjukkan driver mana yang paling berpengaruh pada ROI.</p>
+  <div class="controls" id="k-ctl"></div>
+  <div id="k-kpi"></div>
+  <div class="grid2"><div id="k-sens"></div><div class="callout" id="k-txt"></div></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Metrik</th><th>Rumus</th><th>Artinya</th></tr></thead><tbody>
+   <tr><td>CTR</td><td>Klik ÷ Impresi</td><td>Seberapa menarik iklan</td></tr>
+   <tr><td>CVR</td><td>Order ÷ Klik</td><td>Seberapa efektif halaman/penawaran</td></tr>
+   <tr><td>CPC</td><td>Biaya ÷ Klik</td><td>Harga satu kunjungan</td></tr>
+   <tr><td>CAC</td><td>Biaya ÷ Pelanggan/order baru</td><td>Biaya mendapatkan satu pelanggan</td></tr>
+   <tr><td>ROAS</td><td>Pendapatan ÷ Biaya</td><td>Rupiah penjualan per rupiah iklan</td></tr>
+   <tr><td>ROI</td><td>(Laba kotor − Biaya) ÷ Biaya</td><td>Keuntungan bersih per rupiah iklan</td></tr>
+  </tbody></table></div>
+ </div>
+
+ <h2>3. Funnel pemasaran</h2>
+ <div class="card">
+  <div class="controls" id="f-ctl"></div>
+  <div class="grid2"><div id="f-chart"></div><div><div id="f-txt" class="callout"></div><div class="controls"><label>Perbaiki tahap terlemah sebesar <b id="f-pct">+20%</b><input type="range" id="f-up" min="5" max="50" step="5" value="20"></label></div><div id="f-gain" class="callout ok"></div></div></div>
+ </div>
+
+ <h2>4. Membandingkan saluran</h2>
+ <div class="card">
+  <div id="c-seg"></div>
+  <div class="grid2"><div id="c-bar"></div><div id="c-sc"></div></div>
+  <div id="c-tbl"></div>
+ </div>
+
+ <h2>5. Simulasi realokasi anggaran</h2>
+ <div class="card">
+  <p>Model sederhana: hasil iklan mengalami <i>diminishing returns</i> (menambah 2× biaya tidak menggandakan hasil). Atur alokasi, atau tekan Optimalkan.</p>
+  <div class="row"><button class="btn pri" id="b-opt">⚙ Optimalkan</button><button class="btn" id="b-reset">⟲ Kembalikan</button></div>
+  <div id="b-ctl" class="controls"></div>
+  <div id="b-kpi"></div><div id="b-chart"></div>
+ </div>
+</section>
+
+<section class="pane" id="praktik">
+ <div class="callout ok"><b class="t">Output</b><code>P08_MarketingDashboard.pbix</code>: kartu ROAS/ROI/CAC, funnel, bar ROI per saluran, scatter biaya vs pendapatan, rekomendasi realokasi.</div>
+ <div class="card"><h3>⬇ Dataset</h3><p class="small">6 saluran × 12 bulan: Biaya, Impresi, Klik, Order, Pendapatan.</p><div id="dl"></div></div>
+ <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>🧾 Measure yang perlu dibuat</h3><pre><code>Biaya Iklan = SUM ( Marketing[Biaya] )
+Pendapatan Iklan = SUM ( Marketing[Pendapatan] )
+CTR = DIVIDE ( SUM ( Marketing[Klik] ), SUM ( Marketing[Impresi] ) )
+CVR = DIVIDE ( SUM ( Marketing[Order] ), SUM ( Marketing[Klik] ) )
+CAC = DIVIDE ( [Biaya Iklan], SUM ( Marketing[Order] ) )
+ROAS = DIVIDE ( [Pendapatan Iklan], [Biaya Iklan] )
+ROI = DIVIDE ( [Pendapatan Iklan] * 0.4 - [Biaya Iklan], [Biaya Iklan] )   -- margin kotor 40%</code></pre></div>
+ <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="callout"><b class="t">Padanan Tableau</b>Funnel: bar horizontal terurut (Sheet → Sort descending) dengan Table Calculation "Percent of Total" atau gunakan Dual-axis untuk mengukur konversi antar tahap.</div>
+</section>
+
+<section class="pane" id="kuis"><h2>Kuis Pertemuan 8</h2><div id="quiz"></div></section>
+
+<script>
+const {h, $, fmt, rp, short, pct} = BI;
+const mk = BI.data.marketing(11), sum = BI.sum;
+const CH = [...new Set(mk.map(r => r.Channel))];
+const agg = ch => { const r = mk.filter(x => !ch || x.Channel === ch); const o = { Biaya: sum(r.map(x => x.Biaya)), Impresi: sum(r.map(x => x.Impresi)), Klik: sum(r.map(x => x.Klik)), Order: sum(r.map(x => x.Order)), Pendapatan: sum(r.map(x => x.Pendapatan)) }; return m(o); };
+const m = o => ({ ...o, CTR: o.Klik / o.Impresi, CVR: o.Order / o.Klik, CPC: o.Biaya / o.Klik, CAC: o.Biaya / o.Order, ROAS: o.Pendapatan / o.Biaya, ROI: (o.Pendapatan * MARGIN - o.Biaya) / o.Biaya });
+let MARGIN = 0.4;
+
+/* 2. kalkulator */
+const kc = { imp: 1000000, ctr: 0.02, cvr: 0.03, aov: 350000, cpm: 25000 };
+const kctl = $('#k-ctl');
+BI.slider(kctl, 'Impresi', 100000, 5000000, 100000, kc.imp, v => { kc.imp = v; kcalc(); }, fmt);
+BI.slider(kctl, 'CTR', 0.5, 6, 0.1, kc.ctr * 100, v => { kc.ctr = v / 100; kcalc(); }, v => v.toFixed(1) + '%');
+BI.slider(kctl, 'CVR', 0.5, 8, 0.1, kc.cvr * 100, v => { kc.cvr = v / 100; kcalc(); }, v => v.toFixed(1) + '%');
+BI.slider(kctl, 'Nilai order (AOV)', 50000, 1000000, 10000, kc.aov, v => { kc.aov = v; kcalc(); }, rp);
+BI.slider(kctl, 'CPM (biaya/1000 impresi)', 5000, 60000, 1000, kc.cpm, v => { kc.cpm = v; kcalc(); }, rp);
+BI.slider(kctl, 'Margin kotor', 10, 70, 5, 40, v => { MARGIN = v / 100; kcalc(); }, v => v + '%');
+function kmet(p) { const biaya = p.imp / 1000 * p.cpm, klik = p.imp * p.ctr, ord = klik * p.cvr, rev = ord * p.aov; return { biaya, klik, ord, rev, cpc: biaya / klik, cac: biaya / ord, roas: rev / biaya, roi: (rev * MARGIN - biaya) / biaya }; }
+function kcalc() {
+  const r = kmet(kc);
+  BI.kpi('#k-kpi', [{ label: 'Biaya', value: 'Rp ' + short(r.biaya) }, { label: 'Klik', value: fmt(r.klik), sub: 'CPC ' + rp(r.cpc) }, { label: 'Order', value: fmt(r.ord), sub: 'CAC ' + rp(r.cac) }, { label: 'Pendapatan', value: 'Rp ' + short(r.rev) }, { label: 'ROAS', value: r.roas.toFixed(2).replace('.', ',') + '×' }, { label: 'ROI', value: pct(r.roi), delta: r.roi, note: r.roi >= 0 ? 'untung' : 'rugi' }]);
+  const base = r.roi, keys = [['CTR +10%', { ctr: kc.ctr * 1.1 }], ['CVR +10%', { cvr: kc.cvr * 1.1 }], ['AOV +10%', { aov: kc.aov * 1.1 }], ['CPM −10%', { cpm: kc.cpm * 0.9 }]];
+  const d = keys.map(([l, o]) => (kmet({ ...kc, ...o }).roi - base) * 100);
+  BI.hbar('#k-sens', { labels: keys.map(k => k[0]), data: d, height: 160, rowH: 30, fmt: v => v.toFixed(0), valFmt: v => '+' + v.toFixed(1) + ' poin ROI', title: 'Sensitivitas: perbaikan 10% pada satu driver' });
+  const best = keys[d.indexOf(Math.max(...d))][0];
+  $('#k-txt').innerHTML = `<b class="t">Bacaan</b>${r.roi < 0 ? 'Kampanye <b>rugi</b> pada margin ini; ROAS di bawah titik impas ' + (1 / MARGIN).toFixed(2).replace('.', ',') + '×.' : 'Kampanye <b>untung</b>.'} Titik impas ROAS = 1 ÷ margin = <b>${(1 / MARGIN).toFixed(2).replace('.', ',')}×</b>. Perbaikan yang paling berdampak: <b>${best}</b>.`;
+}
+kcalc();
+
+/* 3. funnel */
+let fch = 'Google Ads';
+BI.select('#f-ctl', 'Saluran', ['Semua', ...CH], fch, v => { fch = v; fun(); });
+let up = 20; $('#f-up').oninput = e => { up = +e.target.value; $('#f-pct').textContent = '+' + up + '%'; fun(); };
+function fun() {
+  const a = agg(fch === 'Semua' ? null : fch), st = [a.Impresi, a.Klik, a.Order / 0.28, a.Order / 0.55, a.Order], L = ['Impresi', 'Klik', 'Add to cart', 'Checkout', 'Order'];
+  BI.funnel('#f-chart', { labels: L, data: st });
+  const conv = st.slice(1).map((v, i) => v / st[i]), bench = [0.02, 0.28, 0.55, 0.55], gap = conv.map((c, i) => c / bench[i]);
+  const w = gap.indexOf(Math.min(...gap));
+  $('#f-txt').innerHTML = `<b class="t">Kebocoran terbesar relatif patokan</b>${L[w]} → ${L[w + 1]}: ${pct(conv[w])} (patokan ilustrasi ${pct(bench[w], 0)}).`;
+  const gain = a.Pendapatan * (up / 100);
+  $('#f-gain').innerHTML = `Jika tahap itu naik ${up}% dan tahap lain tetap, order naik ±${up}% → tambahan pendapatan ≈ <b>Rp ${short(gain)}</b> tanpa menambah biaya iklan.`;
+}
+fun();
+
+/* 4. saluran */
+const mets = { ROAS: ['ROAS', v => v.toFixed(1) + '×'], ROI: ['ROI', v => pct(v, 0)], CAC: ['CAC', rp], CTR: ['CTR', v => pct(v)], CVR: ['CVR', v => pct(v)] };
+BI.seg('#c-seg', Object.keys(mets).map(k => [k, k]), 'ROI', k => {
+  const d = CH.map(c => ({ c, ...agg(c) })).sort((a, b) => (k === 'CAC' ? a[k] - b[k] : b[k] - a[k]));
+  BI.hbar('#c-bar', { labels: d.map(x => x.c), data: d.map(x => x[k]), fmt: v => (k === 'CAC' ? short(v) : k === 'ROAS' ? v.toFixed(1) : (v * 100).toFixed(0) + '%'), valFmt: mets[k][1], rowH: 30, title: k + ' per saluran' + (k === 'CAC' ? ' (lebih kecil = lebih baik)' : ''), colorBy: i => (i === 0 ? 'var(--c3)' : 'var(--c8)') });
+  BI.scatter('#c-sc', { points: CH.map(c => { const a = agg(c); return { x: a.Biaya, y: a.Pendapatan, r: 6 + Math.sqrt(a.Order) / 12, label: c, g: c }; }), xLabel: 'Biaya', yLabel: 'Pendapatan', height: 260, title: 'Biaya vs pendapatan (ukuran = order)' });
+  BI.table('#c-tbl', { sort: true, cols: [{ k: 'c', l: 'Saluran' }, { k: 'Biaya', l: 'Biaya', r: 1, f: v => short(v) }, { k: 'Pendapatan', l: 'Pendapatan', r: 1, f: v => short(v) }, { k: 'CTR', l: 'CTR', r: 1, f: v => pct(v) }, { k: 'CVR', l: 'CVR', r: 1, f: v => pct(v) }, { k: 'CAC', l: 'CAC', r: 1, f: rp }, { k: 'ROAS', l: 'ROAS', r: 1, f: v => v.toFixed(2) }, { k: 'ROI', l: 'ROI', r: 1, f: v => pct(v, 0), cls: v => (v < 0 ? 'bad' : v > 1 ? 'good' : '') }], rows: CH.map(c => ({ c, ...agg(c) })) });
+});
+
+/* 5. realokasi */
+const base = CH.map(c => agg(c)), K = 0.7;
+let pctS = CH.map(() => 100);
+const revOf = (i, s) => base[i].Pendapatan * Math.pow(s / base[i].Biaya, K);
+const bctl = $('#b-ctl');
+const sl = CH.map((c, i) => BI.slider(bctl, c, 20, 250, 5, 100, v => { pctS[i] = v; bsim(); }, v => v + '%'));
+function bsim() {
+  const sp = pctS.map((p, i) => base[i].Biaya * p / 100), tb = sum(sp), tr = sum(sp.map((s, i) => revOf(i, s))), b0 = sum(base.map(x => x.Biaya)), r0 = sum(base.map(x => x.Pendapatan));
+  BI.kpi('#b-kpi', [{ label: 'Total biaya', value: 'Rp ' + short(tb), delta: tb / b0 - 1, good: 'down', note: 'vs semula' }, { label: 'Pendapatan', value: 'Rp ' + short(tr), delta: tr / r0 - 1 }, { label: 'ROAS', value: (tr / tb).toFixed(2).replace('.', ','), delta: (tr / tb) / (r0 / b0) - 1 }]);
+  BI.bar('#b-chart', { labels: CH, series: [{ name: 'Pendapatan semula', data: base.map(x => x.Pendapatan) }, { name: 'Pendapatan simulasi', data: sp.map((s, i) => revOf(i, s)) }], height: 240 });
+}
+$('#b-reset').onclick = () => { pctS = CH.map(() => 100); sl.forEach(s => { s.value = 100; s.dispatchEvent(new Event('input')); }); };
+$('#b-opt').onclick = () => {
+  const b0 = sum(base.map(x => x.Biaya)), step = b0 / 400; let sp = base.map(x => x.Biaya * 0.4);
+  while (sum(sp) < b0 - 1) { let bi = 0, bg = -1; sp.forEach((s, i) => { const g = revOf(i, s + step) - revOf(i, s); if (g > bg && s + step <= base[i].Biaya * 2.5) { bg = g; bi = i; } }); sp[bi] += step; }
+  sl.forEach((s, i) => { s.value = Math.round(sp[i] / base[i].Biaya * 20) * 5; s.dispatchEvent(new Event('input')); });
+};
+bsim();
+
+/* Praktik */
+BI.dlButton('#dl', 'Unduh data marketing', 'data_marketing.csv', () => BI.data.marketing(11));
+BI.steps('#steps', [
+  { t: 'Muat & periksa', tm: '5\'', b: 'Muat CSV; tipe data angka; urutkan Bulan memakai kolom <code>BulanNo</code> (Sort by column).' },
+  { t: 'Measure marketing', tm: '20\'', b: 'Buat 7 measure pada kotak di atas. Cek ROAS per saluran manual untuk 1 saluran.' },
+  { t: 'Funnel chart', tm: '20\'', b: 'Buat tabel kecil (Enter data) Tahap &amp; Nilai: Impresi, Klik, Order — atau unpivot kolom. Visual Funnel; tampilkan % dari tahap sebelumnya di tooltip.' },
+  { t: 'Perbandingan saluran', tm: '20\'', b: 'Bar ROI terurut (warna kondisional: &lt;0 merah). Scatter Biaya vs Pendapatan, Size = Order, Legend = Channel.' },
+  { t: 'Layout & kondisional', tm: '20\'', b: 'Tambah slicer Bulan. Conditional formatting CAC pada tabel. Judul berupa insight.' },
+  { t: 'Rekomendasi realokasi', tm: '10\'', b: 'Gunakan simulator di tab Teori. Tulis rekomendasi: saluran yang dikurangi/ditambah dan alasan numerik.' },
+  { t: 'Refleksi', tm: '5\'', b: 'Apa risiko memindahkan 20% anggaran ke saluran ROI tertinggi?' }
+]);
+BI.checklist('#chk', ['7 measure marketing berfungsi', 'Funnel chart tampil dengan urutan tahap benar', 'Bar ROI per saluran terurut', 'Scatter biaya vs pendapatan berlabel', 'Slicer bulan berfungsi', 'Rekomendasi realokasi tertulis dengan angka'], 'p8');
+
+BI.quiz('#quiz', [
+  { q: 'CTR dihitung dari…', o: ['Order ÷ Klik', 'Klik ÷ Impresi', 'Biaya ÷ Order', 'Pendapatan ÷ Biaya'], a: 1, e: 'CTR = click-through rate.' },
+  { q: 'ROAS = 2,5 dengan margin kotor 40% berarti…', o: ['Untung besar', 'Tepat impas', 'Rugi', 'Tidak bisa ditentukan'], a: 1, e: 'Titik impas ROAS = 1/margin = 2,5×.' },
+  { q: 'CAC adalah…', o: ['Biaya per klik', 'Biaya mendapatkan satu pelanggan/order', 'Pendapatan per klik', 'Rasio klik'], a: 1, e: 'Customer Acquisition Cost.' },
+  { q: 'Funnel membantu menemukan…', o: ['Warna terbaik', 'Tahap dengan kebocoran terbesar', 'Harga terbaik', 'Tim terbaik'], a: 1, e: 'Konversi antar tahap.' },
+  { q: 'Diminishing returns berarti…', o: ['Biaya 2× selalu menghasilkan 2×', 'Tambahan biaya memberi tambahan hasil yang makin kecil', 'Iklan tidak berguna', 'ROI selalu naik'], a: 1, e: 'Kurva respons melandai.' },
+  { q: 'Saluran dengan ROI tertinggi belum tentu cocok ditambah anggaran karena…', o: ['Rugi', 'Skala/volume terbatas dan hasil menurun', 'Tidak ada data', 'Harga naik'], a: 1, e: 'Periksa kapasitas penyerapan.' }
+]);
+</script>
