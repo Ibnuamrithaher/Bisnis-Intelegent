@@ -26,15 +26,12 @@ const COURSE = 'Bisnis Intelegent · Bisnis Digital';
 meta.forEach(m => {
   const fp = path.join(__dirname, 'src/content', `p${pad(m.n)}.html`);
   const frag = fs.existsSync(fp) ? fs.readFileSync(fp, 'utf8') : `<section class="pane" id="teori"><p>Konten belum dibuat.</p></section><section class="pane" id="praktik"></section><section class="pane" id="kuis"></section>`;
-  const prev = m.n > 1 ? `<a href="${file(m.n - 1)}">← Pertemuan ${m.n - 1}</a>` : '<a href="index.html">← Daftar</a>';
-  const next = m.n < 14 ? `<a href="${file(m.n + 1)}">Pertemuan ${m.n + 1} →</a>` : '<a href="index.html">Daftar →</a>';
   const P = PREMIUM.has(m.n), ic = e => (P ? '' : e + ' ');
   const html = `<!doctype html>
 <html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pertemuan ${m.n} – ${esc(m.title)} | ${COURSE}</title>
 <style>${css}</style>${P ? FONT + '<style>' + pcss + '</style>' : ''}</head><body${P ? ' class="hv"' : ''}>
 <header class="hero"><div class="wrap">
- <div class="topnav">${prev}<a href="index.html">☰ Semua pertemuan</a>${next}</div>
  <div class="meta"><span class="pill">Pertemuan ${m.n} / 14</span><span class="pill">Minggu ke-${m.week} RPS</span><span class="pill">45' teori + 100' praktik</span></div>
  <h1>${esc(m.title)}</h1><p>${esc(m.sub)}</p>
 </div></header>

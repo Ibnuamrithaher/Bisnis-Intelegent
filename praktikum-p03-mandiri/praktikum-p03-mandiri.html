@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Praktikum Mandiri 3 SegarMart | Bisnis Intelegent</title>
+<meta name="description" content="Praktikum mandiri Pertemuan 3: bersihkan tiga dataset kotor yang saling berkaitan (CSV, Excel, SQL) di Power Query sebelum dihubungkan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+/* Sistem desain: satu aksen (emerald), netral zinc dingin, radius: wadah 14px, kontrol interaktif pill penuh, input 6px. */
+:root{
+  --bg:#f4f5f6;--card:#fbfbfc;--ink:#16181d;--mut:#5a606b;--line:rgba(22,24,29,.11);--soft:#eaecee;
+  --acc:#0b7a5a;--acc-ink:#fbfbfc;--acc-soft:rgba(11,122,90,.10);
+  --c1:#0b7a5a;--c2:#c27a0e;--c3:#4457d6;--c4:#c2476b;--c5:#7b828d; /* warna data: Jawa, Sumatera, Indonesia Timur, lainnya */
+  --shadow:0 24px 48px -30px rgba(18,40,34,.28);
+  --ease:cubic-bezier(.16,1,.3,1);--r:14px;
+  --sans:"Geist","Segoe UI",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b0d10;--card:#12161b;--ink:#e8ebf0;--mut:#98a0ad;--line:rgba(255,255,255,.11);--soft:#1a1f26;
+  --acc:#3fd6a0;--acc-ink:#04140d;--acc-soft:rgba(63,214,160,.12);
+  --c1:#3fd6a0;--c2:#f0b44a;--c3:#8e9bff;--c4:#f0719a;--c5:#98a0ad;--shadow:0 24px 48px -30px rgba(0,0,0,.7)}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+h1,h2,h3{margin:0;letter-spacing:-.025em;text-wrap:balance}
+h2{font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;line-height:1.1}
+h3{font-size:1.1rem;font-weight:650;letter-spacing:-.01em;line-height:1.3}
+p{margin:.55em 0}
+a{color:inherit}
+code{font:500 .84em var(--mono);background:var(--soft);padding:.14em .45em;border-radius:6px}
+pre{background:#10141a;color:#e3e8ef;padding:16px 18px;border-radius:var(--r);overflow:auto;font:.84rem/1.65 var(--mono);margin:.8em 0}
+pre code{background:none;padding:0;color:inherit;font-size:inherit}
+.mut{color:var(--mut)}.sm{font-size:.92rem}
+.lead{font-size:1.1rem;color:var(--mut);max-width:58ch}
+i.ph{vertical-align:-.12em;font-size:1.1em}
+
+/* tombol */
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:600 .95rem var(--sans);padding:12px 22px;border-radius:99px;background:var(--acc);color:var(--acc-ink);text-decoration:none;white-space:nowrap;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -12px var(--acc)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.alt:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+
+/* nav */
+.nav{position:sticky;top:12px;z-index:30;display:flex;justify-content:center;padding:0 12px;height:52px}
+.nav ul{list-style:none;margin:0;padding:5px;display:flex;gap:2px;align-items:center;max-width:100%;overflow-x:auto;background:color-mix(in srgb,var(--card) 80%,transparent);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-radius:99px;box-shadow:inset 0 0 0 1px var(--line),var(--shadow)}
+.nav a{display:block;padding:7px 15px;border-radius:99px;font-size:.88rem;font-weight:550;color:var(--mut);text-decoration:none;white-space:nowrap;transition:background .3s var(--ease),color .3s var(--ease)}
+.nav a:hover{color:var(--ink)}
+.nav a.on{background:var(--ink);color:var(--bg)}
+@media (prefers-reduced-transparency:reduce){.nav ul{background:var(--card);backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+/* hero */
+.hero{margin-top:-52px;padding:76px 0 56px;min-height:min(100dvh,780px);display:flex;align-items:center}
+.hero .wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;width:100%}
+.tag{display:inline-block;font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--acc);background:var(--acc-soft);padding:5px 14px;border-radius:99px}
+.hero h1{font-size:clamp(2.3rem,5vw,4rem);font-weight:800;line-height:1.04;margin:20px 0 20px}
+.hero h1 em{font-style:normal;color:var(--acc)}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.hero figure{margin:0;position:relative}
+.hero figure img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r);background:var(--soft);box-shadow:var(--shadow)}
+.hero figure::after{content:"";position:absolute;inset:14px -14px -14px 14px;border-radius:var(--r);box-shadow:inset 0 0 0 1.5px var(--acc);opacity:.35;z-index:-1}
+@media(max-width:860px){.hero{min-height:0;padding:76px 0 40px}.hero .wrap{grid-template-columns:1fr;gap:34px}.hero figure img{aspect-ratio:16/10}}
+
+/* strip */
+.strip{padding:0 0 24px}
+.strip .wrap{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:24px;padding-top:26px;border-top:1px solid var(--line)}
+.strip b{display:block;font-size:2rem;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.strip span{font-size:.88rem;color:var(--mut)}
+@media(max-width:640px){.strip .wrap{grid-template-columns:repeat(2,1fr)}}
+
+section.blk{padding:84px 0}
+.hd{margin-bottom:34px;max-width:62ch}
+.hd p{color:var(--mut);margin-top:12px}
+
+/* skenario + keterkaitan */
+.scn{display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:start}
+.scn figure{margin:0;position:sticky;top:90px}
+.scn figure img{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r);background:var(--soft);box-shadow:var(--shadow)}
+.scn ul{padding-left:1.1em;margin:.6em 0 0}.scn li{margin:.4em 0}
+.links{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:28px;padding-top:26px;border-top:1px solid var(--line)}
+.links h3{margin-bottom:6px}
+.links p{color:var(--mut);font-size:.94rem;margin:0}
+.flow{margin-top:30px;padding:22px 24px;background:var(--card);border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line)}
+.flow ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.flow li{position:relative;font-size:.92rem;line-height:1.5}
+.flow li b{display:block;font-size:1rem;margin-bottom:2px}
+.flow li+li::before{content:"";position:absolute;left:-14px;top:.4em;width:8px;height:8px;border-top:2px solid var(--acc);border-right:2px solid var(--acc);transform:rotate(45deg)}
+@media(max-width:860px){.scn{grid-template-columns:1fr;gap:30px}.scn figure{position:static}.scn figure img{aspect-ratio:16/10}.links{grid-template-columns:1fr}.flow ol{grid-template-columns:1fr}.flow li+li::before{display:none}}
+
+/* dataset master-detail */
+.md{display:grid;grid-template-columns:minmax(260px,.8fr) 1.6fr;gap:20px;align-items:start}
+.pick{display:grid;gap:8px}
+.pick button{all:unset;box-sizing:border-box;cursor:pointer;display:block;padding:16px 18px;border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);background:transparent;transition:background .3s var(--ease),box-shadow .3s var(--ease)}
+.pick button:hover{background:var(--card)}
+.pick button[aria-selected="true"]{background:var(--card);box-shadow:inset 0 0 0 2px var(--acc),var(--shadow)}
+.pick button b::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:9px}
+.pick button:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.pick b{display:block;font-size:1.02rem}.pick small{color:var(--mut);font:.8rem var(--mono)}
+.pick .zip{margin-top:6px}
+.panel{background:var(--card);border-radius:var(--r);padding:30px 32px;box-shadow:inset 0 0 0 1px var(--line),var(--shadow);min-height:100%}
+.panel[hidden]{display:none}
+.panel .fmt{display:inline-block;font:600 .78rem var(--mono);padding:4px 11px;border-radius:99px;background:var(--acc-soft);color:var(--acc)}
+.panel h3{font-size:1.5rem;margin:12px 0 4px;letter-spacing:-.02em}
+.panel dl{display:grid;grid-template-columns:110px 1fr;gap:10px 18px;margin:22px 0}
+.panel dt{color:var(--mut);font-size:.9rem}.panel dd{margin:0;font-weight:550}
+.note{padding:14px 16px;border-radius:10px;background:var(--acc-soft);font-size:.92rem;line-height:1.6;margin-bottom:24px}
+.panel.on{animation:swap .5s var(--ease)}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:860px){.md{grid-template-columns:1fr}.panel{padding:24px 20px}.panel dl{grid-template-columns:1fr;gap:2px 0}.panel dt{margin-top:10px}}
+
+.schema{margin-top:60px}
+.schema h3{margin-bottom:6px}
+.sch{width:100%;border-collapse:collapse;font-size:.93rem;margin-top:12px}
+.sch th{text-align:left;font-size:.82rem;font-weight:600;color:var(--mut);padding:8px 14px}
+.sch td{padding:10px 14px;vertical-align:top}
+.sch tr.grp td{padding-top:22px;font-weight:650;border-top:1px solid var(--line);color:var(--ink)}
+.sch tr.grp:first-of-type td{border-top:0;padding-top:10px}
+.scroll{overflow-x:auto}
+
+/* langkah: sticky kiri + daftar tanpa kartu */
+.stp{display:grid;grid-template-columns:.7fr 1.6fr;gap:64px;align-items:start}
+.stp aside{position:sticky;top:90px}
+.stp aside p{color:var(--mut)}
+.steps{display:grid;gap:0}
+.step{padding:30px 0 30px 28px;border-left:2px solid var(--line);position:relative}
+.step::before{content:"";position:absolute;left:-7px;top:36px;width:12px;height:12px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2px var(--acc)}
+.step.done::before{background:var(--acc)}
+.step .src{font-size:.86rem;color:var(--acc);font-weight:600}
+.step h3{font-size:1.3rem;margin:2px 0 6px}
+.chk{display:flex;gap:12px;align-items:flex-start;margin:.7em 0;cursor:pointer;line-height:1.55}
+.chk input{appearance:none;-webkit-appearance:none;flex:none;margin:3px 0 0;width:20px;height:20px;border-radius:6px;box-shadow:inset 0 0 0 2px var(--mut);background:transparent;cursor:pointer;display:grid;place-items:center;transition:background .3s var(--ease),box-shadow .3s var(--ease)}
+.chk input:checked{background:var(--acc);box-shadow:none}
+.chk input:checked::after{content:"";width:5px;height:10px;border:solid var(--acc-ink);border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk input:checked+span{color:var(--mut);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--mut) 50%,transparent)}
+@media(max-width:860px){.stp{grid-template-columns:1fr;gap:20px}.stp aside{position:static}}
+
+/* rupiah */
+.ledger{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;align-items:end;gap:20px 56px;margin-bottom:46px}
+.ledger small{display:block;color:var(--mut);font-size:.85rem;margin-bottom:4px}
+.ledger b{font:600 clamp(1.3rem,3.2vw,2.3rem)/1.15 var(--mono);letter-spacing:-.03em}
+.ledger .bad b{color:var(--mut);text-decoration:line-through;text-decoration-thickness:2px}
+.ledger .good b{color:var(--acc)}
+.fmt3{display:grid;grid-template-columns:.85fr 1.25fr;gap:44px 56px;border-top:1px solid var(--line);padding-top:34px}
+.fmt3+.fmt3{margin-top:34px}
+.fmt3 p{color:var(--mut);font-size:.96rem}
+.fmt3 pre{margin-top:0}
+@media(max-width:860px){.ledger{grid-template-columns:1fr}.fmt3{grid-template-columns:1fr;gap:12px}}
+
+/* dashboard */
+.dsh{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start}
+.dsh figure{margin:0 0 28px}
+.dsh figure img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r);background:var(--soft)}
+.dsh h3{margin:26px 0 8px}
+.dsh ul{margin:0;padding-left:1.1em}.dsh li{margin:.4em 0}
+.sk{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+.sk>div{border-radius:10px;box-shadow:inset 0 0 0 1.5px var(--line);background:var(--card);padding:12px 14px;font-size:.8rem;min-width:0}
+.sk .cap{display:block;font-weight:650;color:var(--ink);font-size:.78rem;margin-bottom:8px}
+.sk .t{grid-column:span 12;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.sk .t b{font-size:.9rem}
+.sk .k{grid-column:span 4}
+.sk .k em{display:block;font:600 1.05rem var(--mono);font-style:normal;letter-spacing:-.03em;color:var(--c1)}
+.sk .l{grid-column:span 8}.sk .r{grid-column:span 4}
+.sk .f{grid-column:span 6}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--mut)}
+.lg span{display:inline-flex;align-items:center;gap:6px}
+.lg span::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
+.ch{width:100%;height:auto;display:block}
+.ch text{font:500 10px var(--sans);fill:var(--mut)}
+.ch .ln{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hb{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:.76rem;color:var(--mut)}
+.hb i{display:block;height:12px;border-radius:4px;background:var(--c);width:var(--w)}
+.slc{display:flex;flex-wrap:wrap;gap:6px}
+.slc span{padding:3px 10px;border-radius:99px;box-shadow:inset 0 0 0 1.5px var(--c);color:var(--ink);font-size:.74rem;font-weight:550}
+.note-i{margin-top:10px;font-size:.8rem;color:var(--mut)}
+@media(max-width:860px){.dsh{grid-template-columns:1fr;gap:30px}.sk .k,.sk .l,.sk .r,.sk .f{grid-column:span 12}}
+
+/* penilaian */
+.wbar{display:flex;gap:4px;height:16px;margin-bottom:26px}
+.wbar .seg{flex:calc(var(--w));background:var(--c);border-radius:99px}
+.nums{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.nums>div{border-top:4px solid var(--c);padding-top:14px}
+.nums b{display:block;font-size:clamp(2.6rem,6vw,4.2rem);font-weight:800;letter-spacing:-.05em;line-height:1}
+.nums b i{font-style:normal;color:var(--acc)}
+.nums span{display:block;margin-top:8px;font-size:.92rem;color:var(--mut);line-height:1.45}
+.deliver{margin-top:56px;display:grid;grid-template-columns:.8fr 1.4fr;gap:56px}
+.deliver ul{margin:0;padding:0;list-style:none}
+.deliver li{padding:12px 0}
+.deliver li code{display:inline-block;margin-bottom:2px}
+@media(max-width:860px){.nums{grid-template-columns:repeat(2,1fr)}.deliver{grid-template-columns:1fr;gap:16px}}
+
+.faq{margin-top:64px;max-width:820px}
+.faq h3{font-size:1.5rem;margin-bottom:14px}
+details{padding:16px 0;box-shadow:0 1px 0 var(--line)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:400 1.5rem/1 var(--sans);color:var(--acc);transition:transform .35s var(--ease)}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--mut);margin:10px 0 2px;max-width:66ch}
+
+footer{padding:50px 0 120px;color:var(--mut);font-size:.88rem;border-top:1px solid var(--line)}
+
+/* progres */
+.prog{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;width:min(480px,calc(100% - 24px));display:flex;align-items:center;gap:14px;padding:10px 20px;border-radius:99px;background:color-mix(in srgb,var(--card) 84%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px var(--line),var(--shadow);font-size:.85rem;font-weight:600}
+.prog .bar{flex:1;height:6px;border-radius:99px;background:var(--soft);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--acc);border-radius:99px;transition:width .6s var(--ease)}
+@media (prefers-reduced-transparency:reduce){.prog{background:var(--card);backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+/* reveal saat scroll: hierarki konten muncul berurutan */
+@media (prefers-reduced-motion:no-preference){
+  .js .rv{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .js .rv.in{opacity:1;transform:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.panel.on{animation:none}*{transition:none!important}}
+@media print{.nav,.prog{display:none}}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Navigasi halaman"><ul>
+  <li><a href="#skenario">Skenario</a></li>
+  <li><a href="#dataset">Dataset</a></li>
+  <li><a href="#aturan">Aturan</a></li>
+  <li><a href="#langkah">Langkah</a></li>
+  <li><a href="#validasi">Validasi</a></li>
+  <li><a href="#nilai">Penilaian</a></li>
+</ul></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <span class="tag">Praktikum mandiri Pertemuan 3</span>
+    <h1>Tiga tabel kotor, <em>satu data bersih.</em></h1>
+    <p class="lead">Bersihkan data pelanggan, produk, dan transaksi SegarMart di Power Query sampai kuncinya cocok dan siap dihubungkan.</p>
+    <div class="cta">
+      <a class="btn" href="#langkah">Mulai membersihkan <i class="ph ph-arrow-right"></i></a>
+      <a class="btn alt" href="#dataset">Lihat dataset</a>
+    </div>
+  </div>
+  <figure><img src="https://picsum.photos/seed/segarmart-grocery-market/960/1200" width="960" height="1200" alt="Sayur dan buah segar di pasar" fetchpriority="high"></figure>
+</div></header>
+
+<div class="strip"><div class="wrap">
+  <div><b>3</b><span>sumber: CSV, Excel, SQL</span></div>
+  <div><b>2</b><span>kunci penghubung antar tabel</span></div>
+  <div><b>6</b><span>langkah kerja</span></div>
+  <div><b>100</b><span>poin penilaian</span></div>
+</div></div>
+
+<main>
+
+<section class="blk" id="skenario"><div class="wrap">
+  <div class="scn">
+    <figure class="rv"><img src="https://picsum.photos/seed/segarmart-warehouse-shelf/900/1200" width="900" height="1200" alt="Rak gudang bahan pangan" loading="lazy"></figure>
+    <div class="rv">
+      <h2>Data SegarMart belum bisa dihubungkan</h2>
+      <p class="lead" style="margin-top:14px">SegarMart adalah toko bahan pangan online. Data pelanggan, produk, dan transaksinya dikelola tiga tim berbeda dan ditulis dengan kebiasaan masing-masing.</p>
+      <p>Jika langsung dimuat dan dihubungkan, relasi antar tabel gagal karena kuncinya tidak persis sama, misalnya <code>plg-0012</code> di satu tabel dan <code> PLG0012 </code> di tabel lain.</p>
+      <ul>
+        <li>Profiling setiap sumber dan catat masalahnya.</li>
+        <li>Bersihkan sesuai aturan bisnis yang ditetapkan.</li>
+        <li>Buktikan kunci antar tabel sudah cocok.</li>
+        <li>Hitung total penjualan bersih dan laporkan.</li>
+      </ul>
+      <div class="links">
+        <div><h3>Dibahas bersama</h3><p>Dataset pertama (<code>data_kotor.csv</code>) dikerjakan bersama di kelas. Satu tabel, tanpa relasi.</p></div>
+        <div><h3>Kamu kerjakan sendiri</h3><p>Dataset kedua ini: tiga tabel dari tiga jenis sumber, dengan kunci yang ikut kotor.</p></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="blk" id="dataset" style="padding-top:20px"><div class="wrap">
+  <div class="hd rv">
+    <h2>Tiga sumber yang saling berkaitan</h2>
+    <p>Transaksi menunjuk pelanggan lewat <code>ID_Pelanggan</code> dan produk lewat <code>Kode_Produk</code>. Temukan sendiri masalah di tiap tabel lewat profiling. Daftar masalah tidak diberikan.</p>
+  </div>
+
+  <div class="md rv">
+    <div class="pick" role="tablist" aria-label="Pilih sumber data" aria-orientation="vertical">
+      <button style="--c:var(--c1)" role="tab" id="t-pel" aria-selected="true" aria-controls="p-pel"><b>Pelanggan</b><small>pelanggan_segarmart.csv</small></button>
+      <button style="--c:var(--c2)" role="tab" id="t-prd" aria-selected="false" aria-controls="p-prd" tabindex="-1"><b>Produk</b><small>produk_segarmart.xlsx</small></button>
+      <button style="--c:var(--c3)" role="tab" id="t-trx" aria-selected="false" aria-controls="p-trx" tabindex="-1"><b>Transaksi</b><small>transaksi_segarmart.sql</small></button>
+      <a class="btn alt zip" href="dataset-segarmart-kotor.zip" download><i class="ph ph-download-simple"></i> Unduh semua (ZIP)</a>
+    </div>
+
+    <div>
+      <article class="panel on" role="tabpanel" id="p-pel" aria-labelledby="t-pel">
+        <span class="fmt">CSV</span><h3>Data pelanggan</h3>
+        <p class="mut sm">Satu baris per pelanggan terdaftar.</p>
+        <dl><dt>Kolom</dt><dd><code>ID_Pelanggan</code> <code>Nama</code> <code>Kota</code> <code>Email</code> <code>No_HP</code> <code>Tanggal_Daftar</code> <code>Segmen</code></dd><dt>Kunci</dt><dd><code>ID_Pelanggan</code>, format akhir <code>PLG-0000</code></dd><dt>Cara extract</dt><dd>Get Data, lalu Text/CSV</dd></dl>
+        <p class="note"><b>Petunjuk:</b> periksa teks, tanggal, dan kolom kontak. Perhatikan juga apakah ada baris yang muncul lebih dari sekali.</p>
+        <a class="btn" href="data/pelanggan_segarmart.csv" download><i class="ph ph-download-simple"></i> Unduh CSV</a>
+      </article>
+      <article class="panel" role="tabpanel" id="p-prd" aria-labelledby="t-prd" hidden>
+        <span class="fmt">XLSX</span><h3>Katalog produk</h3>
+        <p class="mut sm">Buku kerja Excel dengan dua sheet. Data ada di sheet <code>Produk</code>.</p>
+        <dl><dt>Kolom</dt><dd><code>Kode_Produk</code> <code>Nama_Produk</code> <code>Kategori</code> <code>Harga</code> <code>Satuan</code> <code>Supplier</code> <code>Stok</code> <code>Aktif</code></dd><dt>Kunci</dt><dd><code>Kode_Produk</code>, format akhir <code>PRD-000</code></dd><dt>Cara extract</dt><dd>Get Data, lalu Excel, sheet <code>Produk</code></dd></dl>
+        <p class="note"><b>Petunjuk:</b> buka dulu filenya di Excel. Baris pertama bukan header, dan tipe isi kolom <code>Harga</code> tidak seragam.</p>
+        <a class="btn" href="data/produk_segarmart.xlsx" download><i class="ph ph-download-simple"></i> Unduh Excel</a>
+      </article>
+      <article class="panel" role="tabpanel" id="p-trx" aria-labelledby="t-trx" hidden>
+        <span class="fmt">SQL</span><h3>Data transaksi</h3>
+        <p class="mut sm">Skrip MySQL yang membuat dan mengisi tabel <code>transaksi</code> di database <code>segarmart</code>.</p>
+        <dl><dt>Kolom</dt><dd><code>ID_Transaksi</code> <code>Tanggal_Transaksi</code> <code>ID_Pelanggan</code> <code>Kode_Produk</code> <code>Qty</code> <code>Harga_Satuan</code> <code>Diskon</code> <code>Metode_Bayar</code> <code>Status</code></dd><dt>Kunci</dt><dd><code>ID_Pelanggan</code> dan <code>Kode_Produk</code> menunjuk ke dua tabel lain</dd><dt>Cara extract</dt><dd>Jalankan skrip di MySQL, lalu Get Data, lalu MySQL database</dd></dl>
+        <p class="note"><b>Petunjuk:</b> jumlah baris yang dibaca Power BI harus sama dengan <code>SELECT COUNT(*)</code> di MySQL. Tipe kolom di database tidak selalu mencerminkan isi sebenarnya.</p>
+        <a class="btn" href="data/transaksi_segarmart.sql" download><i class="ph ph-download-simple"></i> Unduh SQL</a>
+      </article>
+    </div>
+  </div>
+</div></section>
+
+<section class="blk" id="aturan" style="padding-top:20px"><div class="wrap">
+  <div class="hd rv">
+    <h2>Aturan bisnis pembersihan</h2>
+    <p>Semua orang memakai aturan yang sama supaya hasil akhirnya bisa dibandingkan. Ikuti persis, jangan menebak.</p>
+  </div>
+  <div class="schema rv" style="margin-top:0">
+    <div class="scroll"><table class="sch">
+      <tr><th>Objek</th><th>Aturan</th></tr>
+      <tr class="grp"><td colspan="2">Kunci (semua tabel)</td></tr>
+      <tr><td><code>ID_Pelanggan</code></td><td>Trim, huruf besar, bentuk akhir <code>PLG-0000</code> (sisipkan tanda hubung jika hilang).</td></tr>
+      <tr><td><code>Kode_Produk</code></td><td>Trim, huruf besar, bentuk akhir <code>PRD-000</code>.</td></tr>
+      <tr class="grp"><td colspan="2">Pelanggan</td></tr>
+      <tr><td>Nama</td><td>Trim, spasi ganda menjadi satu, Capitalize Each Word.</td></tr>
+      <tr><td>Kota</td><td>Tepat 8 kota standar. <code>Jkt</code> dan <code>DKI Jakarta</code> menjadi Jakarta, <code>Sby</code> menjadi Surabaya, <code>Bdg</code> menjadi Bandung.</td></tr>
+      <tr><td>Email</td><td>Trim, huruf kecil. Kosong atau tanpa tanda <code>@</code> dikosongkan (null), barisnya tetap dipertahankan.</td></tr>
+      <tr><td>No_HP</td><td>Bentuk akhir <code>08xxxxxxxxxx</code> tanpa spasi, strip, atau kode <code>+62</code> / <code>62</code>.</td></tr>
+      <tr><td>Tanggal_Daftar</td><td>Tipe Date. Format bergaris miring dan strip berurutan hari-bulan-tahun. Bulan berbahasa Indonesia (Using Locale: Indonesian).</td></tr>
+      <tr><td>Segmen</td><td>Capitalize. Kosong menjadi <code>Tidak Diketahui</code>.</td></tr>
+      <tr><td>Duplikat</td><td>Hapus berdasarkan <code>ID_Pelanggan</code>.</td></tr>
+      <tr class="grp"><td colspan="2">Produk</td></tr>
+      <tr><td>Struktur</td><td>Buang baris judul di atas dan baris total di bawah. Promote header.</td></tr>
+      <tr><td><code>Harga</code></td><td>Tipe angka. Harga bertulisan <code>Rp</code> dikonversi. Yang kosong dibiarkan null, jangan ditebak.</td></tr>
+      <tr><td><code>Kategori</code></td><td>Trim, Capitalize Each Word.</td></tr>
+      <tr><td><code>Stok</code></td><td>Tipe angka. Negatif, teks, dan kosong menjadi null.</td></tr>
+      <tr><td><code>Aktif</code></td><td>Hanya dua nilai: <code>Ya</code> atau <code>Tidak</code>.</td></tr>
+      <tr><td>Duplikat</td><td>Hapus berdasarkan <code>Kode_Produk</code>.</td></tr>
+      <tr class="grp"><td colspan="2">Transaksi</td></tr>
+      <tr><td><code>Tanggal_Transaksi</code></td><td>Tipe Date. Format bergaris miring dan strip berurutan hari-bulan-tahun.</td></tr>
+      <tr><td><code>Diskon</code></td><td>Tipe angka persen (<code>10%</code> menjadi 10). Kosong dianggap 0.</td></tr>
+      <tr><td><code>Metode_Bayar</code></td><td>Tepat 4 nilai: <code>Transfer Bank</code>, <code>COD</code>, <code>E-Wallet</code>, <code>Kartu Kredit</code>. Buat tabel pemetaan nilai. <code>Gopay</code> dan <code>OVO</code> termasuk E-Wallet, <code>CC</code> termasuk Kartu Kredit.</td></tr>
+      <tr><td><code>Status</code></td><td>Capitalize. Null menjadi <code>Tidak Diketahui</code>.</td></tr>
+      <tr><td><code>Qty</code></td><td>Tambah kolom <code>Status_Kualitas</code>: <code>Qty kosong</code>, <code>Qty tidak wajar</code> (kurang dari atau sama dengan 0, atau lebih dari 50), selain itu <code>OK</code>. Nilai Qty tidak diubah.</td></tr>
+      <tr><td><code>Harga_Satuan</code></td><td>Jika null, isi dari <code>Harga</code> produk (Merge Queries setelah kunci bersih).</td></tr>
+      <tr><td>Duplikat</td><td>Hapus berdasarkan <code>ID_Transaksi</code>.</td></tr>
+      <tr><td><code>Total_Penjualan</code></td><td>Kolom baru: <code>Qty × Harga_Satuan × (1 - Diskon / 100)</code>.</td></tr>
+    </table></div>
+  </div>
+</div></section>
+
+<section class="blk" id="langkah" style="padding-top:20px"><div class="wrap">
+  <div class="stp">
+    <aside class="rv">
+      <h2>Enam langkah kerja</h2>
+      <p>Urutan penting: kunci dibersihkan sebelum tabel digabung atau dihubungkan. Centang tiap butir, progresmu tersimpan di browser ini.</p>
+    </aside>
+    <div class="steps">
+      <div class="step rv"><div class="src">Persiapan</div><h3>Muat ketiga sumber dan lakukan profiling</h3>
+        <label class="chk"><input type="checkbox"><span>Jalankan <code>transaksi_segarmart.sql</code> di MySQL dan catat hasil <code>SELECT COUNT(*)</code>.</span></label>
+        <label class="chk"><input type="checkbox"><span>Impor CSV, Excel (sheet <code>Produk</code>), dan tabel MySQL. Pilih <b>Transform Data</b>.</span></label>
+        <label class="chk"><input type="checkbox"><span>Aktifkan Column quality, Column distribution, dan Column profile berdasarkan seluruh data.</span></label>
+        <label class="chk"><input type="checkbox"><span>Catat masalah tiap tabel di tabel temuan: jenis, kolom, jumlah baris.</span></label>
+      </div>
+      <div class="step rv"><div class="src">Pelanggan</div><h3>Bersihkan tabel pelanggan</h3>
+        <label class="chk"><input type="checkbox"><span>Rapikan Nama, Kota, Email, dan No_HP sesuai aturan.</span></label>
+        <label class="chk"><input type="checkbox"><span>Ubah <code>Tanggal_Daftar</code> ke Date. Empat bentuk tanggal berbeda perlu ditangani terpisah.</span></label>
+        <label class="chk"><input type="checkbox"><span>Seragamkan Segmen, lalu hapus duplikat berdasarkan <code>ID_Pelanggan</code>. Catat jumlah baris terhapus.</span></label>
+      </div>
+      <div class="step rv"><div class="src">Produk</div><h3>Bersihkan tabel produk</h3>
+        <label class="chk"><input type="checkbox"><span>Buang baris judul dan baris total, lalu Use First Row as Headers.</span></label>
+        <label class="chk"><input type="checkbox"><span>Ubah <code>Harga</code> ke angka, rapikan Kategori, Stok, dan Aktif.</span></label>
+        <label class="chk"><input type="checkbox"><span>Bersihkan <code>Kode_Produk</code>, lalu hapus duplikat. Catat jumlah baris terhapus.</span></label>
+      </div>
+      <div class="step rv"><div class="src">Transaksi</div><h3>Bersihkan tabel transaksi</h3>
+        <label class="chk"><input type="checkbox"><span>Bersihkan <code>ID_Pelanggan</code> dan <code>Kode_Produk</code> sampai bentuk akhirnya sama dengan dua tabel lain.</span></label>
+        <label class="chk"><input type="checkbox"><span>Ubah tanggal, Diskon, Metode_Bayar, dan Status sesuai aturan.</span></label>
+        <label class="chk"><input type="checkbox"><span>Buat kolom <code>Status_Kualitas</code> untuk Qty. Jangan menghapus atau mengubah nilai Qty.</span></label>
+        <label class="chk"><input type="checkbox"><span>Hapus duplikat berdasarkan <code>ID_Transaksi</code>.</span></label>
+      </div>
+      <div class="step rv"><div class="src">Gabung</div><h3>Lengkapi harga dan hitung total</h3>
+        <label class="chk"><input type="checkbox"><span>Merge Queries transaksi dengan produk lewat <code>Kode_Produk</code> untuk mengisi <code>Harga_Satuan</code> yang null.</span></label>
+        <label class="chk"><input type="checkbox"><span>Tambahkan <code>Total_Penjualan</code>. Ganti nama query menjadi <code>Pelanggan_Bersih</code>, <code>Produk_Bersih</code>, <code>Transaksi_Bersih</code>.</span></label>
+        <label class="chk"><input type="checkbox"><span>Beri nama jelas pada setiap Applied Step. Close and Apply.</span></label>
+      </div>
+      <div class="step rv"><div class="src">Dokumentasi</div><h3>Validasi dan tulis laporan</h3>
+        <label class="chk"><input type="checkbox"><span>Buat relasi di Model view dan buktikan lewat bagian validasi di bawah.</span></label>
+        <label class="chk"><input type="checkbox"><span>Isi tabel temuan: masalah, kolom, baris terdampak, solusi, dampak ke total.</span></label>
+        <label class="chk"><input type="checkbox"><span>Tulis 3 catatan keterbatasan data (misalnya baris yang tidak punya pasangan di tabel lain).</span></label>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="blk" id="validasi" style="padding-top:20px"><div class="wrap">
+  <div class="hd rv">
+    <h2>Buktikan hasilmu benar</h2>
+    <p>Pembersihan selesai bukan saat tidak ada error, tapi saat angka-angka ini bisa kamu jelaskan.</p>
+  </div>
+  <div class="fmt3 rv">
+    <div><h3>Jumlah baris sebelum dan sesudah</h3><p>Catat jumlah baris tiap tabel dari sumber, lalu setelah dedup. Selisihnya harus sama dengan jumlah duplikat yang kamu temukan di profiling.</p></div>
+    <div><pre><code>Pelanggan : baris sumber -> baris bersih
+Produk    : baris sumber -> baris bersih
+Transaksi : baris sumber -> baris bersih</code></pre></div>
+  </div>
+  <div class="fmt3 rv">
+    <div><h3>Uji relasi</h3><p>Hubungkan <code>Transaksi_Bersih</code> ke <code>Pelanggan_Bersih</code> dan <code>Produk_Bersih</code> dengan relasi Many-to-One. Hitung transaksi yang kuncinya tidak ditemukan di tabel pasangannya.</p></div>
+    <div><pre><code>Transaksi tanpa pelanggan terdaftar =
+COUNTROWS ( FILTER ( Transaksi_Bersih,
+  ISBLANK ( RELATED ( Pelanggan_Bersih[Nama] ) ) ) )</code></pre><p>Ulangi untuk produk. Kunci yang benar-benar tidak ada di tabel pasangan jangan dihapus. Laporkan jumlahnya.</p></div>
+  </div>
+  <div class="fmt3 rv">
+    <div><h3>Total penjualan bersih</h3><p>Hitung dengan syarat <code>Status_Kualitas</code> sama dengan <code>OK</code> dan <code>Status</code> bukan <code>Batal</code>. Tampilkan dalam format Rupiah Indonesia.</p></div>
+    <div><pre><code>Total Penjualan Bersih =
+CALCULATE ( SUM ( Transaksi_Bersih[Total_Penjualan] ),
+  Transaksi_Bersih[Status_Kualitas] = "OK",
+  Transaksi_Bersih[Status] &lt;&gt; "Batal" )</code></pre><p>Total ini akan dicocokkan dengan kunci dosen. Selisih sekecil apa pun berarti ada langkah yang terlewat.</p></div>
+  </div>
+</div></section>
+
+<section class="blk" id="nilai" style="padding-top:20px"><div class="wrap">
+  <div class="hd rv"><h2>Penilaian dan pengumpulan</h2></div>
+  <div class="wbar rv" role="img" aria-label="Bobot penilaian dari total 100 poin: Profiling 15, Pembersihan 35, Kunci dan relasi 20, Validasi total 20, Dokumentasi 10">
+    <div class="seg" style="--c:var(--c1);--w:15"></div><div class="seg" style="--c:var(--c2);--w:35"></div><div class="seg" style="--c:var(--c3);--w:20"></div><div class="seg" style="--c:var(--c4);--w:20"></div><div class="seg" style="--c:var(--c5);--w:10"></div>
+  </div>
+  <div class="nums rv">
+    <div style="--c:var(--c1)"><b>15</b><span>Profiling dan tabel temuan</span></div>
+    <div style="--c:var(--c2)"><b>35</b><span>Pembersihan sesuai aturan</span></div>
+    <div style="--c:var(--c3)"><b>20</b><span>Kunci bersih dan relasi</span></div>
+    <div style="--c:var(--c4)"><b>20</b><span>Total penjualan bersih</span></div>
+    <div style="--c:var(--c5)"><b>10</b><span>Dokumentasi Applied Steps</span></div>
+  </div>
+  <div class="deliver rv">
+    <div><h3>Berkas yang dikumpulkan</h3><p class="mut sm">Tenggat dan cara unggah mengikuti instruksi dosen.</p></div>
+    <ul>
+      <li><code>P03_Mandiri_NIM_Nama.pbix</code><br><span class="mut sm">Tiga query bersih beserta relasi di Model view</span></li>
+      <li><code>P03_Mandiri_NIM_Nama.pdf</code><br><span class="mut sm">Tabel temuan, hasil validasi, total penjualan bersih, 3 catatan keterbatasan</span></li>
+    </ul>
+  </div>
+
+  <div class="faq rv">
+    <h3>Kendala yang sering muncul</h3>
+    <details><summary>Relasi gagal atau Power BI menandai kardinalitas Many-to-Many</summary><p>Tabel sisi satu masih punya kunci kembar. Hapus duplikat berdasarkan kunci di Pelanggan_Bersih dan Produk_Bersih, lalu pastikan kunci sudah dibersihkan sebelum dedup.</p></details>
+    <details><summary>Kolom tanggal menampilkan error pada sebagian baris</summary><p>Ada lebih dari satu bentuk tanggal. Pecah menjadi beberapa kolom bantu atau pakai Conditional Column per bentuk, lalu konversi masing-masing dengan locale yang sesuai.</p></details>
+    <details><summary>Harga_Satuan masih null setelah Merge</summary><p>Kunci Kode_Produk di transaksi belum bersih sebelum Merge, atau produknya memang tidak ada di katalog. Cek kuncinya dulu.</p></details>
+    <details><summary>Jumlah baris transaksi di Power BI berbeda dari COUNT(*) di MySQL</summary><p>Pastikan kamu membandingkan sebelum menghapus duplikat. Setelah dedup, selisihnya adalah jumlah duplikat.</p></details>
+    <details><summary>Kolom Harga di Excel tidak mau berubah ke angka</summary><p>Sebagian sel berisi teks berawalan Rp dengan titik pemisah ribuan. Hapus teks Rp dan titik dulu, baru ubah tipe. Yang kosong biarkan null.</p></details>
+  </div>
+</div></section>
+
+</main>
+
+<div class="prog" role="status" aria-live="polite"><span id="pt">0 butir</span><div class="bar"><i id="pb"></i></div><span id="pp">0%</span></div>
+
+<footer><div class="wrap">Bisnis Intelegent, praktikum mandiri Pertemuan 3. Foto ilustrasi dari Picsum.</div></footer>
+
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+
+  /* checklist + progres */
+  var boxes=[].slice.call(document.querySelectorAll('.chk input')),KEY='segarmart-praktikum-p3',saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+  function upd(){
+    var n=boxes.filter(function(b){return b.checked}).length,t=boxes.length,p=t?Math.round(n/t*100):0;
+    document.getElementById('pt').textContent=n+' dari '+t;
+    document.getElementById('pb').style.width=p+'%';
+    document.getElementById('pp').textContent=p+'%';
+    [].forEach.call(document.querySelectorAll('.step'),function(s){
+      var c=s.querySelectorAll('input');s.classList.toggle('done',c.length>0&&[].every.call(c,function(x){return x.checked}));
+    });
+    try{var o={};boxes.forEach(function(b,i){if(b.checked)o[i]=1});localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}
+  }
+  boxes.forEach(function(b,i){b.checked=!!saved[i];b.addEventListener('change',upd)});
+  upd();
+
+  /* tab dataset */
+  var tabs=[].slice.call(document.querySelectorAll('.pick [role=tab]'));
+  function show(t){
+    tabs.forEach(function(x){
+      var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      var p=document.getElementById(x.getAttribute('aria-controls'));p.hidden=!on;p.classList.toggle('on',on);
+    });
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){show(t)});
+    t.addEventListener('keydown',function(e){
+      var k=e.key,j=k==='ArrowDown'||k==='ArrowRight'?i+1:k==='ArrowUp'||k==='ArrowLeft'?i-1:-1;
+      if(j<0)return;e.preventDefault();var n=tabs[(j+tabs.length)%tabs.length];n.focus();show(n);
+    });
+  });
+
+  /* reveal + nav aktif (IntersectionObserver, tanpa listener scroll) */
+  if('IntersectionObserver' in window){
+    var rv=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');rv.unobserve(e.target)}})},{threshold:.12});
+    [].forEach.call(document.querySelectorAll('.rv'),function(el){rv.observe(el)});
+    var links=[].slice.call(document.querySelectorAll('.nav a')),
+        io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id)})}})},{rootMargin:'-40% 0px -55% 0px'});
+    links.forEach(function(a){var s=document.querySelector(a.getAttribute('href'));if(s)io.observe(s)});
+  }else{[].forEach.call(document.querySelectorAll('.rv'),function(el){el.classList.add('in')})}
+})();
+</script>
+</body>
+</html>
