@@ -128,10 +128,10 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P03_NamaAnda.pbix</code> dengan kueri <i>Penjualan_Bersih</i> dan tabel catatan masalah (jenis, jumlah baris, solusi).</div>
- <div class="card"><h3>⬇ Dataset kotor</h3><p>300 baris berisi spasi berlebih, huruf tidak konsisten, duplikat, harga bertipe teks, nilai kosong, dan anomali.</p><div id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>📖 Kamus menu Power Query</h3><div id="ref"></div></div>
- <div class="card"><h3>🧾 Contoh kode M hasil langkah</h3><pre><code>let
+ <div class="card"><h3>Dataset kotor</h3><p>300 baris berisi spasi berlebih, huruf tidak konsisten, duplikat, harga bertipe teks, nilai kosong, dan anomali.</p><div id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Kamus menu Power Query</h3><div id="ref"></div></div>
+ <div class="card"><h3>Contoh kode M hasil langkah</h3><pre><code>let
   Sumber   = Csv.Document(File.Contents("data_kotor.csv"),[Delimiter=",", Encoding=65001]),
   Header   = Table.PromoteHeaders(Sumber, [PromoteAllScalars=true]),
   Trim     = Table.TransformColumns(Header, {{"Kota", Text.Trim}, {"Produk", Text.Trim}}),
@@ -141,7 +141,7 @@
   Kondisi  = Table.AddColumn(NoDup, "UkuranOrder", each if [Total] &gt;= 500000 then "Besar" else "Kecil")
 in
   Kondisi</code></pre></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Gunakan <b>Tableau Prep Builder</b> (Clean step: Group Values, Remove Duplicates, Change Data Type) atau <i>Data Interpreter</i> pada Tableau Desktop.</div>
 </section>
 
@@ -217,7 +217,7 @@ function render() {
   const q = tot ? okc / tot : 0;
   BI.kpi('#pq-score', [{ label: 'Skor kualitas', value: Math.round(q * 100) + '%' }, { label: 'Jumlah baris', value: rows.length, sub: 'awal: ' + orig.length }, { label: 'Langkah', value: steps.length - 1 }]);
   const tot2 = BI.sum(rows.map(r => (isNum(r.Qty) && isNum(r.Harga) ? r.Qty * r.Harga : 0)));
-  $('#pq-hint').innerHTML = q >= 0.999 ? `<b class="t">🎉 Data bersih!</b>Total nilai penjualan yang valid: <b>${rp(tot2)}</b>. Perhatikan: urutan langkah dan jumlah baris ikut berubah.` : '<b class="t">Petunjuk</b>Sel <span class="hl">merah</span> = error, <span class="hl">kuning</span> = kosong. Mulai dari Trim, lalu Kapitalisasi, lalu standarisasi, tipe data, duplikat, dan terakhir null/anomali.';
+  $('#pq-hint').innerHTML = q >= 0.999 ? `<b class="t">Data bersih!</b>Total nilai penjualan yang valid: <b>${rp(tot2)}</b>. Perhatikan: urutan langkah dan jumlah baris ikut berubah.` : '<b class="t">Petunjuk</b>Sel <span class="hl">merah</span> = error, <span class="hl">kuning</span> = kosong. Mulai dari Trim, lalu Kapitalisasi, lalu standarisasi, tipe data, duplikat, dan terakhir null/anomali.';
 }
 start();
 

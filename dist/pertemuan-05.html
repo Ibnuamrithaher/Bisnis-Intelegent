@@ -298,10 +298,10 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>8 measure di tabel khusus <i>_Measures</i> (folder tampilan), tervalidasi terhadap hitungan manual, + kartu &amp; matriks pengujian.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧪 Uji formula (ketik DAX Anda)</h3><p class="small muted">Ketik formula untuk tiap tugas. Spasi dan huruf besar/kecil tidak dipermasalahkan.</p><div id="ft"></div><div id="ft-score" class="score"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Uji formula (ketik DAX Anda)</h3><p class="small muted">Ketik formula untuk tiap tugas. Spasi dan huruf besar/kecil tidak dipermasalahkan.</p><div id="ft"></div><div id="ft-score" class="score"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Analysis → Create Calculated Field: <code>SUM([Pendapatan])</code>, <code>SUM([Laba])/SUM([Pendapatan])</code>, LOD: <code>{ FIXED [Kategori] : SUM([Pendapatan]) }</code> (padanan CALCULATE+ALL).</div>
 </section>
 
@@ -310,11 +310,11 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul><li>Measure dihitung saat query sesuai konteks filter; calculated column dihitung saat refresh per baris.</li><li>Gunakan DIVIDE(a,b) untuk menghindari error bagi nol.</li><li>CALCULATE mengubah konteks filter; fondasi hampir semua analisis lanjutan.</li><li>Selalu uji measure dengan hitungan manual pada sampel kecil.</li></ul></div>
- <div class="card"><h3>📝 Tugas: Kamus Metrik</h3><p>Buat 8 measure (minimal 2 rasio dan 2 memakai CALCULATE). Untuk tiap measure tulis: nama, rumus, makna bisnis, dan bukti verifikasi.</p><h4>Kriteria penilaian</h4><ul><li>Ketepatan sintaks formula (50%)</li><li>Kesesuaian hasil dengan logika bisnis (50%)</li></ul>
+ <div class="card"><h3>Rangkuman</h3><ul><li>Measure dihitung saat query sesuai konteks filter; calculated column dihitung saat refresh per baris.</li><li>Gunakan DIVIDE(a,b) untuk menghindari error bagi nol.</li><li>CALCULATE mengubah konteks filter; fondasi hampir semua analisis lanjutan.</li><li>Selalu uji measure dengan hitungan manual pada sampel kecil.</li></ul></div>
+ <div class="card"><h3>Tugas: Kamus Metrik</h3><p>Buat 8 measure (minimal 2 rasio dan 2 memakai CALCULATE). Untuk tiap measure tulis: nama, rumus, makna bisnis, dan bukti verifikasi.</p><h4>Kriteria penilaian</h4><ul><li>Ketepatan sintaks formula (50%)</li><li>Kesesuaian hasil dengan logika bisnis (50%)</li></ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>Bisnis Intelegent · Bisnis Digital · Dosen: Ibnu Amri Thaher · Pertemuan 5</footer>
@@ -705,7 +705,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -896,7 +896,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -933,7 +933,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -970,7 +970,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);
@@ -1081,7 +1081,7 @@ $('#anat').append(h('div', { id: 'anat-d', class: 'callout', style: 'margin-top:
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Buka model minggu 4', tm: '5\'', b: 'Muat ulang 5 tabel dan relasi (atau pakai file P04). Home → Enter data → buat tabel kosong <code>_Measures</code> untuk menampung measure.' },
   { t: 'Measure agregasi', tm: '15\'', b: 'Total Penjualan, Jumlah Order, Rata-rata Order, Pelanggan Unik. Format: mata uang/angka.' },

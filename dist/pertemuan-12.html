@@ -300,9 +300,9 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P12_TimeIntelligence.pbix</code>: tabel kalender kustom (Date Table), measure YTD/MoM/YoY, line chart 2 tahun, kartu growth, dan validasi periode.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Pola DAX time intelligence</h3><pre><code>Dim_Tanggal =
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Pola DAX time intelligence</h3><pre><code>Dim_Tanggal =
 ADDCOLUMNS (
   CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2024, 12, 31 ) ),
   "Tahun", YEAR ( [Date] ),
@@ -318,8 +318,8 @@ Revenue PM     = CALCULATE ( [Revenue], DATEADD ( Dim_Tanggal[Date], -1, MONTH )
 MoM %          = DIVIDE ( [Revenue] - [Revenue PM], [Revenue PM] )
 Revenue YTD    = TOTALYTD ( [Revenue], Dim_Tanggal[Date] )
 Rata-rata 3 bln = AVERAGEX ( DATESINPERIOD ( Dim_Tanggal[Date], MAX ( Dim_Tanggal[Date] ), -3, MONTH ), [Revenue] )</code></pre></div>
- <div class="card"><h3>🔍 Daftar validasi</h3><div id="val"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Daftar validasi</h3><div id="val"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Table calculation: <i>Percent difference from</i> (previous), Year-over-Year growth quick table calc; atau <code>LOOKUP(SUM([Revenue]), -12)</code> pada data bulanan.</div>
 </section>
 
@@ -328,11 +328,11 @@ Rata-rata 3 bln = AVERAGEX ( DATESINPERIOD ( Dim_Tanggal[Date], MAX ( Dim_Tangga
 
 
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul><li>Time intelligence membutuhkan tabel tanggal yang kontinu dan unik.</li><li>YoY = (Tahun ini − Tahun lalu)/Tahun lalu; MoM serupa untuk bulan.</li><li>Bandingkan periode yang setara (apple to apple), terutama musiman.</li><li>Rata-rata bergerak membantu melihat tren dari fluktuasi harian.</li></ul></div>
- <div class="card"><h3>📝 Tugas: Analisis Tren 2 Tahun</h3><p>Buat laporan yang membandingkan YoY &amp; MoM, tampilkan YTD, dan jelaskan pola musiman penjualan.</p><h4>Kriteria penilaian</h4><ul><li>Kebenaran formula time intelligence (50%)</li><li>Ketajaman membaca grafik tren (50%)</li></ul>
+ <div class="card"><h3>Rangkuman</h3><ul><li>Time intelligence membutuhkan tabel tanggal yang kontinu dan unik.</li><li>YoY = (Tahun ini − Tahun lalu)/Tahun lalu; MoM serupa untuk bulan.</li><li>Bandingkan periode yang setara (apple to apple), terutama musiman.</li><li>Rata-rata bergerak membantu melihat tren dari fluktuasi harian.</li></ul></div>
+ <div class="card"><h3>Tugas: Analisis Tren 2 Tahun</h3><p>Buat laporan yang membandingkan YoY &amp; MoM, tampilkan YTD, dan jelaskan pola musiman penjualan.</p><h4>Kriteria penilaian</h4><ul><li>Kebenaran formula time intelligence (50%)</li><li>Ketajaman membaca grafik tren (50%)</li></ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>Bisnis Intelegent · Bisnis Digital · Dosen: Ibnu Amri Thaher · Pertemuan 12</footer>
@@ -723,7 +723,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -914,7 +914,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -951,7 +951,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -988,7 +988,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);
@@ -1096,7 +1096,7 @@ $('#si-txt').innerHTML = `<b class="t">Pola musiman</b>Puncak <b>${BI.MON[hiI]}<
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', F], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', F], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Muat penjualan', tm: '5\'', b: 'Muat <code>penjualan_fakta.csv</code> dan dimensi. Tipe Tanggal = Date.' },
   { t: 'Buat tabel kalender', tm: '20\'', b: 'Modeling → New table → tempel DAX <i>Dim_Tanggal</i>. Tambah kolom Tahun, BulanNo, Bulan. <b>Sort by column</b>: Bulan oleh BulanNo.' },

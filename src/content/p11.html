@@ -32,7 +32,7 @@
  <h2>3. Warna alert yang fungsional</h2>
  <div class="card">
   <p>±8% pria dan ±0,5% wanita mengalami buta warna merah-hijau. Warna <b>tidak boleh menjadi satu-satunya pembawa makna</b>. Tekan tombol untuk menyimulasikan tampilan hitam-putih.</p>
-  <div class="row"><button class="btn" id="cb-btn">🎨 Simulasi tanpa warna</button></div>
+  <div class="row"><button class="btn" id="cb-btn">Simulasi tanpa warna</button></div>
   <div class="grid2" id="cb-box"><div class="card"><h4>❌ Hanya warna</h4><div id="cb-bad"></div></div><div class="card"><h4>✅ Warna + ikon + teks</h4><div id="cb-good"></div></div></div>
  </div>
 
@@ -42,9 +42,9 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P11_OperationalDashboard.pbix</code>: KPI On-time %, status per kurir, daftar pengecualian berwarna, bullet stok vs minimum, dan catatan frekuensi refresh.</div>
- <div class="card"><h3>⬇ Dataset</h3><div id="dl" class="row"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Measure operasional</h3><pre><code>Jumlah Pengiriman = COUNTROWS ( Logistik )
+ <div class="card"><h3>Dataset</h3><div id="dl" class="row"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Measure operasional</h3><pre><code>Jumlah Pengiriman = COUNTROWS ( Logistik )
 Terkirim = CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Terkirim" )
 Terkirim Tepat Waktu = CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Terkirim",
                          FILTER ( Logistik, Logistik[AktualHari] &lt;= Logistik[EstimasiHari] ) )
@@ -52,8 +52,8 @@ On-time % = DIVIDE ( [Terkirim Tepat Waktu], [Terkirim] )
 Error Rate = DIVIDE ( CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Gagal/Retur" ), [Jumlah Pengiriman] )
 Rata-rata Hari Kirim = AVERAGE ( Logistik[AktualHari] )
 Status Stok = IF ( MIN ( Stok[Stok] ) &lt; MIN ( Stok[StokMinimum] ), "Kritis", "Aman" )</code></pre></div>
- <div class="card"><h3>🚦 Aturan warna</h3><div id="rule"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Aturan warna</h3><div id="rule"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Parameter ambang + calculated field status; Dashboard Actions untuk filter; Data Source → Refresh schedule di Tableau Cloud.</div>
 </section>
 
@@ -131,7 +131,7 @@ $('#stk-txt').innerHTML = `<b class="t">${crit.length} SKU di bawah stok minimum
 
 /* Praktik */
 const dl = $('#dl');
-dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('data_logistik.csv', LOG) }, '⬇ data_logistik.csv'), h('button', { class: 'btn pri', onclick: () => BI.download('data_stok.csv', STK) }, '⬇ data_stok.csv'));
+dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('data_logistik.csv', LOG) }, 'data_logistik.csv'), h('button', { class: 'btn pri', onclick: () => BI.download('data_stok.csv', STK) }, 'data_stok.csv'));
 BI.steps('#steps', [
   { t: 'Muat data', tm: '5\'', b: 'Muat dua CSV. Pastikan AktualHari &amp; EstimasiHari Number.' },
   { t: 'Measure operasional', tm: '20\'', b: 'Buat measure pada kotak di atas; uji On-time % terhadap hitungan manual di Excel (filter Terkirim).' },

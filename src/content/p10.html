@@ -41,9 +41,9 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P10_HRDashboard.pbix</code> (1 halaman utama + catatan etika) dan 3 rekomendasi retensi berbasis data.</div>
- <div class="card"><h3>⬇ Dataset</h3><p class="small">320 karyawan fiktif (tanpa nama). Kolom: ID, Departemen, Gender, Usia, MasaKerjaTahun, Gaji, KehadiranPct, SkorKinerja, Status, AlasanKeluar.</p><div id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Measure HR</h3><pre><code>Headcount Total = COUNTROWS ( HR )
+ <div class="card"><h3>Dataset</h3><p class="small">320 karyawan fiktif (tanpa nama). Kolom: ID, Departemen, Gender, Usia, MasaKerjaTahun, Gaji, KehadiranPct, SkorKinerja, Status, AlasanKeluar.</p><div id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Measure HR</h3><pre><code>Headcount Total = COUNTROWS ( HR )
 Karyawan Aktif = CALCULATE ( [Headcount Total], HR[Status] = "Aktif" )
 Karyawan Keluar = CALCULATE ( [Headcount Total], HR[Status] = "Keluar" )
 Attrition % = DIVIDE ( [Karyawan Keluar], [Headcount Total] )
@@ -56,8 +56,8 @@ SWITCH ( TRUE (),
   HR[Usia] &lt; 35, "25–34",
   HR[Usia] &lt; 45, "35–44",
   "45+" )</code></pre></div>
- <div class="card"><h3>🧠 Template rekomendasi retensi</h3><div id="rec"></div><div id="rec-out" class="callout ok"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Template rekomendasi retensi</h3><div id="rec"></div><div id="rec-out" class="callout ok"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Binning: klik kanan Usia → Create → Bins (size 5). Parameter untuk ambang minimum; filter pada <code>COUNTD([ID]) &gt;= 5</code>.</div>
 </section>
 
@@ -121,7 +121,7 @@ function pvr() {
   const ag = u => (u < 25 ? '<25' : u < 35 ? '25-34' : u < 45 ? '35-44' : '45+');
   const rows = HR.filter(r => (!pv.d || r.Departemen === pv.d) && (!pv.a || ag(r.Usia) === pv.a) && (!pv.g || r.Gender === pv.g));
   const hide = $('#pv-mask').checked && rows.length < 5;
-  $('#pv-out').innerHTML = hide ? `<b class="t">🔒 Disembunyikan</b>Kelompok ini hanya ${rows.length} orang (&lt;5). Menampilkan rata-rata gaji/kinerja dapat mengungkap identitas individu.` : `<b class="t">Kelompok: ${rows.length} orang</b>Rata-rata gaji: <b>${rows.length ? rp(avg(rows.map(r => r.Gaji))) : '-'}</b><br>Attrition: <b>${pct(rate(rows))}</b>${rows.length < 5 ? '<br><span class="chip bad">⚠ kelompok kecil, risiko identifikasi</span>' : ''}`;
+  $('#pv-out').innerHTML = hide ? `<b class="t">Disembunyikan</b>Kelompok ini hanya ${rows.length} orang (&lt;5). Menampilkan rata-rata gaji/kinerja dapat mengungkap identitas individu.` : `<b class="t">Kelompok: ${rows.length} orang</b>Rata-rata gaji: <b>${rows.length ? rp(avg(rows.map(r => r.Gaji))) : '-'}</b><br>Attrition: <b>${pct(rate(rows))}</b>${rows.length < 5 ? '<br><span class="chip bad">⚠ kelompok kecil, risiko identifikasi</span>' : ''}`;
   BI.table('#pv-tbl', { cols: [{ k: 'ID', l: 'ID' }, { k: 'Departemen', l: 'Dept' }, { k: 'Usia', l: 'Usia', r: 1 }, { k: 'Gaji', l: 'Gaji', r: 1, f: v => (hide ? '•••' : fmt(v)) }], rows: hide ? [] : rows, limit: 8, maxH: 200, sort: false });
 }
 pvr();

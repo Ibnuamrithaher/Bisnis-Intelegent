@@ -35,9 +35,9 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P12_TimeIntelligence.pbix</code>: tabel kalender kustom (Date Table), measure YTD/MoM/YoY, line chart 2 tahun, kartu growth, dan validasi periode.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Pola DAX time intelligence</h3><pre><code>Dim_Tanggal =
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Pola DAX time intelligence</h3><pre><code>Dim_Tanggal =
 ADDCOLUMNS (
   CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2024, 12, 31 ) ),
   "Tahun", YEAR ( [Date] ),
@@ -53,8 +53,8 @@ Revenue PM     = CALCULATE ( [Revenue], DATEADD ( Dim_Tanggal[Date], -1, MONTH )
 MoM %          = DIVIDE ( [Revenue] - [Revenue PM], [Revenue PM] )
 Revenue YTD    = TOTALYTD ( [Revenue], Dim_Tanggal[Date] )
 Rata-rata 3 bln = AVERAGEX ( DATESINPERIOD ( Dim_Tanggal[Date], MAX ( Dim_Tanggal[Date] ), -3, MONTH ), [Revenue] )</code></pre></div>
- <div class="card"><h3>🔍 Daftar validasi</h3><div id="val"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Daftar validasi</h3><div id="val"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Table calculation: <i>Percent difference from</i> (previous), Year-over-Year growth quick table calc; atau <code>LOOKUP(SUM([Revenue]), -12)</code> pada data bulanan.</div>
 </section>
 
@@ -132,7 +132,7 @@ $('#si-txt').innerHTML = `<b class="t">Pola musiman</b>Puncak <b>${BI.MON[hiI]}<
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', F], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', F], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Muat penjualan', tm: '5\'', b: 'Muat <code>penjualan_fakta.csv</code> dan dimensi. Tipe Tanggal = Date.' },
   { t: 'Buat tabel kalender', tm: '20\'', b: 'Modeling → New table → tempel DAX <i>Dim_Tanggal</i>. Tambah kolom Tahun, BulanNo, Bulan. <b>Sort by column</b>: Bulan oleh BulanNo.' },

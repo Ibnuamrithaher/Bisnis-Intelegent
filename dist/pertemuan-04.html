@@ -301,11 +301,16 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P04_NamaAnda.pbix</code> dengan 5 tabel terhubung (1 fakta, 4 dimensi), diagram Model view, dan 1 visual lintas tabel (Pendapatan per Kategori per Tahun).</div>
- <div class="card"><h3>⬇ Dataset bintang</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>📝 Lembar klasifikasi kolom</h3><p class="small">Isi sebelum membuat relasi. Klik untuk menandai.</p><div id="cls"></div></div>
- <div class="card"><h3>🔧 Latihan memperbaiki relasi</h3><div id="fix"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Dataset bintang</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Lembar klasifikasi kolom</h3><p class="small">Isi sebelum membuat relasi. Klik untuk menandai.</p><div id="cls"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Latihan lanjutan: dimensi many-to-many</h3>
+  <p class="small">Lanjutkan di <code>P04_NamaAnda.pbix</code> yang sudah selesai, tanpa file baru. Dimensi baru <code>dim_label_produk</code> berisi label pemasaran produk. Satu produk bisa punya lebih dari satu label (mis. <i>Premium</i> sekaligus <i>Best Seller</i>), jadi ProdukID berulang di tabel ini.</p>
+  <div class="row" id="m2m-dl"></div>
+  <div id="m2m-steps"></div>
+  <details><summary>Kunci jawaban</summary><div id="m2m-key" class="small"></div></details>
+ </div>
  <div class="callout"><b class="t">Padanan Tableau</b>Data Source tab → seret tabel ke canvas (relationships/noodles). Tableau otomatis menebak kunci; periksa panah &amp; field yang dipakai.</div>
 </section>
 
@@ -314,11 +319,11 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul><li>Fakta = peristiwa terukur (angka), dimensi = konteks (siapa, apa, di mana, kapan).</li><li>Star schema: satu fakta di tengah, dimensi mengelilingi.</li><li>Relasi dimensi → fakta umumnya One-to-Many, filter mengalir dari sisi "satu" ke sisi "banyak".</li><li>Hindari kolom kunci tidak unik di sisi dimensi.</li></ul></div>
- <div class="card"><h3>📝 Tugas: Rancang Model Bintang</h3><p>Dari dataset e-commerce yang diberikan, rancang star schema: gambar diagram, tabel klasifikasi kolom, dan buktikan dengan 1 visual lintas tabel.</p><h4>Kriteria penilaian</h4><ul><li>Ketepatan relasi tabel (50%)</li><li>Logika berpikir analitis hubungan data (30%)</li><li>Kerapian diagram (20%)</li></ul>
+ <div class="card"><h3>Rangkuman</h3><ul><li>Fakta = peristiwa terukur (angka), dimensi = konteks (siapa, apa, di mana, kapan).</li><li>Star schema: satu fakta di tengah, dimensi mengelilingi.</li><li>Relasi dimensi → fakta umumnya One-to-Many, filter mengalir dari sisi "satu" ke sisi "banyak".</li><li>Hindari kolom kunci tidak unik di sisi dimensi.</li></ul></div>
+ <div class="card"><h3>Tugas: Rancang Model Bintang</h3><p>Dari dataset e-commerce yang diberikan, rancang star schema: gambar diagram, tabel klasifikasi kolom, dan buktikan dengan 1 visual lintas tabel.</p><h4>Kriteria penilaian</h4><ul><li>Ketepatan relasi tabel (50%)</li><li>Logika berpikir analitis hubungan data (30%)</li><li>Kerapian diagram (20%)</li></ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>Bisnis Intelegent · Bisnis Digital · Dosen: Ibnu Amri Thaher · Pertemuan 4</footer>
@@ -709,7 +714,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -900,7 +905,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -937,7 +942,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -974,7 +979,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);
@@ -1051,14 +1056,17 @@ let links = new Set(), sel = null;
 const msg = t => $('#sc-msg').textContent = t;
 function drawSC() {
   const c = $('#sc'); c.innerHTML = ''; const svg = S('svg', { viewBox: '0 0 640 370' }); c.append(svg);
-  const ctr = n => [B[n].x + B[n].w / 2, B[n].y + B[n].h / 2];
+  const F = B.Fakta;
   links.forEach(n => {
-    const [x1, y1] = ctr(n), [x2, y2] = ctr('Fakta');
-    const ln = S('line', { x1, y1, x2, y2, stroke: 'var(--c3)', 'stroke-width': 3, style: 'cursor:pointer' }, svg);
+    // sambung sisi dimensi yang menghadap fakta ke sisi kiri/kanan fakta, bukan tengah ke tengah
+    const b = B[n], dir = b.x < F.x ? 1 : -1, top = b.y < F.y;
+    const x1 = dir > 0 ? b.x + b.w : b.x, y1 = b.y + b.h / 2;
+    const x2 = dir > 0 ? F.x : F.x + F.w, y2 = F.y + F.h * (top ? 0.3 : 0.7), mx = (x1 + x2) / 2;
+    const ln = S('path', { d: `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`, fill: 'none', stroke: 'var(--c3)', 'stroke-width': 3, style: 'cursor:pointer' }, svg);
     ln.addEventListener('click', () => { links.delete(n); drawSC(); calc(); msg('Relasi ' + n + ' dihapus'); });
     BI.hover(ln, 'Klik untuk menghapus');
-    T(svg, x1 + (x2 - x1) * 0.25, y1 + (y2 - y1) * 0.25 - 4, '1', { class: 'lbl', style: 'font-size:14px' });
-    T(svg, x1 + (x2 - x1) * 0.78, y1 + (y2 - y1) * 0.78 - 4, '*', { class: 'lbl', style: 'font-size:18px' });
+    T(svg, x1 + dir * 6, y1 - 6, '1', { class: 'lbl', style: 'font-size:14px', 'text-anchor': dir > 0 ? 'start' : 'end' });
+    T(svg, x2 - dir * 6, y2 - 6, '*', { class: 'lbl', style: 'font-size:18px', 'text-anchor': dir > 0 ? 'end' : 'start' });
   });
   Object.keys(B).forEach(n => {
     const b = B[n], g = S('g', { style: 'cursor:pointer' }, svg);
@@ -1108,23 +1116,39 @@ function dup() {
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_wilayah.csv', star.dimWilayah], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_wilayah.csv', star.dimWilayah], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
-  { t: 'Muat kelima tabel', tm: '5\'', b: 'Get data → Text/CSV untuk masing-masing. Pastikan tipe data kunci sama (Text untuk ID, Date untuk Tanggal).' },
+  { t: 'Muat kelima tabel', tm: '5\'', b: 'Di file baru, matikan dulu relasi otomatis: File → Options and settings → Options → <i>CURRENT FILE: Data Load</i> → hilangkan centang <b>Autodetect new relationships after data is loaded</b>. Lalu Get data → Text/CSV untuk masing-masing. Pastikan tipe data kunci sama (Text untuk ID, Date untuk Tanggal).' },
   { t: 'Klasifikasi kolom', tm: '15\'', b: 'Isi lembar klasifikasi di bawah dan gambar sketsa star schema di kertas.' },
   { t: 'Buat relasi di Model view', tm: '25\'', b: 'Seret <code>Dim_Produk[ProdukID]</code> → <code>Fakta[ProdukID]</code>. Ulangi untuk Pelanggan, Wilayah, Tanggal. Periksa bahwa kardinalitas <b>One to many (1:*)</b> dan arah filter <b>Single</b>.' },
   { t: 'Uji propagasi filter', tm: '20\'', b: 'Report view: tabel/bar dengan <i>Kategori</i> (Dim_Produk), <i>Tahun</i> (Dim_Tanggal), <i>Sum of Pendapatan</i> (Fakta). Tambah slicer Wilayah dan Segmen; pastikan angka berubah.' },
-  { t: 'Perbaiki relasi rusak', tm: '20\'', b: 'Kerjakan kasus latihan di bawah menggunakan model Anda.' },
   { t: 'Dokumentasi', tm: '10\'', b: 'Screenshot Model view (semua garis 1:*) dan 1 visual lintas tabel; tulis 3 kalimat penjelasan.' }
 ]);
+/* Latihan lanjutan: dim_label_produk; Premium/Reguler membagi semua produk, Best Seller menumpuk di atasnya */
+const revP = {}; star.fakta.forEach(f => revP[f.ProdukID] = (revP[f.ProdukID] || 0) + f.Pendapatan);
+const byHarga = star.dimProduk.slice().sort((a, b) => b.HargaList - a.HargaList), half = Math.ceil(byHarga.length / 2);
+const best = star.dimProduk.slice().sort((a, b) => revP[b.ProdukID] - revP[a.ProdukID]).slice(0, 4).map(p => p.ProdukID);
+const labelRows = [];
+star.dimProduk.forEach(p => {
+  labelRows.push({ ProdukID: p.ProdukID, Label: byHarga.indexOf(p) < half ? 'Premium' : 'Reguler' });
+  if (best.includes(p.ProdukID)) labelRows.push({ ProdukID: p.ProdukID, Label: 'Best Seller' });
+});
+$('#m2m-dl').append(h('button', { class: 'btn pri', onclick: () => BI.download('dim_label_produk.csv', labelRows) }, 'dim_label_produk.csv'));
+BI.steps('#m2m-steps', [
+  { t: 'Muat dimensi label', b: 'Buka <code>P04_NamaAnda.pbix</code> → Get data → Text/CSV → <code>dim_label_produk.csv</code> → Load. Relasi otomatis sudah mati di file ini sejak langkah 1, jadi tabel masuk tanpa garis.' },
+  { t: 'Buat relasi many-to-many', b: 'Model view → seret <code>dim_label_produk[ProdukID]</code> → <code>penjualan_fakta[ProdukID]</code>. Power BI memberi peringatan dan memakai <b>Many to many (*:*)</b>, karena ProdukID berulang di kedua tabel. Cross-filter direction bawaannya <i>Both</i>: ubah menjadi <b>dim_label_produk filters penjualan_fakta</b> agar filter tetap satu arah dari dimensi ke fakta → Save.' },
+  { t: 'Visual per label', b: 'Report view → tabel baru: <i>Label</i> (dim_label_produk) + <i>Sum of Pendapatan</i>. Jumlahkan baris-barisnya: hasilnya <b>lebih besar dari Total</b>, tetapi Total tetap sama dengan total penjualan. Ini benar: produk Best Seller juga Premium atau Reguler, sehingga pendapatannya tampil di dua baris.' },
+  { t: 'Slicer label', b: 'Di halaman visual langkah 4, tambahkan slicer <i>Label</i>. Pilih <b>Best Seller</b>: tabel Kategori × Tahun hanya menampilkan pendapatan produk terlaris.' },
+  { t: 'Jelaskan', b: 'Tulis 2 kalimat: mengapa relasi ini many-to-many, dan mengapa baris per label tidak boleh dijumlahkan untuk mendapatkan total.' }
+]);
+const labRev = l => sum(star.fakta.filter(f => labelRows.some(r => r.ProdukID === f.ProdukID && r.Label === l)).map(f => f.Pendapatan));
+const totRev = sum(star.fakta.map(f => f.Pendapatan)), labs = ['Best Seller', 'Premium', 'Reguler'];
+$('#m2m-key').innerHTML = `<p>Best Seller: ${best.map(id => `<b>${id}</b> ${star.dimProduk.find(p => p.ProdukID === id).Produk}`).join(', ')}.</p>
+<p>${labs.map(l => `${l}: ${fmt(labRev(l))}`).join(' · ')}<br>Jumlah baris = ${fmt(sum(labs.map(labRev)))}, Total visual = <b>${fmt(totRev)}</b> (Premium + Reguler = total; Best Seller adalah tumpang tindih).</p>`;
 const clsRows = ['OrderID', 'Tanggal', 'ProdukID', 'Qty', 'Pendapatan', 'Kategori', 'Segmen', 'Zona', 'HPP'];
 const clsAns = { OrderID: 'Kunci', Tanggal: 'Kunci', ProdukID: 'Kunci', Qty: 'Fakta', Pendapatan: 'Fakta', Kategori: 'Dimensi', Segmen: 'Dimensi', Zona: 'Dimensi', HPP: 'Fakta' };
 clsRows.forEach(c => { const r = h('div', { class: 'row' }, h('b', { style: 'min-width:100px' }, c)); ['Fakta', 'Dimensi', 'Kunci'].forEach(k => r.append(h('button', { class: 'btn sm', onclick(e) { BI.$$('button', r).forEach(b => b.classList.remove('on')); e.currentTarget.classList.add('on'); r.querySelector('.chip') && r.querySelector('.chip').remove(); r.append(h('span', { class: 'chip ' + (clsAns[c] === k ? 'ok' : 'bad') }, clsAns[c] === k ? 'Tepat' : 'Periksa lagi')); } }, k))); $('#cls').append(r); });
-[['Hubungan Many-to-Many muncul antara Penjualan dan Produk', 'Cek kolom ProdukID di Dim_Produk: apakah ada nilai ganda? Hapus duplikat (Remove Duplicates) pada dimensi.'],
- ['Tanggal tidak bisa dihubungkan (tipe berbeda)', 'Satu kolom Text, satu Date. Samakan tipe data di Power Query.'],
- ['Slicer Wilayah tidak mengubah angka', 'Relasi belum aktif/terhapus atau arah filter salah. Periksa garis di Model view (garis putus-putus = tidak aktif).'],
- ['Total penjualan lebih besar dari sumber', 'Kemungkinan kunci dimensi duplikat sehingga baris fakta berlipat.']].forEach(([a, b]) => $('#fix').append(h('details', {}, h('summary', {}, a), h('p', {}, '  ' + b))));
-BI.checklist('#chk', ['5 tabel termuat dengan tipe kunci sama', 'Lembar klasifikasi terisi', '4 relasi One-to-many tercipta', 'Slicer lintas tabel berfungsi', 'Relasi rusak berhasil diperbaiki', 'Diagram Model view didokumentasikan'], 'p4');
+BI.checklist('#chk', ['5 tabel termuat dengan tipe kunci sama', 'Lembar klasifikasi terisi', '4 relasi One-to-many tercipta', 'Slicer lintas tabel berfungsi', 'Diagram Model view didokumentasikan'], 'p4');
 
 BI.quiz('#quiz', [
   { q: 'Kolom "Pendapatan" berperan sebagai…', o: ['Dimensi', 'Fakta (ukuran)', 'Kunci dimensi', 'Hierarki'], a: 1, e: 'Angka yang diagregasi = fakta.' },

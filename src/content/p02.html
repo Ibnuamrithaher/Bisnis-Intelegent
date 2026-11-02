@@ -52,13 +52,13 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>Satu file <code>P02_NamaAnda.pbix</code> berisi tabel Penjualan (CSV), Produk (Excel), dan Pelanggan (database/SQL), dengan jumlah baris yang sudah diverifikasi terhadap sumber.</div>
- <div class="card"><h3>⬇ Dataset</h3>
+ <div class="card"><h3>Dataset</h3>
   <p class="small">CSV dapat dibuka di Excel lalu <b>Save As .xlsx</b> untuk latihan konektor Excel. File SQL dipakai untuk membuat database contoh (SQLite/MySQL).</p>
   <div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧪 Simulator error umum: perbaiki pratinjau</h3>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Simulator error umum: perbaiki pratinjau</h3>
   <div id="tsim"></div></div>
- <div class="card"><h3>✅ Checklist verifikasi</h3><div id="chk"></div></div>
+ <div class="card"><h3>Checklist verifikasi</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Connect → To a file → Text file / Microsoft Excel; Connect → To a Server → MySQL/PostgreSQL. Pilih <b>Live</b> (setara DirectQuery) atau <b>Extract</b> (setara Import).</div>
 </section>
 
@@ -156,10 +156,10 @@ upd();
 /* Praktik */
 const star = BI.data.star(sales);
 const dl = $('#dl');
-dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('penjualan.csv', star.fakta) }, '⬇ penjualan.csv'),
-  h('button', { class: 'btn pri', onclick: () => BI.download('produk.csv', star.dimProduk) }, '⬇ produk.csv'),
-  h('button', { class: 'btn pri', onclick: () => BI.download('pelanggan.csv', star.dimPelanggan) }, '⬇ pelanggan.csv'),
-  h('button', { class: 'btn', onclick: () => BI.downloadText('toko_online.sql', BI.sqlDump({ pelanggan: star.dimPelanggan, produk: star.dimProduk })) }, '⬇ toko_online.sql'));
+dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('penjualan.csv', star.fakta) }, 'penjualan.csv'),
+  h('button', { class: 'btn pri', onclick: () => BI.download('produk.csv', star.dimProduk) }, 'produk.csv'),
+  h('button', { class: 'btn pri', onclick: () => BI.download('pelanggan.csv', star.dimPelanggan) }, 'pelanggan.csv'),
+  h('button', { class: 'btn', onclick: () => BI.downloadText('toko_online.sql', BI.sqlDump({ pelanggan: star.dimPelanggan, produk: star.dimProduk })) }, 'toko_online.sql'));
 BI.steps('#steps', [
   { t: 'Siapkan sumber', tm: '10\'', b: 'Simpan <code>penjualan.csv</code>. Buka <code>produk.csv</code> di Excel → Save As <code>produk.xlsx</code>. Jalankan <code>toko_online.sql</code> di SQLite/MySQL (atau minta dosen menyediakan server lab).' },
   { t: 'Extract CSV', tm: '20\'', b: '<b>Get data → Text/CSV</b> → pilih <code>penjualan.csv</code>. Periksa pratinjau: Delimiter = Comma, File Origin = 65001 UTF-8. Klik <b>Transform Data</b> (bukan Load) agar bisa memeriksa tipe data di Power Query.' },

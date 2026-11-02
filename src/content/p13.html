@@ -37,17 +37,17 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>Laporan ter-publish di workspace, dibagikan ke 1 rekan (Viewer), 2 role RLS (Manajer Jawa, Manajer Sumatera) teruji dengan "View as", serta screenshot bukti.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Aturan RLS</h3>
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Aturan RLS</h3>
   <pre><code>-- RLS statis: role "Manajer Jawa" pada tabel Dim_Wilayah
 [Wilayah] = "Jawa"
 
 -- RLS dinamis: tabel Akses (Email, Wilayah) + role "Manajer" pada Dim_Wilayah
 [Wilayah] = LOOKUPVALUE ( Akses[Wilayah], Akses[Email], USERPRINCIPALNAME () )</code></pre>
   <p class="small muted">Catatan: RLS hanya berlaku bagi pengguna dengan peran Viewer. Admin/Member/Contributor workspace melihat semua data.</p></div>
- <div class="card"><h3>🧪 Skenario uji</h3><div id="test"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Skenario uji</h3><div id="test"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Publish: Server → Publish Workbook ke Tableau Cloud. Keamanan baris: User Filter (Server → Create User Filter) atau <code>USERNAME()</code> pada Data Source Filter.</div>
 </section>
 
@@ -127,7 +127,7 @@ rfr();
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_wilayah.csv', star.dimWilayah], ['dim_produk.csv', star.dimProduk], ['dim_tanggal.csv', star.dimTanggal], ['akses_wilayah.csv', ACC.filter(a => a.Wilayah && a.Wilayah !== '*').map(a => ({ Email: a.Email, Wilayah: a.Wilayah === 'Jawa' ? 'Jawa' : a.Wilayah }))]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', star.fakta], ['dim_wilayah.csv', star.dimWilayah], ['dim_produk.csv', star.dimProduk], ['dim_tanggal.csv', star.dimTanggal], ['akses_wilayah.csv', ACC.filter(a => a.Wilayah && a.Wilayah !== '*').map(a => ({ Email: a.Email, Wilayah: a.Wilayah === 'Jawa' ? 'Jawa' : a.Wilayah }))]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Siapkan akun', tm: '5\'', b: 'Masuk ke app.powerbi.com dengan akun institusi. Buat workspace "BI-NamaAnda" (jika diizinkan).' },
   { t: 'Publish', tm: '15\'', b: 'Di Desktop: <b>Home → Publish → pilih workspace</b>. Buka tautan hasil. Periksa bahwa dataset dan report muncul.' },

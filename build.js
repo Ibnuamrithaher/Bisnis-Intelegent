@@ -26,7 +26,7 @@ const COURSE = 'Bisnis Intelegent · Bisnis Digital';
 meta.forEach(m => {
   const fp = path.join(__dirname, 'src/content', `p${pad(m.n)}.html`);
   const frag = fs.existsSync(fp) ? fs.readFileSync(fp, 'utf8') : `<section class="pane" id="teori"><p>Konten belum dibuat.</p></section><section class="pane" id="praktik"></section><section class="pane" id="kuis"></section>`;
-  const P = PREMIUM.has(m.n), ic = e => (P ? '' : e + ' ');
+  const P = PREMIUM.has(m.n);
   const html = `<!doctype html>
 <html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pertemuan ${m.n} – ${esc(m.title)} | ${COURSE}</title>
@@ -36,7 +36,7 @@ meta.forEach(m => {
  <h1>${esc(m.title)}</h1><p>${esc(m.sub)}</p>
 </div></header>
 <nav class="tabs"><div class="wrap">
- <button data-pane="ringkasan">${ic('🧭')}Ringkasan</button><button data-pane="teori">${ic('📘')}Teori · 45'</button><button data-pane="praktik">${ic('💻')}Praktik · 100'</button><button data-pane="kuis">${ic('❓')}Kuis</button>${frag.includes('id="soal"') ? '<button data-pane="soal">' + ic('🧪') + 'Bank Soal</button>' : ''}<button data-pane="tugas">${ic('📝')}Rangkuman & Tugas</button>
+ <button data-pane="ringkasan">Ringkasan</button><button data-pane="teori">Teori · 45'</button><button data-pane="praktik">Praktik · 100'</button><button data-pane="kuis">Kuis</button>${frag.includes('id="soal"') ? '<button data-pane="soal">Bank Soal</button>' : ''}<button data-pane="tugas">Rangkuman & Tugas</button>
 </div></nav>
 <main><div class="wrap">
 <section class="pane" id="ringkasan">
@@ -47,23 +47,23 @@ ${P ? `<div class="bento">
   <div class="row"><button class="btn pri" data-goto="teori">Mulai teori</button><button class="btn" data-goto="praktik">Langsung praktik</button></div></div>
  <div class="card b-ag1"><span class="eyebrow">Capaian pembelajaran (CPMK)</span><ul class="small">${cpmkHtml(m)}</ul></div>
  <div class="card b-ag2"><span class="eyebrow">Sumber referensi</span><ol class="small">${refHtml(m)}</ol></div>
-</div>` : ` <div class="card"><h3>🎯 Kemampuan akhir</h3><p>${esc(m.goal)}</p>
+</div>` : ` <div class="card"><h3>Kemampuan akhir</h3><p>${esc(m.goal)}</p>
   <p class="small muted">${m.cpmk.map(esc).join(' · ')} · Referensi: ${esc(m.ref)}</p></div>
  <div class="grid2">
   <div class="card"><h3>Pokok bahasan</h3><ol>${m.topics.map(t => `<li>${esc(t)}</li>`).join('')}</ol></div>
   <div class="card"><h3>Cara memakai bahan ajar</h3><ul><li>Ikuti agenda dengan tombol <b>timer</b>.</li><li>Di tab Teori, <b>klik, geser, dan ubah</b> setiap visualisasi.</li><li>Di tab Praktik, centang langkah; progres tersimpan di browser.</li><li>Tab Kuis untuk cek pemahaman.</li></ul>
   <div class="row"><button class="btn pri" data-goto="teori">Mulai teori →</button><button class="btn" data-goto="praktik">Langsung praktik</button></div></div>
  </div>
- <div class="grid2"><div class="card"><h3>🎓 Capaian pembelajaran (CPMK)</h3><ul class="small">${cpmkHtml(m)}</ul></div><div class="card"><h3>📚 Sumber referensi</h3><ol class="small">${refHtml(m)}</ol></div></div>
+ <div class="grid2"><div class="card"><h3>Capaian pembelajaran (CPMK)</h3><ul class="small">${cpmkHtml(m)}</ul></div><div class="card"><h3>Sumber referensi</h3><ol class="small">${refHtml(m)}</ol></div></div>
 `}
 </section>
 ${frag}
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul>${m.summary.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
- <div class="card"><h3>📝 Tugas: ${esc(m.tugas.judul)}</h3><p>${esc(m.tugas.desc)}</p><h4>Kriteria penilaian</h4><ul>${m.tugas.kriteria.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
+ <div class="card"><h3>Rangkuman</h3><ul>${m.summary.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
+ <div class="card"><h3>Tugas: ${esc(m.tugas.judul)}</h3><p>${esc(m.tugas.desc)}</p><h4>Kriteria penilaian</h4><ul>${m.tugas.kriteria.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>${COURSE} · Dosen: Ibnu Amri Thaher · Pertemuan ${m.n}</footer>

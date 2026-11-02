@@ -385,7 +385,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -576,7 +576,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -613,7 +613,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -650,7 +650,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);

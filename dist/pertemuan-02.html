@@ -317,13 +317,13 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>Satu file <code>P02_NamaAnda.pbix</code> berisi tabel Penjualan (CSV), Produk (Excel), dan Pelanggan (database/SQL), dengan jumlah baris yang sudah diverifikasi terhadap sumber.</div>
- <div class="card"><h3>⬇ Dataset</h3>
+ <div class="card"><h3>Dataset</h3>
   <p class="small">CSV dapat dibuka di Excel lalu <b>Save As .xlsx</b> untuk latihan konektor Excel. File SQL dipakai untuk membuat database contoh (SQLite/MySQL).</p>
   <div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧪 Simulator error umum: perbaiki pratinjau</h3>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Simulator error umum: perbaiki pratinjau</h3>
   <div id="tsim"></div></div>
- <div class="card"><h3>✅ Checklist verifikasi</h3><div id="chk"></div></div>
+ <div class="card"><h3>Checklist verifikasi</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Connect → To a file → Text file / Microsoft Excel; Connect → To a Server → MySQL/PostgreSQL. Pilih <b>Live</b> (setara DirectQuery) atau <b>Extract</b> (setara Import).</div>
 </section>
 
@@ -334,11 +334,11 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul><li>ETL: Extract (ambil), Transform (bersihkan/ubah), Load (muat ke tujuan).</li><li>OLTP dioptimalkan untuk transaksi harian; OLAP/DW untuk analisis dan agregasi.</li><li>Verifikasi hasil Load: bandingkan jumlah baris &amp; total kunci dengan sumber.</li><li>Import menyalin data ke model; DirectQuery membaca langsung dari sumber.</li></ul></div>
- <div class="card"><h3>📝 Tugas: Rekonsiliasi Hasil Load</h3><p>Muat 3 file (CSV penjualan, Excel pelanggan, tabel produk dari database). Buat laporan 1 halaman: jumlah baris sumber vs hasil load, masalah yang ditemui dan cara memperbaikinya.</p><h4>Kriteria penilaian</h4><ul><li>Pemahaman arsitektur aliran data BI (40%)</li><li>Load tanpa error dan hasil terverifikasi (40%)</li><li>Dokumentasi masalah &amp; solusi (20%)</li></ul>
+ <div class="card"><h3>Rangkuman</h3><ul><li>ETL: Extract (ambil), Transform (bersihkan/ubah), Load (muat ke tujuan).</li><li>OLTP dioptimalkan untuk transaksi harian; OLAP/DW untuk analisis dan agregasi.</li><li>Verifikasi hasil Load: bandingkan jumlah baris &amp; total kunci dengan sumber.</li><li>Import menyalin data ke model; DirectQuery membaca langsung dari sumber.</li></ul></div>
+ <div class="card"><h3>Tugas: Rekonsiliasi Hasil Load</h3><p>Muat 3 file (CSV penjualan, Excel pelanggan, tabel produk dari database). Buat laporan 1 halaman: jumlah baris sumber vs hasil load, masalah yang ditemui dan cara memperbaikinya.</p><h4>Kriteria penilaian</h4><ul><li>Pemahaman arsitektur aliran data BI (40%)</li><li>Load tanpa error dan hasil terverifikasi (40%)</li><li>Dokumentasi masalah &amp; solusi (20%)</li></ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>Bisnis Intelegent · Bisnis Digital · Dosen: Ibnu Amri Thaher · Pertemuan 2</footer>
@@ -729,7 +729,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -920,7 +920,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -957,7 +957,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -994,7 +994,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);
@@ -1120,10 +1120,10 @@ upd();
 /* Praktik */
 const star = BI.data.star(sales);
 const dl = $('#dl');
-dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('penjualan.csv', star.fakta) }, '⬇ penjualan.csv'),
-  h('button', { class: 'btn pri', onclick: () => BI.download('produk.csv', star.dimProduk) }, '⬇ produk.csv'),
-  h('button', { class: 'btn pri', onclick: () => BI.download('pelanggan.csv', star.dimPelanggan) }, '⬇ pelanggan.csv'),
-  h('button', { class: 'btn', onclick: () => BI.downloadText('toko_online.sql', BI.sqlDump({ pelanggan: star.dimPelanggan, produk: star.dimProduk })) }, '⬇ toko_online.sql'));
+dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('penjualan.csv', star.fakta) }, 'penjualan.csv'),
+  h('button', { class: 'btn pri', onclick: () => BI.download('produk.csv', star.dimProduk) }, 'produk.csv'),
+  h('button', { class: 'btn pri', onclick: () => BI.download('pelanggan.csv', star.dimPelanggan) }, 'pelanggan.csv'),
+  h('button', { class: 'btn', onclick: () => BI.downloadText('toko_online.sql', BI.sqlDump({ pelanggan: star.dimPelanggan, produk: star.dimProduk })) }, 'toko_online.sql'));
 BI.steps('#steps', [
   { t: 'Siapkan sumber', tm: '10\'', b: 'Simpan <code>penjualan.csv</code>. Buka <code>produk.csv</code> di Excel → Save As <code>produk.xlsx</code>. Jalankan <code>toko_online.sql</code> di SQLite/MySQL (atau minta dosen menyediakan server lab).' },
   { t: 'Extract CSV', tm: '20\'', b: '<b>Get data → Text/CSV</b> → pilih <code>penjualan.csv</code>. Periksa pratinjau: Delimiter = Comma, File Origin = 65001 UTF-8. Klik <b>Transform Data</b> (bukan Load) agar bisa memeriksa tipe data di Power Query.' },

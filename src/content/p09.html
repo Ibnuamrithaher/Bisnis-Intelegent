@@ -38,10 +38,10 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>Dashboard minggu 7/8 ditambah: ≥3 slicer (sinkron), pengaturan Edit interactions, 1 hierarki drill-down, 1 halaman drill-through, 2 tombol navigasi, 2 bookmark.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>⏱ Uji UX bersama teman (5 tugas)</h3><p class="small muted">Minta teman menyelesaikan tiap tugas tanpa bantuan. Tekan Mulai saat ia mulai dan Selesai saat ia menemukan jawabannya.</p><div id="ux"></div><div id="ux-out" class="callout"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Uji UX bersama teman (5 tugas)</h3><p class="small muted">Minta teman menyelesaikan tiap tugas tanpa bantuan. Tekan Mulai saat ia mulai dan Selesai saat ia menemukan jawabannya.</p><div id="ux"></div><div id="ux-out" class="callout"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Filter actions, Highlight actions, Go to Sheet actions (Dashboard → Actions); Hierarchy untuk drill; Parameter + tombol navigasi.</div>
 </section>
 
@@ -75,7 +75,7 @@ const MA = { y: '', w: '', cat: null, mode: 'highlight' };
 const maY = BI.select('#ma-ctl', 'Tahun', [['', '(semua)'], '2023', '2024'], '', v => { MA.y = v; ma(); });
 const maW = BI.select('#ma-ctl', 'Wilayah', [['', '(semua)'], ...BI.REGION], '', v => { MA.w = v; ma(); });
 $('#ma-ctl').append(h('button', { class: 'btn sm', onclick() { MA.y = ''; MA.w = ''; MA.cat = null; ma(); } }, '⟲ Reset'));
-[['Elektronik 2024', { y: '2024', w: '', cat: 'Elektronik' }], ['Jawa 2023', { y: '2023', w: 'Jawa', cat: null }], ['Semua Fashion', { y: '', w: '', cat: 'Fashion' }]].forEach(([t, s]) => $('#ma-bm').append(h('button', { class: 'btn sm', onclick() { Object.assign(MA, s); ma(); } }, '🔖 ' + t)));
+[['Elektronik 2024', { y: '2024', w: '', cat: 'Elektronik' }], ['Jawa 2023', { y: '2023', w: 'Jawa', cat: null }], ['Semua Fashion', { y: '', w: '', cat: 'Fashion' }]].forEach(([t, s]) => $('#ma-bm').append(h('button', { class: 'btn sm', onclick() { Object.assign(MA, s); ma(); } }, '' + t)));
 BI.seg('#ma-mode', [['highlight', 'Highlight'], ['filter', 'Filter'], ['none', 'Tidak ada']], 'highlight', v => { MA.mode = v; ma(); });
 function ma() {
   maY.value = MA.y; maW.value = MA.w;
@@ -124,7 +124,7 @@ $('#dt-back').onclick = () => { $('#dt-main').style.display = ''; $('#dt-detail'
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Siapkan', tm: '5\'', b: 'Buka dashboard sebelumnya. Duplikat halaman sebagai cadangan (klik kanan tab halaman → Duplicate page).' },
   { t: 'Slicer & sinkronisasi', tm: '20\'', b: 'Tambah slicer Tahun (Between/Tile), Wilayah (Dropdown), Kategori (Tile). <b>View → Sync slicers</b> agar berlaku di semua halaman.' },

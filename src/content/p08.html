@@ -34,7 +34,7 @@
  <h2>5. Simulasi realokasi anggaran</h2>
  <div class="card">
   <p>Model sederhana: hasil iklan mengalami <i>diminishing returns</i> (menambah 2× biaya tidak menggandakan hasil). Atur alokasi, atau tekan Optimalkan.</p>
-  <div class="row"><button class="btn pri" id="b-opt">⚙ Optimalkan</button><button class="btn" id="b-reset">⟲ Kembalikan</button></div>
+  <div class="row"><button class="btn pri" id="b-opt">Optimalkan</button><button class="btn" id="b-reset">⟲ Kembalikan</button></div>
   <div id="b-ctl" class="controls"></div>
   <div id="b-kpi"></div><div id="b-chart"></div>
  </div>
@@ -42,16 +42,16 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P08_MarketingDashboard.pbix</code>: kartu ROAS/ROI/CAC, funnel, bar ROI per saluran, scatter biaya vs pendapatan, rekomendasi realokasi.</div>
- <div class="card"><h3>⬇ Dataset</h3><p class="small">6 saluran × 12 bulan: Biaya, Impresi, Klik, Order, Pendapatan.</p><div id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Measure yang perlu dibuat</h3><pre><code>Biaya Iklan = SUM ( Marketing[Biaya] )
+ <div class="card"><h3>Dataset</h3><p class="small">6 saluran × 12 bulan: Biaya, Impresi, Klik, Order, Pendapatan.</p><div id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Measure yang perlu dibuat</h3><pre><code>Biaya Iklan = SUM ( Marketing[Biaya] )
 Pendapatan Iklan = SUM ( Marketing[Pendapatan] )
 CTR = DIVIDE ( SUM ( Marketing[Klik] ), SUM ( Marketing[Impresi] ) )
 CVR = DIVIDE ( SUM ( Marketing[Order] ), SUM ( Marketing[Klik] ) )
 CAC = DIVIDE ( [Biaya Iklan], SUM ( Marketing[Order] ) )
 ROAS = DIVIDE ( [Pendapatan Iklan], [Biaya Iklan] )
 ROI = DIVIDE ( [Pendapatan Iklan] * 0.4 - [Biaya Iklan], [Biaya Iklan] )   -- margin kotor 40%</code></pre></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Funnel: bar horizontal terurut (Sheet → Sort descending) dengan Table Calculation "Percent of Total" atau gunakan Dual-axis untuk mengukur konversi antar tahap.</div>
 </section>
 

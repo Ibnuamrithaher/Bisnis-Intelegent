@@ -297,7 +297,7 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
  <h2>3. Warna alert yang fungsional</h2>
  <div class="card">
   <p>±8% pria dan ±0,5% wanita mengalami buta warna merah-hijau. Warna <b>tidak boleh menjadi satu-satunya pembawa makna</b>. Tekan tombol untuk menyimulasikan tampilan hitam-putih.</p>
-  <div class="row"><button class="btn" id="cb-btn">🎨 Simulasi tanpa warna</button></div>
+  <div class="row"><button class="btn" id="cb-btn">Simulasi tanpa warna</button></div>
   <div class="grid2" id="cb-box"><div class="card"><h4>❌ Hanya warna</h4><div id="cb-bad"></div></div><div class="card"><h4>✅ Warna + ikon + teks</h4><div id="cb-good"></div></div></div>
  </div>
 
@@ -307,9 +307,9 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b><code>P11_OperationalDashboard.pbix</code>: KPI On-time %, status per kurir, daftar pengecualian berwarna, bullet stok vs minimum, dan catatan frekuensi refresh.</div>
- <div class="card"><h3>⬇ Dataset</h3><div id="dl" class="row"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧾 Measure operasional</h3><pre><code>Jumlah Pengiriman = COUNTROWS ( Logistik )
+ <div class="card"><h3>Dataset</h3><div id="dl" class="row"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Measure operasional</h3><pre><code>Jumlah Pengiriman = COUNTROWS ( Logistik )
 Terkirim = CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Terkirim" )
 Terkirim Tepat Waktu = CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Terkirim",
                          FILTER ( Logistik, Logistik[AktualHari] &lt;= Logistik[EstimasiHari] ) )
@@ -317,8 +317,8 @@ On-time % = DIVIDE ( [Terkirim Tepat Waktu], [Terkirim] )
 Error Rate = DIVIDE ( CALCULATE ( [Jumlah Pengiriman], Logistik[Status] = "Gagal/Retur" ), [Jumlah Pengiriman] )
 Rata-rata Hari Kirim = AVERAGE ( Logistik[AktualHari] )
 Status Stok = IF ( MIN ( Stok[Stok] ) &lt; MIN ( Stok[StokMinimum] ), "Kritis", "Aman" )</code></pre></div>
- <div class="card"><h3>🚦 Aturan warna</h3><div id="rule"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Aturan warna</h3><div id="rule"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Parameter ambang + calculated field status; Dashboard Actions untuk filter; Data Source → Refresh schedule di Tableau Cloud.</div>
 </section>
 
@@ -327,11 +327,11 @@ Status Stok = IF ( MIN ( Stok[Stok] ) &lt; MIN ( Stok[StokMinimum] ), "Kritis", 
 
 
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul><li>Dashboard operasional menjawab "apa yang perlu ditindak sekarang?"</li><li>Warna alert harus konsisten dan tidak bergantung warna saja (tambahkan ikon/teks).</li><li>Data operasional butuh refresh berkala; tampilkan waktu pembaruan terakhir.</li><li>Dashboard strategis: tren dan target; operasional: status dan pengecualian.</li></ul></div>
- <div class="card"><h3>📝 Tugas: Dashboard Pemantauan Pengiriman</h3><p>Buat dashboard operasional untuk koordinator gudang dengan alert on-time % dan stok kritis.</p><h4>Kriteria penilaian</h4><ul><li>Ketepatan pemetaan status pengiriman (50%)</li><li>Penggunaan warna fungsional (50%)</li></ul>
+ <div class="card"><h3>Rangkuman</h3><ul><li>Dashboard operasional menjawab "apa yang perlu ditindak sekarang?"</li><li>Warna alert harus konsisten dan tidak bergantung warna saja (tambahkan ikon/teks).</li><li>Data operasional butuh refresh berkala; tampilkan waktu pembaruan terakhir.</li><li>Dashboard strategis: tren dan target; operasional: status dan pengecualian.</li></ul></div>
+ <div class="card"><h3>Tugas: Dashboard Pemantauan Pengiriman</h3><p>Buat dashboard operasional untuk koordinator gudang dengan alert on-time % dan stok kritis.</p><h4>Kriteria penilaian</h4><ul><li>Ketepatan pemetaan status pengiriman (50%)</li><li>Penggunaan warna fungsional (50%)</li></ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>Bisnis Intelegent · Bisnis Digital · Dosen: Ibnu Amri Thaher · Pertemuan 11</footer>
@@ -722,7 +722,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -913,7 +913,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -950,7 +950,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -987,7 +987,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);
@@ -1095,7 +1095,7 @@ $('#stk-txt').innerHTML = `<b class="t">${crit.length} SKU di bawah stok minimum
 
 /* Praktik */
 const dl = $('#dl');
-dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('data_logistik.csv', LOG) }, '⬇ data_logistik.csv'), h('button', { class: 'btn pri', onclick: () => BI.download('data_stok.csv', STK) }, '⬇ data_stok.csv'));
+dl.append(h('button', { class: 'btn pri', onclick: () => BI.download('data_logistik.csv', LOG) }, 'data_logistik.csv'), h('button', { class: 'btn pri', onclick: () => BI.download('data_stok.csv', STK) }, 'data_stok.csv'));
 BI.steps('#steps', [
   { t: 'Muat data', tm: '5\'', b: 'Muat dua CSV. Pastikan AktualHari &amp; EstimasiHari Number.' },
   { t: 'Measure operasional', tm: '20\'', b: 'Buat measure pada kotak di atas; uji On-time % terhadap hitungan manual di Excel (filter Terkirim).' },

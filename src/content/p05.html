@@ -33,10 +33,10 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>8 measure di tabel khusus <i>_Measures</i> (folder tampilan), tervalidasi terhadap hitungan manual, + kartu &amp; matriks pengujian.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🧪 Uji formula (ketik DAX Anda)</h3><p class="small muted">Ketik formula untuk tiap tugas. Spasi dan huruf besar/kecil tidak dipermasalahkan.</p><div id="ft"></div><div id="ft-score" class="score"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Uji formula (ketik DAX Anda)</h3><p class="small muted">Ketik formula untuk tiap tugas. Spasi dan huruf besar/kecil tidak dipermasalahkan.</p><div id="ft"></div><div id="ft-score" class="score"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Analysis → Create Calculated Field: <code>SUM([Pendapatan])</code>, <code>SUM([Laba])/SUM([Pendapatan])</code>, LOD: <code>{ FIXED [Kategori] : SUM([Pendapatan]) }</code> (padanan CALCULATE+ALL).</div>
 </section>
 
@@ -117,7 +117,7 @@ $('#anat').append(h('div', { id: 'anat-d', class: 'callout', style: 'margin-top:
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Buka model minggu 4', tm: '5\'', b: 'Muat ulang 5 tabel dan relasi (atau pakai file P04). Home → Enter data → buat tabel kosong <code>_Measures</code> untuk menampung measure.' },
   { t: 'Measure agregasi', tm: '15\'', b: 'Total Penjualan, Jumlah Order, Rata-rata Order, Pelanggan Unik. Format: mata uang/angka.' },

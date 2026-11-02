@@ -303,10 +303,10 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>Dashboard minggu 7/8 ditambah: ≥3 slicer (sinkron), pengaturan Edit interactions, 1 hierarki drill-down, 1 halaman drill-through, 2 tombol navigasi, 2 bookmark.</div>
- <div class="card"><h3>⬇ Dataset</h3><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>⏱ Uji UX bersama teman (5 tugas)</h3><p class="small muted">Minta teman menyelesaikan tiap tugas tanpa bantuan. Tekan Mulai saat ia mulai dan Selesai saat ia menemukan jawabannya.</p><div id="ux"></div><div id="ux-out" class="callout"></div></div>
- <div class="card"><h3>✅ Checklist</h3><div id="chk"></div></div>
+ <div class="card"><h3>Dataset</h3><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Uji UX bersama teman (5 tugas)</h3><p class="small muted">Minta teman menyelesaikan tiap tugas tanpa bantuan. Tekan Mulai saat ia mulai dan Selesai saat ia menemukan jawabannya.</p><div id="ux"></div><div id="ux-out" class="callout"></div></div>
+ <div class="card"><h3>Checklist</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Padanan Tableau</b>Filter actions, Highlight actions, Go to Sheet actions (Dashboard → Actions); Hierarchy untuk drill; Parameter + tombol navigasi.</div>
 </section>
 
@@ -315,11 +315,11 @@ footer{text-align:center;color:var(--mut);font-size:.82rem;padding:24px 0 40px}
 
 
 <section class="pane" id="tugas">
- <div class="card"><h3>📌 Rangkuman</h3><ul><li>Slicer = filter yang terlihat; panel filter = filter tersembunyi.</li><li>Highlight menjaga konteks keseluruhan; filter menyaring.</li><li>Drill-down menyelam dalam hierarki; drill-through pindah halaman dengan konteks.</li><li>Interaktivitas harus mengurangi beban kognitif, bukan menambahnya.</li></ul></div>
- <div class="card"><h3>📝 Tugas: Upgrade Interaktivitas</h3><p>Tambahkan minimal 3 slicer, 1 hierarki drill-down, 1 halaman drill-through, dan 2 tombol navigasi pada dashboard sebelumnya. Rekam video 1 menit demo.</p><h4>Kriteria penilaian</h4><ul><li>Kestabilan interaktivitas (50%)</li><li>Efisiensi penggunaan ruang (50%)</li></ul>
+ <div class="card"><h3>Rangkuman</h3><ul><li>Slicer = filter yang terlihat; panel filter = filter tersembunyi.</li><li>Highlight menjaga konteks keseluruhan; filter menyaring.</li><li>Drill-down menyelam dalam hierarki; drill-through pindah halaman dengan konteks.</li><li>Interaktivitas harus mengurangi beban kognitif, bukan menambahnya.</li></ul></div>
+ <div class="card"><h3>Tugas: Upgrade Interaktivitas</h3><p>Tambahkan minimal 3 slicer, 1 hierarki drill-down, 1 halaman drill-through, dan 2 tombol navigasi pada dashboard sebelumnya. Rekam video 1 menit demo.</p><h4>Kriteria penilaian</h4><ul><li>Kestabilan interaktivitas (50%)</li><li>Efisiensi penggunaan ruang (50%)</li></ul>
   <p class="small muted">Bobot nilai mata kuliah: 40% tugas, 30% UTS, 30% UAS.</p></div>
- <div class="card"><h3>✍ Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
-  <div class="row"><button class="btn" onclick="window.print()">🖨 Cetak / simpan PDF halaman ini</button></div></div>
+ <div class="card"><h3>Catatan & refleksi pribadi</h3><p class="small muted">Tersimpan otomatis di browser Anda. Apa satu hal paling berguna hari ini? Apa yang masih membingungkan?</p><textarea id="notes" rows="5" placeholder="Tulis di sini…"></textarea>
+  <div class="row"><button class="btn" onclick="window.print()">Cetak / simpan PDF halaman ini</button></div></div>
 </section>
 </div></main>
 <footer>Bisnis Intelegent · Bisnis Digital · Dosen: Ibnu Amri Thaher · Pertemuan 9</footer>
@@ -710,7 +710,7 @@ const BI = (() => {
         box.classList.add('done'); done++;
         if (oi === it.a) ok++;
         opts.forEach((b, bi) => { if (bi === it.a) b.classList.add('ok'); else if (bi === oi) b.classList.add('no'); });
-        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? '🎉 sempurna' : ok >= items.length * 0.7 ? '👍 bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
+        score.textContent = done === items.length ? `Skor akhir: ${ok} / ${items.length} (${Math.round((ok / items.length) * 100)}%) ${ok === items.length ? 'sempurna' : ok >= items.length * 0.7 ? 'bagus' : '— ulangi materi teori lalu coba lagi'}` : `Terjawab ${done}/${items.length} · benar ${ok}`;
       } }, t));
       box.append(...opts, h('div', { class: 'why' }, '  ' + it.e));
       c.append(box);
@@ -901,7 +901,7 @@ const BI = (() => {
     const a = h('a', { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
     toast('Mengunduh ' + name);
   }
-  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '⬇ ' + label + ' (' + name + ')')); }
+  function dlButton(c, label, name, genFn) { el(c).append(h('button', { class: 'btn pri', onclick: () => download(name, genFn()) }, '' + label + ' (' + name + ')')); }
 
 
   function steps(c, items) {
@@ -938,7 +938,7 @@ const BI = (() => {
     sets.forEach((s, si) => {
       const lvl = { D: ['Dasar', 'ok'], M: ['Menengah', 'warn'], T: ['Tantangan', 'bad'] }[s.lvl || 'D'];
       const box = h('div', { class: 'card' }, h('div', { class: 'row' }, h('h3', { style: 'margin:0' }, `Set ${String.fromCharCode(65 + si)} · ${s.title}`), h('span', { class: 'chip ' + lvl[1] }, lvl[0]), s.mnt ? h('span', { class: 'chip' }, '≈ ' + s.mnt + ' menit') : null), h('p', { html: s.desc }));
-      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '⬇ ' + f.name))));
+      if (s.files && s.files.length) box.append(h('div', { class: 'row' }, s.files.map(f => h('button', { class: 'btn pri sm', onclick: () => (f.text ? downloadText(f.name, f.get()) : download(f.name, f.get())) }, '' + f.name))));
       s.tasks.forEach((t, i) => {
         const q = h('div', { class: 'q' }, h('b', { html: `${i + 1}. ${t.q}` }));
         const fb = h('div', { class: 'small', style: 'margin-top:6px' });
@@ -975,7 +975,7 @@ const BI = (() => {
           q.append(...bs);
         } else {
           const ck = (t.rubric || ['Selesai dikerjakan']).map(r => h('label', { class: 'check' }, h('input', { type: 'checkbox' }), h('span', { html: r })));
-          q.append(h('div', { class: 'chip warn' }, '🛠 Kerjakan'), ...ck);
+          q.append(h('div', { class: 'chip warn' }, 'Kerjakan'), ...ck);
         }
         q.append(fb, why());
         box.append(q);
@@ -1039,7 +1039,7 @@ const MA = { y: '', w: '', cat: null, mode: 'highlight' };
 const maY = BI.select('#ma-ctl', 'Tahun', [['', '(semua)'], '2023', '2024'], '', v => { MA.y = v; ma(); });
 const maW = BI.select('#ma-ctl', 'Wilayah', [['', '(semua)'], ...BI.REGION], '', v => { MA.w = v; ma(); });
 $('#ma-ctl').append(h('button', { class: 'btn sm', onclick() { MA.y = ''; MA.w = ''; MA.cat = null; ma(); } }, '⟲ Reset'));
-[['Elektronik 2024', { y: '2024', w: '', cat: 'Elektronik' }], ['Jawa 2023', { y: '2023', w: 'Jawa', cat: null }], ['Semua Fashion', { y: '', w: '', cat: 'Fashion' }]].forEach(([t, s]) => $('#ma-bm').append(h('button', { class: 'btn sm', onclick() { Object.assign(MA, s); ma(); } }, '🔖 ' + t)));
+[['Elektronik 2024', { y: '2024', w: '', cat: 'Elektronik' }], ['Jawa 2023', { y: '2023', w: 'Jawa', cat: null }], ['Semua Fashion', { y: '', w: '', cat: 'Fashion' }]].forEach(([t, s]) => $('#ma-bm').append(h('button', { class: 'btn sm', onclick() { Object.assign(MA, s); ma(); } }, '' + t)));
 BI.seg('#ma-mode', [['highlight', 'Highlight'], ['filter', 'Filter'], ['none', 'Tidak ada']], 'highlight', v => { MA.mode = v; ma(); });
 function ma() {
   maY.value = MA.y; maW.value = MA.w;
@@ -1088,7 +1088,7 @@ $('#dt-back').onclick = () => { $('#dt-main').style.display = ''; $('#dt-detail'
 
 /* Praktik */
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_wilayah.csv', star.dimWilayah], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
 BI.steps('#steps', [
   { t: 'Siapkan', tm: '5\'', b: 'Buka dashboard sebelumnya. Duplikat halaman sebagai cadangan (klik kanan tab halaman → Duplicate page).' },
   { t: 'Slicer & sinkronisasi', tm: '20\'', b: 'Tambah slicer Tahun (Between/Tile), Wilayah (Dropdown), Kategori (Tile). <b>View → Sync slicers</b> agar berlaku di semua halaman.' },

@@ -23,7 +23,7 @@
   <p>Isi kanvas; sistem menyusun alur presentasi 7 menit dan memeriksa kualitas <i>Big Idea</i> Anda (satu kalimat: pandangan + alasan + implikasi).</p>
   <div class="grid2">
    <div id="cv"></div>
-   <div><div id="cv-bi" class="callout"></div><div id="cv-bar"></div><pre style="white-space:pre-wrap" id="cv-out"></pre><div class="row"><button class="btn" id="cv-dl">⬇ Unduh skrip (.txt)</button></div></div>
+   <div><div id="cv-bi" class="callout"></div><div id="cv-bar"></div><pre style="white-space:pre-wrap" id="cv-out"></pre><div class="row"><button class="btn" id="cv-dl">Unduh skrip (.txt)</button></div></div>
   </div>
  </div>
 
@@ -38,11 +38,11 @@
 
 <section class="pane" id="praktik">
  <div class="callout ok"><b class="t">Output</b>Dashboard final proyek kelompok + skrip presentasi 7 menit + lembar perbaikan hasil peer review. Dikumpulkan sebelum UAS (Minggu 16).</div>
- <div class="card"><h3>📦 Dataset latihan komprehensif</h3><p class="small">Gunakan dataset industri Anda sendiri untuk UAS. Untuk latihan cepat, pakai set berikut.</p><div class="row" id="dl"></div></div>
- <div class="card"><h3>📋 Langkah kerja</h3><div id="steps"></div></div>
- <div class="card"><h3>🤝 Peer review (rubrik)</h3><p class="small muted">Nilai dashboard kelompok lain. Hasil menjadi umpan balik tertulis.</p><div id="pr"></div><div id="pr-out" class="callout"></div><div class="row"><button class="btn" id="pr-cp">📋 Salin umpan balik</button></div></div>
- <div class="card"><h3>🧮 Simulasi rubrik UAS (30% nilai akhir)</h3><div id="rb"></div><div id="rb-out" class="score"></div></div>
- <div class="card"><h3>✅ Checklist finalisasi</h3><div id="chk"></div></div>
+ <div class="card"><h3>Dataset latihan komprehensif</h3><p class="small">Gunakan dataset industri Anda sendiri untuk UAS. Untuk latihan cepat, pakai set berikut.</p><div class="row" id="dl"></div></div>
+ <div class="card"><h3>Langkah kerja</h3><div id="steps"></div></div>
+ <div class="card"><h3>Peer review (rubrik)</h3><p class="small muted">Nilai dashboard kelompok lain. Hasil menjadi umpan balik tertulis.</p><div id="pr"></div><div id="pr-out" class="callout"></div><div class="row"><button class="btn" id="pr-cp">Salin umpan balik</button></div></div>
+ <div class="card"><h3>Simulasi rubrik UAS (30% nilai akhir)</h3><div id="rb"></div><div id="rb-out" class="score"></div></div>
+ <div class="card"><h3>Checklist finalisasi</h3><div id="chk"></div></div>
  <div class="callout"><b class="t">Tips UAS</b>Presentasi 7 menit + tanya jawab. Siapkan: (1) dashboard terbuka dan dicoba dua kali, (2) cadangan screenshot, (3) satu kalimat Big Idea, (4) jawaban 3 pertanyaan sulit: asal data, definisi metrik, keterbatasan.</div>
 </section>
 
@@ -111,8 +111,8 @@ $('#fs-ck').onclick = () => { $('#fs-res').style.display = ''; $('#fs-res').inne
 /* Praktik */
 const star = BI.data.star(BI.data.sales(900, 7));
 const dl = $('#dl');
-[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_wilayah.csv', star.dimWilayah], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '⬇ ' + n)));
-dl.append(h('button', { class: 'btn', onclick: () => BI.download('data_marketing.csv', BI.data.marketing(11)) }, '⬇ data_marketing.csv'), h('button', { class: 'btn', onclick: () => BI.download('data_hr.csv', BI.data.hr(320, 5)) }, '⬇ data_hr.csv'), h('button', { class: 'btn', onclick: () => BI.download('data_logistik.csv', BI.data.logistics(500, 3)) }, '⬇ data_logistik.csv'));
+[['penjualan_fakta.csv', star.fakta], ['dim_produk.csv', star.dimProduk], ['dim_pelanggan.csv', star.dimPelanggan], ['dim_wilayah.csv', star.dimWilayah], ['dim_tanggal.csv', star.dimTanggal]].forEach(([n, r]) => dl.append(h('button', { class: 'btn pri', onclick: () => BI.download(n, r) }, '' + n)));
+dl.append(h('button', { class: 'btn', onclick: () => BI.download('data_marketing.csv', BI.data.marketing(11)) }, 'data_marketing.csv'), h('button', { class: 'btn', onclick: () => BI.download('data_hr.csv', BI.data.hr(320, 5)) }, 'data_hr.csv'), h('button', { class: 'btn', onclick: () => BI.download('data_logistik.csv', BI.data.logistics(500, 3)) }, 'data_logistik.csv'));
 BI.steps('#steps', [
   { t: 'Audit end-to-end', tm: '5\'', b: 'Telusuri: sumber → Power Query → model → measure → visual. Pastikan setiap angka bisa ditelusuri ke sumber.' },
   { t: 'Finalisasi model &amp; measure', tm: '25\'', b: 'Rapikan nama tabel/kolom, sembunyikan kolom teknis, kelompokkan measure di tabel <i>_Measures</i> dengan display folder, beri deskripsi.' },
