@@ -84,6 +84,7 @@ input[type=range]{accent-color:var(--acc);vertical-align:middle}
 .kpi svg{position:absolute;right:8px;bottom:8px;width:70px;height:28px}
 .tbl{width:100%;border-collapse:collapse;font-size:.86rem}
 .tbl th,.tbl td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.tbl.wrap td{white-space:normal;vertical-align:top}
 .tbl th{background:var(--soft);position:sticky;top:0;cursor:default;user-select:none}
 .tbl th.sortable{cursor:pointer}.tbl th.sortable:hover{color:var(--acc)}
 .tbl td.r,.tbl th.r{text-align:right}

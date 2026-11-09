@@ -110,6 +110,8 @@ const BI = (() => {
       if (o.target) mx = Math.max(mx, o.target);
       if (o.yMin != null) mn = o.yMin;
       const R = range(mn, mx), pw = W - m.l - m.r, ph = H - m.t - m.b;
+      if (o.yMin != null) R.min = o.yMin; // sumbu terpotong harus tepat di yMin, bukan dibulatkan ke kelipatan step
+      const clamp = v => Math.min(R.max, Math.max(R.min, v)), base = clamp(0); // batang berpangkal di dasar area plot
       const y = v => m.t + ph - ((v - R.min) / (R.max - R.min)) * ph;
       const svg = frame(o, W, H); holder.append(svg);
       const g = S('g', { class: 'grid' }, svg);
@@ -124,7 +126,7 @@ const BI = (() => {
         vis.forEach((s, j) => {
           const v = s.data[i] || 0; let ya, yb, xx = x0 + (stacked ? 0 : j * bw);
           if (stacked) { if (v >= 0) { ya = y(pos + v); yb = y(pos); pos += v; } else { ya = y(neg); yb = y(neg + v); neg += v; } }
-          else { ya = y(Math.max(v, 0)); yb = y(Math.min(v, 0)); }
+          else { const cv = clamp(v); ya = y(Math.max(cv, base)); yb = y(Math.min(cv, base)); }
           const dim = (o.highlight != null && o.highlight !== i);
           const color = o.colorBy ? o.colorBy(i, v, lab) : s.color;
           const r = S('rect', { x: xx, y: ya, width: Math.max(1, bw - (stacked ? 0 : 2)), height: Math.max(0, yb - ya), rx: 3, fill: color, class: dim ? 'dim' : '', style: o.onClick ? 'cursor:pointer' : '' }, svg);
