@@ -1,0 +1,21 @@
+Kode_SKU,Nama_Produk,Kategori,Harga,Satuan,Pemasok,Aktif
+SKU-001,Kaos Polos Katun,Atasan,,pcs,PT Karya Mandiri,Ya
+SKU-002,Kemeja Flanel,Atasan,145000,pcs,UD Berkah Abadi,Ya
+SKU-003,Blouse Satin,Atasan,125000,pcs,CV Maju Bersama,Ya
+SKU-004,Hoodie Fleece,Atasan,185000,pcs,UD Berkah Abadi,Ya
+SKU-005,Kemeja Batik Modern,Atasan,160000,pcs,CV Maju Bersama,Ya
+SKU-006,Celana Jeans Slim,Bawahan,210000,pcs,PT Karya Mandiri,Ya
+SKU-007,Celana Chino,Bawahan,175000,pcs,UD Berkah Abadi,Ya
+SKU-008,Rok Plisket,Bawahan,115000,pcs,CV Sumber Jaya,Ya
+SKU-009,Celana Kulot,Bawahan,130000,pcs,PT Nusa Mitra,Ya
+SKU-010,Celana Training,Bawahan,,pcs,PT Karya Mandiri,Ya
+SKU-011,Sneakers Putih,Sepatu,325000,pasang,CV Maju Bersama,Ya
+SKU-012,Sandal Jepit Premium,Sepatu,89000,pasang,CV Maju Bersama,Ya
+SKU-013,Sepatu Lari Ringan,Sepatu,395000,pasang,PT Karya Mandiri,Ya
+SKU-014,Flatshoes Wanita,Sepatu,155000,pasang,PT Nusa Mitra,Ya
+SKU-015,Sepatu Kulit Formal,Sepatu,450000,pasang,CV Sumber Jaya,Ya
+SKU-016,Topi Baseball,Aksesori,55000,pcs,CV Maju Bersama,Ya
+SKU-017,Tas Selempang,Aksesori,135000,pcs,PT Nusa Mitra,Ya
+SKU-018,Ikat Pinggang Kulit,Aksesori,85000,pcs,CV Sumber Jaya,Ya
+SKU-019,Kacamata Hitam,Aksesori,99000,pcs,PT Nusa Mitra,Ya
+SKU-020,Dompet Lipat,Aksesori,75000,pcs,PT Nusa Mitra,Ya

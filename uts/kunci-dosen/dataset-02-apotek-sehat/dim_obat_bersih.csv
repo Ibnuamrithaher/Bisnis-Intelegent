@@ -1,0 +1,21 @@
+Kode_Obat,Nama_Obat,Kategori,Harga,Satuan,Pemasok,Aktif
+OBT-001,Vitamin C 500mg,Vitamin,24000,strip,PT Karya Mandiri,Ya
+OBT-002,Vitamin D3 1000IU,Vitamin,68000,botol,PT Karya Mandiri,Ya
+OBT-003,Multivitamin Dewasa,Vitamin,85000,botol,CV Sumber Jaya,Ya
+OBT-004,Zinc 20mg,Vitamin,32000,strip,CV Sumber Jaya,Ya
+OBT-005,Kalsium Tulang,Vitamin,,botol,UD Berkah Abadi,Ya
+OBT-006,Parasetamol 500mg,Obat Bebas,,strip,UD Berkah Abadi,Tidak
+OBT-007,Antasida Sirup,Obat Bebas,18000,botol,PT Nusa Mitra,Ya
+OBT-008,Obat Batuk Herbal,Obat Bebas,21000,botol,CV Maju Bersama,Ya
+OBT-009,Salep Luka,Obat Bebas,17500,tube,CV Sumber Jaya,Ya
+OBT-010,Tetes Mata,Obat Bebas,23000,botol,PT Nusa Mitra,Ya
+OBT-011,Masker Medis 50s,Alat Kesehatan,35000,box,UD Berkah Abadi,Ya
+OBT-012,Termometer Digital,Alat Kesehatan,45000,pcs,PT Nusa Mitra,Ya
+OBT-013,Tensimeter Digital,Alat Kesehatan,320000,pcs,CV Maju Bersama,Ya
+OBT-014,Hand Sanitizer 100ml,Alat Kesehatan,15000,botol,PT Nusa Mitra,Ya
+OBT-015,Plester Luka 10s,Alat Kesehatan,8500,box,PT Nusa Mitra,Ya
+OBT-016,Sabun Antiseptik,Perawatan,22000,botol,UD Berkah Abadi,Ya
+OBT-017,Sunscreen SPF 50,Perawatan,76000,tube,UD Berkah Abadi,Ya
+OBT-018,Pelembap Wajah,Perawatan,58000,tube,CV Maju Bersama,Ya
+OBT-019,Sampo Anti Ketombe,Perawatan,31000,botol,UD Berkah Abadi,Ya
+OBT-020,Minyak Kayu Putih,Perawatan,19000,botol,UD Berkah Abadi,Ya

@@ -1,0 +1,21 @@
+Kode_Layanan,Nama_Layanan,Kategori,Harga,Satuan,Pemasok,Aktif
+LYN-001,Reguler Dalam Kota,Reguler,9000,paket,UD Berkah Abadi,Ya
+LYN-002,Reguler Antar Kota,Reguler,14000,paket,CV Maju Bersama,Ya
+LYN-003,Reguler Antar Pulau,Reguler,28000,paket,CV Sumber Jaya,Ya
+LYN-004,Reguler Hemat,Reguler,8000,paket,PT Nusa Mitra,Ya
+LYN-005,Reguler Sehari Tiba,Reguler,16000,paket,UD Berkah Abadi,Tidak
+LYN-006,Ekspres Same Day,Ekspres,35000,paket,CV Sumber Jaya,Ya
+LYN-007,Ekspres Next Day,Ekspres,,paket,CV Maju Bersama,Ya
+LYN-008,Ekspres Pagi,Ekspres,30000,paket,PT Karya Mandiri,Ya
+LYN-009,Ekspres Antar Pulau,Ekspres,48000,paket,PT Karya Mandiri,Ya
+LYN-010,Ekspres Dokumen,Ekspres,18000,paket,PT Nusa Mitra,Ya
+LYN-011,Kargo Darat per 10kg,Kargo,45000,koli,PT Nusa Mitra,Ya
+LYN-012,Kargo Udara per 10kg,Kargo,125000,koli,PT Karya Mandiri,Ya
+LYN-013,Kargo Laut per 10kg,Kargo,,koli,CV Maju Bersama,Ya
+LYN-014,Kargo Pindahan Rumah,Kargo,350000,koli,UD Berkah Abadi,Ya
+LYN-015,Kargo Barang Besar,Kargo,220000,koli,PT Nusa Mitra,Ya
+LYN-016,Kurir Instan 3 Jam,Instan,26000,paket,CV Sumber Jaya,Ya
+LYN-017,Kurir Motor Kota,Instan,20000,paket,CV Sumber Jaya,Tidak
+LYN-018,Kurir Mobil Box,Instan,75000,paket,CV Maju Bersama,Ya
+LYN-019,Kurir Makanan Beku,Instan,38000,paket,CV Sumber Jaya,Ya
+LYN-020,Kurir Malam Hari,Instan,32000,paket,CV Sumber Jaya,Ya

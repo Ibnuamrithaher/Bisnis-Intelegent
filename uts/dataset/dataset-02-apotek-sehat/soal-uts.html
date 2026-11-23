@@ -1,0 +1,126 @@
+<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>UTS Bisnis Intelegent - Paket 02 Apotek Sehat Sentosa</title><style>body{font:15px/1.55 Segoe UI,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#1b1f24}h1{border-bottom:3px solid #0b5a7a;padding-bottom:6px}h2{color:#0b5a7a;margin-top:28px}h3{margin-top:20px}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #c9d1d9;padding:6px 9px;text-align:left;vertical-align:top}th{background:#0b5a7a;color:#fff}table.kv td:first-child{background:#eef3f6;font-weight:600;width:22%}code{background:#eef3f6;padding:1px 5px;border-radius:3px;font-size:.92em}hr{border:0;border-top:1px solid #c9d1d9;margin:24px 0}@media print{body{max-width:none;margin:0}h2{page-break-after:avoid}table{page-break-inside:avoid}}</style></head><body><h1>UJIAN TENGAH SEMESTER: BISNIS INTELEGENT</h1>
+<p><strong>Paket 02: Apotek Sehat Sentosa</strong></p>
+<table class='kv'><tr><td>Mata kuliah</td><td>Bisnis Intelegent (materi Pertemuan 1 sampai 7)</td></tr><tr><td>Waktu</td><td>120 menit</td></tr><tr><td>Sifat</td><td>Praktik, kerja berpasangan, buka catatan</td></tr><tr><td>Perangkat</td><td>Power BI Desktop, MySQL/MariaDB (atau berkas CSV cadangan), draw.io atau alat gambar lain</td></tr><tr><td>Anggota</td><td>Mahasiswa 1 (Varian A): ............................ NIM: ............ <br> Mahasiswa 2 (Varian B): ............................ NIM: ............</td></tr></table>
+<p>Setiap pasangan mendapat <strong>dataset yang berbeda</strong> dari pasangan lain. Angka hasil Anda tidak akan sama dengan pasangan lain, jadi jangan menyalin. Bagian A, B, C dikerjakan berdua. Bagian D dijawab perorangan sesuai varian masing-masing. Seluruh jawaban, termasuk Bagian D kedua mahasiswa, dikumpulkan dalam <strong>satu laporan PDF per pasangan</strong>.</p>
+<hr>
+<h2>Skenario</h2>
+<p>Apotek Sehat Sentosa memiliki 5 cabang. Pemilik ingin mengetahui kategori produk dan cabang yang paling menguntungkan serta pola pembelian pasien.</p>
+<p>Data mentah datang dari tiga sumber yang berbeda dan belum bersih. Tugas Anda: <strong>mengekstrak, mentransformasi, dan memuat</strong> data tersebut, lalu <strong>merancang dan membangun star schema</strong> yang siap dipakai untuk analisis. Periode data: <strong>Februari 2025 sampai Juli 2025</strong>.</p>
+<h2>Berkas yang diberikan</h2>
+<table><thead><tr><th>Berkas</th><th>Sumber</th><th>Isi</th></tr></thead><tbody><tr><td><code>pasien_apotek_sehat.csv</code></td><td>CSV</td><td>Master pasien (kolom <code>ID_Pasien</code>, Nama, Kota, Email, No_HP, Tanggal_Daftar, Segmen)</td></tr><tr><td><code>obat_apotek_apotek_sehat.xlsx</code></td><td>Excel</td><td>Sheet <code>Obat</code> (master obat, judul dan header tidak di baris 1), sheet <code>Apotek</code> (master apotek), sheet <code>Catatan</code> (bukan data)</td></tr><tr><td><code>penjualan_apotek_sehat.sql</code></td><td>Database MySQL</td><td>Tabel <code>penjualan</code> pada database <code>apotek_sehat</code>: tabel transaksi. Kolom: ID_Transaksi, Tanggal_Transaksi, ID_Pasien, Kode_Obat, Kode_Apotek, Qty, Harga_Satuan, Diskon, Metode_Bayar, Status</td></tr><tr><td><code>penjualan_apotek_sehat_cadangan.csv</code></td><td>CSV</td><td>Salinan isi tabel <code>penjualan</code>, <strong>hanya dipakai bila MySQL tidak bisa dijalankan</strong> (nilai Extract dikurangi, lihat A1)</td></tr></tbody></table>
+<p>Hubungan antar data: <code>penjualan.ID_Pasien</code> ke master pasien, <code>penjualan.Kode_Obat</code> ke master obat, <code>penjualan.Kode_Apotek</code> ke master apotek. Kunci di tabel transaksi sengaja kotor sehingga relasi gagal sebelum dibersihkan.</p>
+<hr>
+<h2>BAGIAN A. ETL (35 poin)</h2>
+<h3>A1. Extract (8 poin)</h3>
+<ol>
+<li>Muat ketiga sumber ke Power BI Desktop: CSV, sheet Excel <code>Obat</code> dan <code>Apotek</code>, serta tabel <code>penjualan</code> dari MySQL (jalankan <code>penjualan_apotek_sehat.sql</code> lebih dulu). Sheet <code>Catatan</code> tidak dimuat.</li>
+<li>Catat jumlah baris <strong>sesuai sumber</strong> sebelum dibersihkan pada tabel berikut.</li>
+</ol>
+<table><thead><tr><th>Tabel</th><th>Baris di sumber</th><th>Catatan</th></tr></thead><tbody><tr><td>Pasien</td><td></td><td></td></tr><tr><td>Obat (data saja, tanpa judul/total)</td><td></td><td></td></tr><tr><td>Apotek</td><td></td><td></td></tr><tr><td>penjualan</td><td></td><td>harus sama dengan <code>SELECT COUNT(*)</code></td></tr></tbody></table>
+<p>Jika memakai berkas CSV cadangan, nilai A1 poin 1 dikurangi 2 poin dan tuliskan alasannya.</p>
+<h3>A2. Transform (20 poin)</h3>
+<p>Terapkan <strong>semua aturan baku</strong> berikut di Power Query. Setiap langkah harus tercatat di Applied Steps dan diberi nama yang jelas. Aturan ini sama untuk seluruh paket supaya hasil bisa dinilai adil.</p>
+<p><strong>Tabel Pasien</strong></p>
+<ul>
+<li>T1. Hapus duplikat persis; hapus spasi di tepi dan spasi ganda di dalam teks.</li>
+<li>T2. <code>Nama</code>: Capitalize Each Word. <code>Kota</code>: rapikan huruf dan spasi, alias <code>Jkt</code> dan <code>DKI Jakarta</code> menjadi <code>Jakarta</code>, <code>Sby</code> menjadi <code>Surabaya</code>, <code>Bdg</code> menjadi <code>Bandung</code>.</li>
+<li>T3. <code>Email</code>: huruf kecil. Email tanpa tanda <code>@</code> dianggap tidak valid, ganti menjadi null.</li>
+<li>T4. <code>No_HP</code>: seragamkan menjadi 12 digit berawalan <code>08</code> tanpa tanda baca (<code>+62</code>, <code>62</code>, atau tanpa angka 0 di depan diperbaiki). Kosong dibiarkan null.</li>
+<li>T5. <code>Tanggal_Daftar</code>: ubah ke tipe Date. Ada format <code>yyyy-MM-dd</code>, <code>dd/MM/yyyy</code>, <code>dd-MM-yyyy</code>, dan teks Indonesia seperti <code>21 Juni 2024</code>. Hati-hati dengan locale.</li>
+<li>T6. <code>Segmen</code>: rapikan huruf; kosong diisi <code>Tidak Diketahui</code>.</li>
+</ul>
+<p><strong>Tabel Obat dan Apotek</strong></p>
+<ul>
+<li>T7. Obat: buang baris judul, baris kosong, dan baris <code>Total</code>; naikkan header. Kode: hapus spasi dan huruf besar. Kategori dan nama: rapikan huruf dan spasi. Harga bertuliskan <code>Rp 12.500</code> diubah menjadi angka; harga yang kosong dibiarkan null. Stok negatif, kosong, atau bertuliskan <code>habis</code> diganti null. <code>Aktif</code>: seragamkan menjadi <code>Ya</code> atau <code>Tidak</code> (Y, ya, TRUE, Aktif sama dengan Ya; N, tidak, FALSE, Nonaktif sama dengan Tidak). Hapus duplikat.</li>
+<li>T8. Apotek: kode huruf besar tanpa spasi tepi, kota dirapikan, duplikat dihapus.</li>
+</ul>
+<p><strong>Tabel penjualan</strong></p>
+<ul>
+<li>T9. Hapus baris dengan <code>ID_Transaksi</code> yang sama (duplikat persis).</li>
+<li>T10. Seragamkan semua kunci (<code>ID_Pasien</code>, <code>Kode_Obat</code>, <code>Kode_Apotek</code>): hapus spasi tepi, huruf besar, dan kembalikan tanda hubung bila hilang (contoh <code>psn0045</code> menjadi <code>PSN-0045</code>).</li>
+<li>T11. <code>Tanggal_Transaksi</code> menjadi tipe Date (tiga format campur).</li>
+<li>T12. <code>Qty</code> kosong, nol, negatif, atau lebih dari 50 dianggap tidak valid: <strong>baris tetap disimpan</strong>, tetapi beri kolom <code>Status_Kualitas</code> bernilai <code>OK</code> atau <code>Qty Tidak Valid</code>.</li>
+<li>T13. <code>Harga_Satuan</code> yang null diisi dari harga obat pada master (setelah dibersihkan).</li>
+<li>T14. <code>Diskon</code> (<code>10%</code>, <code>10 %</code>, <code>10</code>, kosong) menjadi angka persen; kosong dihitung 0.</li>
+<li>T15. <code>Metode_Bayar</code> diseragamkan menjadi 4 nilai: <code>Transfer Bank</code>, <code>Tunai</code>, <code>E-Wallet</code>, <code>Kartu Kredit</code>.</li>
+<li>T16. <code>Status</code>: rapikan huruf (Selesai, Diproses, Batal); null menjadi <code>Tidak Diketahui</code>.</li>
+<li>T17. Tambah kolom <code>Nilai_Bersih = Qty x Harga_Satuan x (1 - Diskon)</code>.</li>
+<li>T18. Kunci pada transaksi yang <strong>tidak punya pasangan</strong> di master (pasien dan obat tidak terdaftar) <strong>tidak boleh dihapus</strong>. Tambahkan baris <code>Tidak Terdaftar</code> dengan kunci <code>UNK</code> pada dimensi terkait dan arahkan kuncinya ke sana.</li>
+</ul>
+<p>Selain membersihkan data, buat <strong>Tabel A2 (tabel temuan masalah)</strong> di laporan. Catat minimal 10 masalah kualitas data yang berbeda, dengan kolom: jenis masalah, kolom yang terdampak, jumlah baris terdampak, dan langkah perbaikan yang Anda lakukan.</p>
+<h3>A3. Load (7 poin)</h3>
+<ol>
+<li>Muat hasil akhir ke model: tabel dimensi bersih dan satu tabel fakta bersih. Tabel mentah/staging <strong>tidak dimuat</strong> ke model (nonaktifkan *Enable load*).</li>
+<li>Lengkapi <strong>tabel rekonsiliasi</strong> berikut dan jelaskan selisihnya.</li>
+</ol>
+<table><thead><tr><th>Tabel</th><th>Baris sumber (A1)</th><th>Baris setelah bersih</th><th>Selisih dan penyebab</th></tr></thead><tbody><tr><td>Pasien</td><td></td><td></td><td></td></tr><tr><td>Obat</td><td></td><td></td><td></td></tr><tr><td>Apotek</td><td></td><td></td><td></td></tr><tr><td>penjualan</td><td></td><td></td><td></td></tr></tbody></table>
+<hr>
+<h2>BAGIAN B. STAR SCHEMA (30 poin)</h2>
+<h3>B1. Rancangan di atas kertas (10 poin)</h3>
+<p>Sebelum membangun model di Power BI, rancang dulu di laporan Anda. Ada tiga bagian.</p>
+<p><strong>1. Proses bisnis dan grain (3 poin).</strong> Jawab dengan dua kalimat pendek:</p>
+<ul>
+<li>*Proses bisnis*: kejadian apa yang dicatat oleh tabel fakta <code>Fact_Penjualan</code>?</li>
+<li>*Grain*: satu baris di tabel fakta mewakili apa? (Contoh bentuk jawaban: &quot;satu baris = satu ...&quot;)</li>
+</ul>
+<p><strong>2. Klasifikasi kolom (5 poin).</strong> Buat tabel berisi <strong>semua kolom</strong> dari tabel transaksi, ditambah kolom <code>Nilai_Bersih</code> yang Anda hitung sendiri. Golongkan tiap kolom ke salah satu jenis berikut:</p>
+<ul>
+<li><strong>Kunci</strong>: pengenal yang menghubungkan fakta dengan dimensi.</li>
+<li><strong>Ukuran (measure)</strong>: angka yang bisa dijumlahkan atau dirata-ratakan.</li>
+<li><strong>Atribut dimensi</strong>: keterangan untuk mengelompokkan atau memfilter, seperti kota, kategori, nama bulan.</li>
+</ul>
+<p>Tulis juga tabel asalnya: <code>Fact_Penjualan</code> atau salah satu dimensi. Contoh baris yang sudah terisi (lengkapi sisanya):</p>
+<table><thead><tr><th>Kolom</th><th>Jenis</th><th>Tabel asal</th></tr></thead><tbody><tr><td><code>ID_Transaksi</code></td><td>Kunci</td><td><code>Fact_Penjualan</code></td></tr><tr><td><code>ID_Pasien</code></td><td>Kunci</td><td><code>Fact_Penjualan</code> dan <code>Dim_Pasien</code></td></tr><tr><td><code>Qty</code></td><td>Ukuran</td><td><code>Fact_Penjualan</code></td></tr><tr><td><code>Nilai_Bersih</code></td><td>Ukuran (hasil hitung: Qty x Harga_Satuan x (1 - Diskon))</td><td><code>Fact_Penjualan</code></td></tr><tr><td><code>Kota</code></td><td>Atribut dimensi</td><td><code>Dim_Pasien</code></td></tr><tr><td>...</td><td>...</td><td>...</td></tr></tbody></table>
+<p><strong>3. Dimensi dan kunci utamanya (2 poin).</strong> Tulis keempat tabel dimensi yang akan Anda bangun, dan untuk masing-masing sebutkan <strong>kolom kunci utamanya</strong> (kolom yang nilainya unik dan tidak ada yang sama). Isi tabel berikut:</p>
+<table><thead><tr><th>Tabel dimensi</th><th>Kunci utama</th></tr></thead><tbody><tr><td><code>Dim_Pasien</code></td><td>...</td></tr><tr><td><code>Dim_Obat</code></td><td>...</td></tr><tr><td><code>Dim_Apotek</code></td><td>...</td></tr><tr><td><code>Dim_Tanggal</code></td><td>...</td></tr></tbody></table>
+<h3>B2. Implementasi (12 poin)</h3>
+<ol>
+<li>Bangun star schema di Model view dengan satu fakta <code>Fact_Penjualan</code> dan empat dimensi: <code>Dim_Pasien</code>, <code>Dim_Obat</code>, <code>Dim_Apotek</code>, dan <strong><code>Dim_Tanggal</code> buatan Anda sendiri</strong>.</li>
+<li><code>Dim_Tanggal</code> harus menutup seluruh rentang tanggal transaksi tanpa celah, memuat minimal kolom: Tanggal, Tahun, Nomor Bulan, Nama Bulan, Kuartal, Hari dalam Minggu. Urutkan Nama Bulan berdasarkan Nomor Bulan.</li>
+<li>Atur relasi <strong>One-to-Many</strong> dari tiap dimensi ke fakta, arah filter tunggal, hanya satu relasi aktif per pasangan tabel. Semua kunci dimensi harus unik.</li>
+<li>Buktikan model bekerja: tabel visual lintas tabel (Kategori, Nama Bulan, Total Nilai Bersih) dan jumlahnya cocok dengan total tanpa filter.</li>
+</ol>
+<h3>B3. Dokumentasi dan analisis (8 poin)</h3>
+<ol>
+<li>Gambarkan diagram star schema (tabel, kolom kunci, kardinalitas) di draw.io atau tangkapan layar Model view yang rapi.</li>
+<li>Jelaskan dalam 3 sampai 5 kalimat: mengapa bentuk bintang dipilih dibanding satu tabel datar (flat) atau snowflake untuk data ini.</li>
+<li>Jelaskan bagaimana Anda memperlakukan kunci yatim (baris <code>UNK</code>) dan apa dampaknya bila baris itu dihapus.</li>
+</ol>
+<hr>
+<h2>BAGIAN C. VALIDASI DAN LAPORAN (20 poin)</h2>
+<h3>C1. Measure (8 poin)</h3>
+<p>Buat measure berikut pada tabel khusus <code>_Measures</code> (atau di fakta) dengan format yang benar, dan hanya menghitung baris <code>Status_Kualitas = OK</code> dengan <code>Status</code> bukan <code>Batal</code>:</p>
+<ol>
+<li><code>Total Penjualan Bersih</code></li>
+<li><code>Jumlah Transaksi</code></li>
+<li><code>Rata-rata Nilai Transaksi</code> (gunakan <code>DIVIDE</code>)</li>
+<li><code>Kontribusi Kategori %</code> (nilai kategori terhadap total, tetap benar saat difilter)</li>
+</ol>
+<h3>C2. Halaman laporan (8 poin)</h3>
+<p>Buat satu halaman laporan berisi: 4 kartu (3 measure di atas dan jumlah pasien yang bertransaksi), minimal 3 visual yang tepat (tren per bulan, perbandingan per apotek, 5 obat teratas), dan slicer Kategori. Judul visual harus berupa pesan, bukan nama field.</p>
+<h3>C3. Angka validasi (4 poin)</h3>
+<p>Tuliskan hasil akhir Anda:</p>
+<table><thead><tr><th>Pertanyaan</th><th>Jawaban Anda</th></tr></thead><tbody><tr><td>Total Penjualan Bersih (Rp)</td><td></td></tr><tr><td>Jumlah transaksi yang dihitung</td><td></td></tr><tr><td>Rata-rata nilai transaksi (Rp)</td><td></td></tr><tr><td>Jumlah baris fakta setelah bersih</td><td></td></tr><tr><td>Apotek dengan penjualan tertinggi</td><td></td></tr><tr><td>Bulan dengan penjualan tertinggi</td><td></td></tr><tr><td>Jumlah hari pada <code>Dim_Tanggal</code></td><td></td></tr></tbody></table>
+<hr>
+<h2>BAGIAN D. PERTANYAAN KONSEP, PERORANGAN DALAM SATU LAPORAN (15 poin)</h2>
+<p>Jawab singkat (3 sampai 6 kalimat per soal) memakai contoh dari dataset Anda. Tulis jawaban di bagian akhir laporan PDF yang sama, dengan sub-judul nama masing-masing mahasiswa. Mahasiswa 1 menjawab <strong>Varian A</strong>, Mahasiswa 2 menjawab <strong>Varian B</strong>.</p>
+<p><strong>Varian A</strong></p>
+<ol>
+<li>(5) Mengapa analisis sebaiknya tidak dijalankan langsung pada database transaksi (OLTP), dan apa peran ETL di antaranya?</li>
+<li>(5) Mengapa kunci yang tidak seragam (huruf, spasi, tanda hubung) menggagalkan relasi? Tunjukkan contoh dari data Anda.</li>
+<li>(5) Jelaskan perbedaan *measure* dan *calculated column* dan pilih mana untuk <code>Nilai_Bersih</code> dan <code>Total Penjualan Bersih</code>. Berikan alasan.</li>
+</ol>
+<p><strong>Varian B</strong></p>
+<ol>
+<li>(5) Apa beda tabel fakta dan tabel dimensi? Klasifikasikan 3 kolom dari dataset Anda dan beri alasan.</li>
+<li>(5) Apa yang terjadi pada hasil jumlah jika relasi dimensi ke fakta bersifat Many-to-Many atau dimensi memiliki kunci duplikat? Berikan contoh.</li>
+<li>(5) Sebutkan dua risiko menghapus baris dengan Qty tidak valid dibanding menandainya lewat <code>Status_Kualitas</code>.</li>
+</ol>
+<hr>
+<h2>Yang dikumpulkan</h2>
+<ol>
+<li>Berkas <code>.pbix</code> (nama: <code>UTS_Paket02_NIM1_NIM2.pbix</code>).</li>
+<li>Laporan <code>.pdf</code> berisi: Tabel A1, Tabel A2 (temuan masalah), Tabel A3, jawaban B1 dan B3, diagram star schema, tangkapan layar halaman laporan, tabel angka validasi C3, dan jawaban Bagian D kedua mahasiswa (Varian A dan Varian B, masing-masing diberi nama penjawabnya).</li>
+</ol>
+<h2>Rubrik ringkas</h2>
+<table><thead><tr><th>Bagian</th><th>Poin</th><th>Penilaian utama</th></tr></thead><tbody><tr><td>A. ETL</td><td>35</td><td>Extract tiga sumber, kelengkapan dan kebenaran 18 aturan, rekonsiliasi baris</td></tr><tr><td>B. Star schema</td><td>30</td><td>Grain dan klasifikasi, relasi dan kardinalitas benar, Dim_Tanggal lengkap, diagram dan alasan</td></tr><tr><td>C. Validasi</td><td>20</td><td>Measure, halaman laporan, kecocokan angka dengan kunci</td></tr><tr><td>D. Konsep</td><td>15</td><td>Ketepatan konsep dan contoh dari dataset sendiri</td></tr><tr><td><strong>Total</strong></td><td><strong>100</strong></td><td></td></tr></tbody></table></body></html>

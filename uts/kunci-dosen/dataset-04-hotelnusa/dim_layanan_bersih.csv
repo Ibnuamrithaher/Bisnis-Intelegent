@@ -1,0 +1,21 @@
+Kode_Layanan,Nama_Layanan,Kategori,Harga,Satuan,Pemasok,Aktif
+LYN-001,Kamar Standar,Kamar,450000,malam,PT Karya Mandiri,Ya
+LYN-002,Kamar Superior,Kamar,600000,malam,PT Nusa Mitra,Ya
+LYN-003,Kamar Deluxe,Kamar,800000,malam,UD Berkah Abadi,Ya
+LYN-004,Suite Junior,Kamar,1300000,malam,CV Sumber Jaya,Ya
+LYN-005,Suite Eksekutif,Kamar,2100000,malam,UD Berkah Abadi,Ya
+LYN-006,Sarapan Prasmanan,Makan,90000,pax,PT Nusa Mitra,Ya
+LYN-007,Makan Malam Set,Makan,175000,pax,CV Sumber Jaya,Ya
+LYN-008,Paket Afternoon Tea,Makan,120000,pax,UD Berkah Abadi,Ya
+LYN-009,Room Service Hemat,Makan,,porsi,PT Karya Mandiri,Ya
+LYN-010,Paket Barbeque,Makan,220000,pax,UD Berkah Abadi,Ya
+LYN-011,Pijat Tradisional 60',Spa,250000,sesi,PT Karya Mandiri,Tidak
+LYN-012,Aromaterapi 90',Spa,,sesi,UD Berkah Abadi,Ya
+LYN-013,Lulur dan Mandi Susu,Spa,420000,sesi,UD Berkah Abadi,Ya
+LYN-014,Refleksi Kaki 45',Spa,150000,sesi,UD Berkah Abadi,Ya
+LYN-015,Paket Pasangan,Spa,750000,sesi,PT Nusa Mitra,Ya
+LYN-016,Ruang Rapat Kecil,Ruang Rapat,1500000,hari,CV Sumber Jaya,Ya
+LYN-017,Ruang Rapat Sedang,Ruang Rapat,2800000,hari,PT Nusa Mitra,Ya
+LYN-018,Ballroom Setengah Hari,Ruang Rapat,6500000,hari,PT Nusa Mitra,Ya
+LYN-019,Paket Coffee Break,Ruang Rapat,65000,pax,UD Berkah Abadi,Ya
+LYN-020,Sewa Proyektor,Ruang Rapat,350000,hari,UD Berkah Abadi,Tidak

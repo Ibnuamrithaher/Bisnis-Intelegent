@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UTS Bisnis Intelegent - Unduh Paket</title>
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--ink:#1b1f24;--mut:#59636e;--line:#d0d7de;--acc:#0b5a7a}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--card:#161b22;--ink:#e6edf3;--mut:#9aa4af;--line:#30363d;--acc:#4aa8d0}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",Arial,sans-serif}
+main{max-width:860px;margin:0 auto;padding:28px 16px 48px}
+h1{margin:0 0 4px;font-size:1.6rem}
+.sub{color:var(--mut);margin:0 0 20px}
+.note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;padding:12px 14px;margin-bottom:22px}
+.note ul{margin:6px 0 0;padding-left:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.no{font-size:.8rem;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.card h2{margin:0;font-size:1.1rem}
+.card p{margin:0;color:var(--mut);font-size:.9rem;flex:1}
+a.btn{display:inline-block;margin-top:8px;padding:8px 12px;border-radius:6px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;text-align:center}
+a.btn:hover{opacity:.9}
+a.btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+footer{margin-top:24px;color:var(--mut);font-size:.9rem}
+</style>
+</head>
+<body>
+<main>
+<h1>UTS Bisnis Intelegent</h1>
+<p class="sub">Unduh paket soal dan dataset untuk pasangan Anda.</p>
+<div class="note">
+<strong>Sebelum mengunduh</strong>
+<ul>
+<li>Setiap paket berisi soal (<code>soal-uts.html</code>), data CSV, data Excel, data SQL, dan CSV cadangan transaksi.</li>
+<li>Ekstrak berkas zip, lalu buka <code>soal-uts.html</code> di browser.</li>
+</ul>
+</div>
+<div class="grid">
+<div class="card"><span class="no">Paket 01</span><h2>KopiKita</h2><p>Jaringan kedai kopi, 5 outlet.</p><a class="btn" href="paket-mahasiswa/dataset-01-kopikita.zip" download>Unduh Paket 01</a></div>
+<div class="card"><span class="no">Paket 02</span><h2>Apotek Sehat Sentosa</h2><p>Apotek dengan 5 cabang.</p><a class="btn" href="paket-mahasiswa/dataset-02-apotek-sehat.zip" download>Unduh Paket 02</a></div>
+<div class="card"><span class="no">Paket 03</span><h2>EduPlus Academy</h2><p>Kursus daring lewat 5 kampus mitra.</p><a class="btn" href="paket-mahasiswa/dataset-03-eduplus.zip" download>Unduh Paket 03</a></div>
+<div class="card"><span class="no">Paket 04</span><h2>Hotel Nusa Group</h2><p>Jaringan 5 hotel.</p><a class="btn" href="paket-mahasiswa/dataset-04-hotelnusa.zip" download>Unduh Paket 04</a></div>
+<div class="card"><span class="no">Paket 05</span><h2>FashionKu</h2><p>Toko fashion daring, 5 gudang.</p><a class="btn" href="paket-mahasiswa/dataset-05-fashionku.zip" download>Unduh Paket 05</a></div>
+<div class="card"><span class="no">Paket 06</span><h2>KirimCepat Express</h2><p>Logistik dengan 5 hub.</p><a class="btn" href="paket-mahasiswa/dataset-06-kirimcepat.zip" download>Unduh Paket 06</a></div>
+<div class="card"><span class="no">Paket 07</span><h2>CineKita Cinema</h2><p>Jaringan 5 bioskop.</p><a class="btn" href="paket-mahasiswa/dataset-07-cinekita.zip" download>Unduh Paket 07</a></div>
+</div>
+<footer>Waktu pengerjaan 120 menit. Kumpulkan berkas <code>.pbix</code> dan laporan <code>.pdf</code> sesuai petunjuk di soal.</footer>
+</main>
+</body>
+</html>

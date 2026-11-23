@@ -1,0 +1,21 @@
+Kode_Kursus,Nama_Kursus,Kategori,Harga,Satuan,Pemasok,Aktif
+KRS-001,Dasar Excel untuk Bisnis,Data,350000,kursi,UD Berkah Abadi,Ya
+KRS-002,SQL untuk Pemula,Data,450000,kursi,PT Karya Mandiri,Tidak
+KRS-003,Power BI Mahir,Data,750000,kursi,CV Sumber Jaya,Ya
+KRS-004,Python untuk Analisis Data,Data,850000,kursi,CV Maju Bersama,Ya
+KRS-005,Statistik Bisnis,Data,500000,kursi,CV Sumber Jaya,Ya
+KRS-006,Desain Grafis Dasar,Desain,400000,kursi,CV Maju Bersama,Ya
+KRS-007,UI/UX Fundamental,Desain,900000,kursi,CV Maju Bersama,Ya
+KRS-008,Editing Video,Desain,650000,kursi,PT Nusa Mitra,Ya
+KRS-009,Fotografi Produk,Desain,550000,kursi,CV Maju Bersama,Tidak
+KRS-010,Ilustrasi Digital,Desain,700000,kursi,PT Karya Mandiri,Ya
+KRS-011,Digital Marketing,Bisnis,800000,kursi,CV Sumber Jaya,Ya
+KRS-012,Manajemen Proyek,Bisnis,950000,kursi,PT Nusa Mitra,Tidak
+KRS-013,Dasar Akuntansi UMKM,Bisnis,450000,kursi,PT Karya Mandiri,Ya
+KRS-014,Public Speaking,Bisnis,,kursi,CV Sumber Jaya,Ya
+KRS-015,Strategi Penjualan,Bisnis,600000,kursi,UD Berkah Abadi,Ya
+KRS-016,Bahasa Inggris Bisnis,Bahasa,,kursi,PT Karya Mandiri,Ya
+KRS-017,Persiapan IELTS,Bahasa,1200000,kursi,CV Maju Bersama,Ya
+KRS-018,Bahasa Jepang N5,Bahasa,850000,kursi,CV Maju Bersama,Tidak
+KRS-019,Bahasa Mandarin Dasar,Bahasa,750000,kursi,PT Nusa Mitra,Ya
+KRS-020,Menulis Profesional,Bahasa,350000,kursi,CV Maju Bersama,Ya

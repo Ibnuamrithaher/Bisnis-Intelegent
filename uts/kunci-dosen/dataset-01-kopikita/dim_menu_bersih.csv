@@ -1,0 +1,21 @@
+Kode_Menu,Nama_Menu,Kategori,Harga,Satuan,Pemasok,Aktif
+MNU-001,Espresso,Kopi,18000,gelas,UD Berkah Abadi,Ya
+MNU-002,Americano,Kopi,22000,gelas,CV Maju Bersama,Ya
+MNU-003,Cafe Latte,Kopi,28000,gelas,CV Sumber Jaya,Ya
+MNU-004,Cappuccino,Kopi,28000,gelas,PT Nusa Mitra,Ya
+MNU-005,Kopi Susu Gula Aren,Kopi,24000,gelas,UD Berkah Abadi,Ya
+MNU-006,Matcha Latte,Non-Kopi,30000,gelas,UD Berkah Abadi,Ya
+MNU-007,Cokelat Panas,Non-Kopi,26000,gelas,PT Karya Mandiri,Ya
+MNU-008,Teh Lemon,Non-Kopi,16000,gelas,PT Karya Mandiri,Ya
+MNU-009,Red Velvet Latte,Non-Kopi,29000,gelas,PT Nusa Mitra,Ya
+MNU-010,Es Jeruk,Non-Kopi,15000,gelas,CV Maju Bersama,Ya
+MNU-011,Nasi Goreng Kampung,Makanan,,porsi,CV Sumber Jaya,Ya
+MNU-012,Mie Goreng Spesial,Makanan,30000,porsi,CV Maju Bersama,Ya
+MNU-013,Roti Bakar Cokelat,Makanan,22000,porsi,CV Maju Bersama,Ya
+MNU-014,Sandwich Ayam,Makanan,28000,porsi,PT Karya Mandiri,Ya
+MNU-015,Kentang Goreng,Makanan,20000,porsi,PT Karya Mandiri,Ya
+MNU-016,Pisang Goreng,Camilan,18000,porsi,CV Sumber Jaya,Ya
+MNU-017,Croissant,Camilan,,pcs,UD Berkah Abadi,Ya
+MNU-018,Brownies,Camilan,19000,pcs,CV Maju Bersama,Ya
+MNU-019,Donat Gula,Camilan,12000,pcs,UD Berkah Abadi,Tidak
+MNU-020,Cookies Oat,Camilan,14000,pcs,CV Maju Bersama,Ya

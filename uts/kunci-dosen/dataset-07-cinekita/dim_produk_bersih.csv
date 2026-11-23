@@ -1,0 +1,21 @@
+Kode_Produk,Nama_Produk,Kategori,Harga,Satuan,Pemasok,Aktif
+PRD-001,Tiket Reguler Weekday,Tiket,40000,lembar,PT Nusa Mitra,Ya
+PRD-002,Tiket Reguler Weekend,Tiket,55000,lembar,UD Berkah Abadi,Ya
+PRD-003,Tiket Premier,Tiket,90000,lembar,PT Nusa Mitra,Ya
+PRD-004,Tiket Anak,Tiket,30000,lembar,PT Nusa Mitra,Ya
+PRD-005,Tiket Sweetbox,Tiket,130000,lembar,PT Karya Mandiri,Ya
+PRD-006,Popcorn Asin Kecil,Popcorn,35000,pcs,UD Berkah Abadi,Ya
+PRD-007,Popcorn Asin Besar,Popcorn,52000,pcs,PT Nusa Mitra,Ya
+PRD-008,Popcorn Karamel Kecil,Popcorn,,pcs,CV Sumber Jaya,Ya
+PRD-009,Popcorn Karamel Besar,Popcorn,58000,pcs,UD Berkah Abadi,Ya
+PRD-010,Popcorn Mix Jumbo,Popcorn,68000,pcs,PT Nusa Mitra,Ya
+PRD-011,Cola Medium,Minuman,,gelas,CV Maju Bersama,Ya
+PRD-012,Cola Large,Minuman,30000,gelas,PT Nusa Mitra,Ya
+PRD-013,Air Mineral,Minuman,12000,botol,CV Sumber Jaya,Ya
+PRD-014,Teh Dingin,Minuman,20000,gelas,PT Nusa Mitra,Ya
+PRD-015,Kopi Dingin,Minuman,28000,gelas,PT Nusa Mitra,Ya
+PRD-016,Combo Berdua,Paket Combo,110000,paket,CV Sumber Jaya,Ya
+PRD-017,Combo Keluarga,Paket Combo,195000,paket,CV Maju Bersama,Ya
+PRD-018,Combo Hemat Solo,Paket Combo,65000,paket,CV Sumber Jaya,Tidak
+PRD-019,Combo Premier,Paket Combo,150000,paket,CV Maju Bersama,Ya
+PRD-020,Combo Anak,Paket Combo,75000,paket,UD Berkah Abadi,Ya
