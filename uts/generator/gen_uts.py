@@ -1,4 +1,4 @@
-# Generator UTS Bisnis Intelegent: 7 dataset (CSV + Excel + SQL) kotor, soal per paket, kunci dosen.
+# Generator UTS Bisnis Intelegent: 8 dataset (CSV + Excel + SQL) kotor, soal per paket, kunci dosen.
 # Jalankan: python gen_uts.py   (deterministik, seed tetap per paket)
 import random, csv, re, json, sqlite3, os, datetime, zipfile, shutil
 from openpyxl import Workbook
@@ -81,7 +81,16 @@ PAKET = [
     "Popcorn": [("Popcorn Asin Kecil", "pcs", 35000), ("Popcorn Asin Besar", "pcs", 52000), ("Popcorn Karamel Kecil", "pcs", 40000), ("Popcorn Karamel Besar", "pcs", 58000), ("Popcorn Mix Jumbo", "pcs", 68000)],
     "Minuman": [("Cola Medium", "gelas", 24000), ("Cola Large", "gelas", 30000), ("Air Mineral", "botol", 12000), ("Teh Dingin", "gelas", 20000), ("Kopi Dingin", "gelas", 28000)],
     "Paket Combo": [("Combo Berdua", "paket", 110000), ("Combo Keluarga", "paket", 195000), ("Combo Hemat Solo", "paket", 65000), ("Combo Premier", "paket", 150000), ("Combo Anak", "paket", 75000)]}, 7707),
+ D(8, "bukukita", "BukuKita", "BukuKita adalah jaringan toko buku dengan 5 toko. Manajemen ingin mengetahui kategori produk dan toko yang paling menyumbang penjualan, serta bagaimana pola belanja pelanggan dari bulan ke bulan.",
+   dict(tbl="pelanggan", id="ID_Pelanggan", pref="PLG", label="Pelanggan"), dict(label="Produk", pref="PRD", kode="Kode_Produk", nama="Nama_Produk", sheet="Produk"),
+   dict(label="Toko", pref="TKO", kode="Kode_Toko", nama="Nama_Toko", sheet="Toko", names=["BukuKita Pusat", "BukuKita Dipatiukur", "BukuKita Malioboro", "BukuKita Tunjungan", "BukuKita Ubud"], tipe=["Flagship", "Reguler", "Kios"]),
+   "penjualan", (2025, 8, 1), (2026, 1, 31), ["Reguler", "Member", "Baru"],
+   {"Buku Fiksi": [("Novel Laskar Pelangi", "buah", 98000), ("Novel Bumi Manusia", "buah", 125000), ("Kumpulan Cerpen Senja", "buah", 65000), ("Novel Misteri Kota Tua", "buah", 89000), ("Komik Petualangan Nusantara", "buah", 45000)],
+    "Buku Nonfiksi": [("Atomic Habits Edisi Indonesia", "buah", 108000), ("Dasar Manajemen Keuangan", "buah", 135000), ("Belajar Python dari Nol", "buah", 120000), ("Sejarah Indonesia Modern", "buah", 145000), ("Panduan Memulai Bisnis", "buah", 95000)],
+    "Alat Tulis": [("Pulpen Gel 12 pcs", "pak", 36000), ("Buku Tulis 38 Lembar 10 pcs", "pak", 42000), ("Pensil 2B 12 pcs", "pak", 28000), ("Stabilo 5 Warna", "set", 32000), ("Map Plastik 10 pcs", "pak", 25000)],
+    "Hobi dan Kado": [("Puzzle 500 Keping", "buah", 85000), ("Pembatas Buku Kayu", "buah", 18000), ("Lampu Baca Klip", "buah", 55000), ("Kotak Kado Buku", "buah", 30000), ("Jurnal Bergaris Premium", "buah", 72000)]}, 8808),
 ]
+
 
 
 # ---------------------------------------------------------------- UTIL
@@ -583,7 +592,7 @@ Jawab singkat (3 sampai 6 kalimat per soal) memakai contoh dari dataset Anda. Tu
 
 
 def kunci_md(allP):
-    L = ["# Kunci Dosen: UTS Bisnis Intelegent (7 Paket)", "", "Dokumen ini khusus dosen. Jangan dibagikan ke mahasiswa.", "",
+    L = ["# Kunci Dosen: UTS Bisnis Intelegent (8 Paket)", "", "Dokumen ini khusus dosen. Jangan dibagikan ke mahasiswa.", "",
          "## Ringkasan paket", "", "| Paket | Bisnis | Berkas mahasiswa |", "|---|---|---|"]
     for P, K, name in allP:
         L.append(f"| {P['no']:02d} | {P['bisnis']} | `publik/paket-mahasiswa/{name}.zip` |")

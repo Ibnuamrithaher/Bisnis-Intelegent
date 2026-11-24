@@ -1,0 +1,21 @@
+Kode_Produk,Nama_Produk,Kategori,Harga,Satuan,Pemasok,Aktif
+PRD-001,Novel Laskar Pelangi,Buku Fiksi,98000,buah,UD Berkah Abadi,Ya
+PRD-002,Novel Bumi Manusia,Buku Fiksi,125000,buah,PT Nusa Mitra,Ya
+PRD-003,Kumpulan Cerpen Senja,Buku Fiksi,65000,buah,UD Berkah Abadi,Ya
+PRD-004,Novel Misteri Kota Tua,Buku Fiksi,89000,buah,PT Nusa Mitra,Ya
+PRD-005,Komik Petualangan Nusantara,Buku Fiksi,45000,buah,CV Sumber Jaya,Ya
+PRD-006,Atomic Habits Edisi Indonesia,Buku Nonfiksi,108000,buah,CV Sumber Jaya,Tidak
+PRD-007,Dasar Manajemen Keuangan,Buku Nonfiksi,135000,buah,CV Sumber Jaya,Ya
+PRD-008,Belajar Python dari Nol,Buku Nonfiksi,120000,buah,CV Maju Bersama,Ya
+PRD-009,Sejarah Indonesia Modern,Buku Nonfiksi,145000,buah,PT Karya Mandiri,Ya
+PRD-010,Panduan Memulai Bisnis,Buku Nonfiksi,95000,buah,PT Karya Mandiri,Ya
+PRD-011,Pulpen Gel 12 pcs,Alat Tulis,36000,pak,CV Maju Bersama,Ya
+PRD-012,Buku Tulis 38 Lembar 10 pcs,Alat Tulis,42000,pak,UD Berkah Abadi,Ya
+PRD-013,Pensil 2B 12 pcs,Alat Tulis,,pak,PT Karya Mandiri,Ya
+PRD-014,Stabilo 5 Warna,Alat Tulis,,set,CV Maju Bersama,Ya
+PRD-015,Map Plastik 10 pcs,Alat Tulis,25000,pak,PT Nusa Mitra,Ya
+PRD-016,Puzzle 500 Keping,Hobi dan Kado,85000,buah,CV Maju Bersama,Ya
+PRD-017,Pembatas Buku Kayu,Hobi dan Kado,18000,buah,PT Karya Mandiri,Ya
+PRD-018,Lampu Baca Klip,Hobi dan Kado,55000,buah,PT Nusa Mitra,Ya
+PRD-019,Kotak Kado Buku,Hobi dan Kado,30000,buah,CV Maju Bersama,Tidak
+PRD-020,Jurnal Bergaris Premium,Hobi dan Kado,72000,buah,PT Nusa Mitra,Ya

@@ -879,5 +879,132 @@
   "tgl_data_min": "2025-05-02",
   "tgl_data_max": "2025-10-31",
   "tgl_data_hari": 183
+ },
+ "dataset-08-bukukita": {
+  "d1_nama_huruf": 29,
+  "d1_tgl_slash": 30,
+  "d1_hp_format": 29,
+  "d1_tgl_teks": 15,
+  "d1_nama_spasi": 19,
+  "d1_email_tanpa_at": 4,
+  "d1_email_huruf": 7,
+  "d1_kota_variasi": 24,
+  "d1_segmen_huruf": 10,
+  "d1_tgl_strip": 7,
+  "d1_email_spasi": 8,
+  "d1_segmen_kosong": 4,
+  "d1_hp_kosong": 6,
+  "d1_kota_alias": 1,
+  "d1_email_kosong": 1,
+  "d1_duplikat": 5,
+  "d1_baris_file": 105,
+  "d1_baris_bersih": 100,
+  "it_stok_teks": 2,
+  "it_aktif_variasi": 10,
+  "it_harga_teks": 4,
+  "it_kode_huruf": 1,
+  "it_kat_variasi": 4,
+  "it_kode_spasi": 3,
+  "it_harga_kosong": 2,
+  "it_nama_huruf": 1,
+  "it_stok_kosong": 1,
+  "it_duplikat": 2,
+  "cb_kode_spasi": 2,
+  "cb_kota_variasi": 2,
+  "cb_kode_huruf": 1,
+  "cb_duplikat": 1,
+  "it_baris_file": 22,
+  "it_baris_bersih": 20,
+  "cb_baris_file": 6,
+  "cb_baris_bersih": 5,
+  "f_orphan_d1": 8,
+  "f_orphan_item": 5,
+  "f_tgl_slash": 115,
+  "f_diskon_format": 174,
+  "f_d1_tanpa_strip": 29,
+  "f_item_tanpa_strip": 31,
+  "f_cb_spasi": 35,
+  "f_d1_huruf": 33,
+  "f_harga_null": 27,
+  "f_status_null": 15,
+  "f_d1_spasi": 38,
+  "f_metode_variasi": 136,
+  "f_status_variasi": 75,
+  "f_item_huruf": 49,
+  "f_cb_huruf": 58,
+  "f_tgl_strip": 56,
+  "f_item_spasi": 28,
+  "f_qty_tidak_wajar": 12,
+  "f_qty_kosong": 15,
+  "f_cb_tanpa_strip": 21,
+  "f_diskon_kosong": 23,
+  "f_duplikat": 10,
+  "f_baris_file": 410,
+  "f_baris_bersih": 400,
+  "f_baris_setelah_dedup": 400,
+  "f_orphan_d1_akhir": 8,
+  "f_orphan_item_akhir": 5,
+  "total_bersih": 91117450,
+  "baris_dihitung": 307,
+  "dikecualikan": {
+   "qty": 27,
+   "batal": 66
+  },
+  "rata2_nilai": 296800,
+  "per_kategori": {
+   "Buku Nonfiksi": 38758300,
+   "Buku Fiksi": 28885100,
+   "Hobi dan Kado": 12877000,
+   "Alat Tulis": 9932050,
+   "Tidak Terdaftar": 665000
+  },
+  "per_cabang": {
+   "BukuKita Ubud": 23561050,
+   "BukuKita Malioboro": 19415200,
+   "BukuKita Tunjungan": 16772000,
+   "BukuKita Pusat": 15916150,
+   "BukuKita Dipatiukur": 15453050
+  },
+  "per_bulan": {
+   "2025-08": 15397550,
+   "2025-09": 10401650,
+   "2025-10": 17920100,
+   "2025-11": 14754950,
+   "2025-12": 16956950,
+   "2026-01": 15686250
+  },
+  "top5_item": [
+   [
+    "Sejarah Indonesia Modern",
+    11824750
+   ],
+   [
+    "Novel Bumi Manusia",
+    10450000
+   ],
+   [
+    "Atomic Habits Edisi Indonesia",
+    8866800
+   ],
+   [
+    "Belajar Python dari Nol",
+    8124000
+   ],
+   [
+    "Novel Laskar Pelangi",
+    6840400
+   ]
+  ],
+  "pelanggan_pembeli_unik": 99,
+  "blank_codes": [
+   "PRD-013",
+   "PRD-014"
+  ],
+  "tanggal_min": "2025-08-01",
+  "tanggal_max": "2026-01-31",
+  "hari_kalender": 184,
+  "tgl_data_min": "2025-08-01",
+  "tgl_data_max": "2026-01-31",
+  "tgl_data_hari": 184
  }
 }

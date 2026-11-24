@@ -1,4 +1,4 @@
-# Kunci Dosen: UTS Bisnis Intelegent (7 Paket)
+# Kunci Dosen: UTS Bisnis Intelegent (8 Paket)
 
 Dokumen ini khusus dosen. Jangan dibagikan ke mahasiswa.
 
@@ -13,6 +13,7 @@ Dokumen ini khusus dosen. Jangan dibagikan ke mahasiswa.
 | 05 | FashionKu | `publik/paket-mahasiswa/dataset-05-fashionku.zip` |
 | 06 | KirimCepat Express | `publik/paket-mahasiswa/dataset-06-kirimcepat.zip` |
 | 07 | CineKita Cinema | `publik/paket-mahasiswa/dataset-07-cinekita.zip` |
+| 08 | BukuKita | `publik/paket-mahasiswa/dataset-08-bukukita.zip` |
 
 Setiap zip berisi: soal (`soal-uts.html`), CSV master, Excel (item + cabang), SQL transaksi, dan CSV cadangan transaksi. Berkas bersih per paket ada di `kunci-dosen/dataset-XX-.../` (fact_bersih.csv dan tiga dimensi bersih).
 
@@ -934,6 +935,135 @@ Per bulan:
 | `it_nama_huruf` | 2 |
 | `it_stok_kosong` | 2 |
 | `it_stok_negatif` | 2 |
+| `it_stok_teks` | 2 |
+
+---
+
+## Paket 08: BukuKita
+
+Database `bukukita`, tabel `penjualan`. Periode 2025-08-01 sampai 2026-01-31 (kalender penuh 184 hari; hari antara tanggal transaksi pertama dan terakhir: 184).
+
+### Jumlah baris (A1, A3)
+
+| Tabel | Baris di file | Duplikat | Baris bersih |
+|---|---|---|---|
+| Pelanggan (CSV) | 105 | 5 | 100 |
+| Produk (Excel, data saja) | 22 | 2 | 20 |
+| Toko (Excel) | 6 | 1 | 5 |
+| penjualan (SQL) | 410 | 10 | 400 |
+
+Kunci yatim setelah dibersihkan: pelanggan tak terdaftar **8** baris, produk tak terdaftar **5** baris. Harga kosong di master: `PRD-013, PRD-014`.
+
+### Angka validasi (C3)
+
+| Ukuran | Nilai |
+|---|---|
+| **Total Penjualan Bersih** | **Rp 91.117.450** |
+| Jumlah transaksi dihitung | 307 |
+| Rata-rata nilai transaksi | Rp 296.800 |
+| Baris fakta setelah bersih | 400 |
+| Dikecualikan karena Qty tidak valid | 27 |
+| Dikecualikan karena Batal | 66 |
+| Pelanggan unik yang bertransaksi | 99 |
+| Toko tertinggi | BukuKita Ubud (Rp 23.561.050) |
+| Bulan tertinggi | 2025-10 (Rp 17.920.100) |
+
+Per kategori:
+
+| Kategori | Total |
+|---|---|
+| Buku Nonfiksi | Rp 38.758.300 |
+| Buku Fiksi | Rp 28.885.100 |
+| Hobi dan Kado | Rp 12.877.000 |
+| Alat Tulis | Rp 9.932.050 |
+| Tidak Terdaftar | Rp 665.000 |
+
+Per toko:
+
+| Toko | Total |
+|---|---|
+| BukuKita Ubud | Rp 23.561.050 |
+| BukuKita Malioboro | Rp 19.415.200 |
+| BukuKita Tunjungan | Rp 16.772.000 |
+| BukuKita Pusat | Rp 15.916.150 |
+| BukuKita Dipatiukur | Rp 15.453.050 |
+
+Per bulan:
+
+| Bulan | Total |
+|---|---|
+| 2025-08 | Rp 15.397.550 |
+| 2025-09 | Rp 10.401.650 |
+| 2025-10 | Rp 17.920.100 |
+| 2025-11 | Rp 14.754.950 |
+| 2025-12 | Rp 16.956.950 |
+| 2026-01 | Rp 15.686.250 |
+
+5 teratas:
+
+| Nama | Total |
+|---|---|
+| Sejarah Indonesia Modern | Rp 11.824.750 |
+| Novel Bumi Manusia | Rp 10.450.000 |
+| Atomic Habits Edisi Indonesia | Rp 8.866.800 |
+| Belajar Python dari Nol | Rp 8.124.000 |
+| Novel Laskar Pelangi | Rp 6.840.400 |
+
+### Masalah yang ditanam
+
+| Kode | Jumlah |
+|---|---|
+| `cb_duplikat` | 1 |
+| `cb_kode_huruf` | 1 |
+| `cb_kode_spasi` | 2 |
+| `cb_kota_variasi` | 2 |
+| `d1_duplikat` | 5 |
+| `d1_email_huruf` | 7 |
+| `d1_email_kosong` | 1 |
+| `d1_email_spasi` | 8 |
+| `d1_email_tanpa_at` | 4 |
+| `d1_hp_format` | 29 |
+| `d1_hp_kosong` | 6 |
+| `d1_kota_alias` | 1 |
+| `d1_kota_variasi` | 24 |
+| `d1_nama_huruf` | 29 |
+| `d1_nama_spasi` | 19 |
+| `d1_segmen_huruf` | 10 |
+| `d1_segmen_kosong` | 4 |
+| `d1_tgl_slash` | 30 |
+| `d1_tgl_strip` | 7 |
+| `d1_tgl_teks` | 15 |
+| `f_cb_huruf` | 58 |
+| `f_cb_spasi` | 35 |
+| `f_cb_tanpa_strip` | 21 |
+| `f_d1_huruf` | 33 |
+| `f_d1_spasi` | 38 |
+| `f_d1_tanpa_strip` | 29 |
+| `f_diskon_format` | 174 |
+| `f_diskon_kosong` | 23 |
+| `f_duplikat` | 10 |
+| `f_harga_null` | 27 |
+| `f_item_huruf` | 49 |
+| `f_item_spasi` | 28 |
+| `f_item_tanpa_strip` | 31 |
+| `f_metode_variasi` | 136 |
+| `f_orphan_d1` | 8 |
+| `f_orphan_item` | 5 |
+| `f_qty_kosong` | 15 |
+| `f_qty_tidak_wajar` | 12 |
+| `f_status_null` | 15 |
+| `f_status_variasi` | 75 |
+| `f_tgl_slash` | 115 |
+| `f_tgl_strip` | 56 |
+| `it_aktif_variasi` | 10 |
+| `it_duplikat` | 2 |
+| `it_harga_kosong` | 2 |
+| `it_harga_teks` | 4 |
+| `it_kat_variasi` | 4 |
+| `it_kode_huruf` | 1 |
+| `it_kode_spasi` | 3 |
+| `it_nama_huruf` | 1 |
+| `it_stok_kosong` | 1 |
 | `it_stok_teks` | 2 |
 
 ---
